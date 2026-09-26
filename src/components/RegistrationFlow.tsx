@@ -14,7 +14,8 @@ import {
   Printer
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { api } from '../services/api';
+import { QRCodeSVG } from 'qrcode.react';
+import { api, generateProductionQrUrl } from '../services/api';
 import type { BloodGroup, EmergencyContact, UserProfile } from '../types';
 import { ProfilePhotoUploader } from './ProfilePhotoUploader';
 
@@ -584,11 +585,11 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({ onNavigate }
               </p>
             </div>
 
-            {/* Card Showing Generated Tag ID and Short Code */}
-            <div className="max-w-md mx-auto p-6 rounded-3xl bg-white/90 border border-red-200 text-left space-y-4 shadow-lg">
-              <div className="flex justify-between items-center border-b border-red-100 pb-3">
+            {/* Card Showing Generated Tag ID, QR Code and Short Code */}
+            <div className="max-w-md mx-auto p-6 rounded-3xl bg-white/90 border border-red-200 text-center space-y-4 shadow-lg">
+              <div className="flex justify-between items-center border-b border-red-100 pb-3 text-left">
                 <div>
-                  <span className="text-[10px] uppercase font-bold text-[#806F6F]">ResQTag Secure ID</span>
+                  <span className="text-[10px] uppercase font-bold text-[#806F6F]">Unique ResQTag ID</span>
                   <div className="text-sm font-mono font-bold text-[#2B2020]">{createdProfile.tagId}</div>
                 </div>
                 <div className="text-right">
@@ -599,7 +600,19 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({ onNavigate }
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-2 text-xs text-[#2B2020]">
+              {/* Live QR Code */}
+              <div className="p-4 bg-red-50/50 border border-red-100 rounded-2xl inline-block shadow-inner mx-auto">
+                <QRCodeSVG
+                  value={generateProductionQrUrl(createdProfile)}
+                  size={180}
+                  level="H"
+                />
+                <p className="text-[10px] font-mono text-[#806F6F] mt-2 font-bold">
+                  Scan from any phone camera to view profile
+                </p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2 text-xs text-[#2B2020] text-left">
                 <div>
                   <span className="text-[10px] text-[#806F6F] block font-semibold">NAME</span>
                   <strong>{createdProfile.fullName}</strong>
@@ -613,15 +626,15 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({ onNavigate }
                   <strong>{createdProfile.vehicleNumber}</strong>
                 </div>
                 <div>
-                  <span className="text-[10px] text-[#806F6F] block font-semibold">EMERGENCY CONTACT</span>
+                  <span className="text-[10px] text-[#806F6F] block font-semibold">PRIMARY SOS</span>
                   <strong>{createdProfile.emergencyContacts[0]?.name}</strong>
                 </div>
               </div>
 
-              <div className="p-3 rounded-xl bg-[#FFF7F7] border border-red-100 text-[11px] text-[#806F6F] flex items-center gap-2">
+              <div className="p-3 rounded-xl bg-[#FFF7F7] border border-red-100 text-[11px] text-[#806F6F] flex items-center gap-2 text-left">
                 <Lock className="w-4 h-4 text-[#E53935] shrink-0" />
                 <span>
-                  <strong className="text-[#2B2020]">Strict Privacy:</strong> The QR contains only the secure ID token, never unencrypted personal info.
+                  <strong className="text-[#2B2020]">Cross-Device Cloud Sync:</strong> This QR code is persistently linked to your emergency record worldwide.
                 </span>
               </div>
             </div>

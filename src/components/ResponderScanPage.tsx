@@ -27,15 +27,23 @@ export const ResponderScanPage: React.FC<ResponderScanPageProps> = ({ onScanComp
   // Helper to extract tag code from raw scanned string or URL
   const extractCode = (scannedText: string): string => {
     const text = scannedText.trim();
+    if (text.includes('#emergency/')) {
+      const parts = text.split('#emergency/');
+      return parts[parts.length - 1].trim();
+    }
+    if (text.includes('/emergency/')) {
+      const parts = text.split('/emergency/');
+      return parts[parts.length - 1].trim();
+    }
     if (text.includes('#scan/')) {
       const parts = text.split('#scan/');
-      return parts[parts.length - 1].trim().toUpperCase();
+      return parts[parts.length - 1].trim();
     }
     if (text.includes('/scan/')) {
       const parts = text.split('/scan/');
-      return parts[parts.length - 1].trim().toUpperCase();
+      return parts[parts.length - 1].trim();
     }
-    return text.toUpperCase();
+    return text.trim();
   };
 
   // Start Camera Scanner

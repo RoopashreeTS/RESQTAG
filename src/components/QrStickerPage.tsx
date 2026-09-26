@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { useAuth } from '../context/AuthContext';
-import { INITIAL_DEMO_DATA } from '../services/api';
+import { INITIAL_DEMO_DATA, generateProductionQrUrl } from '../services/api';
 
 interface QrStickerPageProps {
   onNavigate?: (view: string, param?: string) => void;
@@ -28,7 +28,7 @@ export const QrStickerPage: React.FC<QrStickerPageProps> = () => {
   const [copiedLink, setCopiedLink] = useState(false);
   const stickerRef = useRef<HTMLDivElement>(null);
 
-  const scanUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/#scan/${currentProfile.shortCode}`;
+  const scanUrl = generateProductionQrUrl(currentProfile);
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(scanUrl);

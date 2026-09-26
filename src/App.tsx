@@ -23,11 +23,30 @@ const AppContent: React.FC = () => {
   // Sync with browser hash routing
   useEffect(() => {
     const handleHashChange = () => {
-      const hash = window.location.hash.replace(/^#\/?/, '');
-      if (hash.startsWith('scan/')) {
-        const id = hash.replace('scan/', '');
+      // 1. Check path-based emergency URL first (e.g. /RESQTAG/emergency/RQT-...)
+      const path = window.location.pathname;
+      if (path.includes('/emergency/')) {
+        const parts = path.split('/emergency/');
+        const id = parts[parts.length - 1].split(/[?#]/)[0].trim();
+        if (id) {
+          setCurrentView('emergency-profile');
+          setCurrentParam(id);
+          return;
+        }
+      }
+
+      // 2. Check hash routing (e.g. #/emergency/RQT-... or #emergency/RQT-... or #scan/...)
+      const rawHash = window.location.hash.replace(/^#\/?/, '');
+      const hash = rawHash.split('?')[0]; // strip query string
+
+      if (hash.startsWith('emergency/')) {
+        const id = hash.replace('emergency/', '').trim();
         setCurrentView('emergency-profile');
-        setCurrentParam(id || 'RQ7K29');
+        setCurrentParam(id || 'RQT-8829A4');
+      } else if (hash.startsWith('scan/')) {
+        const id = hash.replace('scan/', '').trim();
+        setCurrentView('emergency-profile');
+        setCurrentParam(id || 'RQT-8829A4');
       } else if (hash === 'scan') {
         setCurrentView('scan');
         setCurrentParam(undefined);
@@ -60,7 +79,7 @@ const AppContent: React.FC = () => {
 
     // Update URL hash smoothly
     if (view === 'emergency-profile' && param) {
-      window.location.hash = `scan/${param}`;
+      window.location.hash = `emergency/${param}`;
     } else if (view === 'scan') {
       window.location.hash = 'scan';
     } else if (view === 'safejourney') {

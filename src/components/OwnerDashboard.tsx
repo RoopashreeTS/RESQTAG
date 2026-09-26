@@ -20,7 +20,7 @@ import {
 } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { useAuth } from '../context/AuthContext';
-import { api, INITIAL_DEMO_DATA } from '../services/api';
+import { api, INITIAL_DEMO_DATA, generateProductionQrUrl } from '../services/api';
 import type { ScanEvent, BloodGroup, EmergencyContact, JourneyAlert } from '../types';
 import { ProfilePhotoUploader } from './ProfilePhotoUploader';
 
@@ -152,7 +152,7 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate }) =>
     }
   };
 
-  const scanUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/#scan/${current.shortCode}`;
+  const scanUrl = generateProductionQrUrl(current);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 text-[#2B2020] relative z-10">

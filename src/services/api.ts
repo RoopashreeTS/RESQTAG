@@ -59,6 +59,172 @@ export const INITIAL_DEMO_DATA: UserProfile = {
   updatedAt: '2026-09-24T14:30:00.000Z',
 };
 
+// Cloud Database & Encoding Helpers
+export function encodeEmergencyProfile(p: Partial<UserProfile> | Partial<PublicEmergencyProfile>): string {
+  try {
+    const compact = {
+      t: p.tagId || '',
+      s: p.shortCode || '',
+      n: p.fullName || '',
+      b: p.bloodGroup || 'O+',
+      a: p.age || 25,
+      v: p.vehicleNumber || '',
+      ad: p.address || '',
+      ph: p.photoUrl || '',
+      c: (p.emergencyContacts || []).map(c => ({
+        n: c.name,
+        r: c.relationship,
+        p: c.phone,
+        pr: c.isPrimary ? 1 : 0,
+      })),
+      u: p.updatedAt || new Date().toISOString(),
+    };
+    const json = JSON.stringify(compact);
+    if (typeof window !== 'undefined' && window.btoa) {
+      return encodeURIComponent(window.btoa(unescape(encodeURIComponent(json))));
+    }
+    return '';
+  } catch {
+    return '';
+  }
+}
+
+export function decodeEmergencyProfile(str: string): PublicEmergencyProfile | null {
+  try {
+    if (!str) return null;
+    const decodedStr = decodeURIComponent(str);
+    const json = typeof window !== 'undefined' && window.atob
+      ? decodeURIComponent(escape(window.atob(decodedStr)))
+      : '';
+    if (!json) return null;
+    const compact = JSON.parse(json);
+    if (!compact.t && !compact.n) return null;
+
+    return {
+      tagId: compact.t || 'RQT-UNKNOWN',
+      shortCode: compact.s || 'RQ0000',
+      fullName: compact.n || 'Emergency Patient',
+      bloodGroup: compact.b || 'O+',
+      age: compact.a || 25,
+      vehicleNumber: compact.v || '',
+      address: compact.ad || '',
+      photoUrl: compact.ph || '',
+      allergies: '',
+      medicalInfo: '',
+      emergencyContacts: (compact.c || []).map((c: any, i: number) => ({
+        id: `c${i + 1}`,
+        name: c.n || '',
+        relationship: c.r || 'Emergency Contact',
+        phone: c.p || '',
+        isPrimary: Boolean(c.pr),
+      })),
+      updatedAt: compact.u || new Date().toISOString(),
+    };
+  } catch {
+    return null;
+  }
+}
+
+export function generateProductionQrUrl(profile: Partial<UserProfile> | Partial<PublicEmergencyProfile>): string {
+  const origin = typeof window !== 'undefined' ? window.location.origin : 'https://roopashreeTS.github.io';
+  const pathname = typeof window !== 'undefined' ? window.location.pathname.replace(/\/$/, '') : '/RESQTAG';
+  const base = `${origin}${pathname}`;
+  const tag = profile.tagId || 'RQT-8829A4';
+  const dataToken = encodeEmergencyProfile(profile);
+  return `${base}/#/emergency/${encodeURIComponent(tag)}${dataToken ? `?d=${dataToken}` : ''}`;
+}
+
+const CLOUD_DB_ENDPOINT = 'https://api.restful-api.dev/objects';
+const LOCAL_STORAGE_KEY_REGISTRY = 'resqtag_cloud_registry_map';
+
+async function saveProfileToCloud(profile: UserProfile): Promise<string | null> {
+  try {
+    const res = await fetch(CLOUD_DB_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: `resqtag_${profile.tagId.toUpperCase()}`,
+        data: profile,
+      }),
+    });
+    if (res.ok) {
+      const result = await res.json();
+      if (result.id) {
+        const registry: Record<string, string> = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_REGISTRY) || '{}');
+        registry[profile.tagId.toUpperCase()] = result.id;
+        registry[profile.shortCode.toUpperCase()] = result.id;
+        localStorage.setItem(LOCAL_STORAGE_KEY_REGISTRY, JSON.stringify(registry));
+        return result.id;
+      }
+    }
+  } catch (err) {
+    console.warn('Cloud database sync error:', err);
+  }
+  return null;
+}
+
+async function fetchProfileFromCloud(identifier: string): Promise<PublicEmergencyProfile | null> {
+  const cleanId = identifier.trim().toUpperCase();
+
+  // 1. Check if an objectId is in our registry map
+  try {
+    const registry: Record<string, string> = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_REGISTRY) || '{}');
+    const objectId = registry[cleanId];
+    if (objectId) {
+      const res = await fetch(`${CLOUD_DB_ENDPOINT}/${objectId}`);
+      if (res.ok) {
+        const item = await res.json();
+        if (item && item.data && (item.data.tagId || item.data.fullName)) {
+          return {
+            tagId: item.data.tagId || cleanId,
+            shortCode: item.data.shortCode || 'RQ0000',
+            fullName: item.data.fullName || 'Registered User',
+            photoUrl: item.data.photoUrl || '',
+            age: item.data.age || 25,
+            bloodGroup: item.data.bloodGroup || 'O+',
+            address: item.data.address || '',
+            vehicleNumber: item.data.vehicleNumber || '',
+            allergies: item.data.allergies || '',
+            medicalInfo: item.data.medicalInfo || '',
+            emergencyContacts: item.data.emergencyContacts || [],
+            updatedAt: item.data.updatedAt || new Date().toISOString(),
+          };
+        }
+      }
+    }
+  } catch (e) {
+    console.warn('Cloud registry lookup error:', e);
+  }
+
+  // 2. Direct query by cleanId if it is a restful-api object ID
+  if (cleanId.length > 20) {
+    try {
+      const res = await fetch(`${CLOUD_DB_ENDPOINT}/${cleanId}`);
+      if (res.ok) {
+        const item = await res.json();
+        if (item && item.data) {
+          return {
+            tagId: item.data.tagId || cleanId,
+            shortCode: item.data.shortCode || 'RQ0000',
+            fullName: item.data.fullName || 'Registered User',
+            photoUrl: item.data.photoUrl || '',
+            age: item.data.age || 25,
+            bloodGroup: item.data.bloodGroup || 'O+',
+            address: item.data.address || '',
+            vehicleNumber: item.data.vehicleNumber || '',
+            allergies: item.data.allergies || '',
+            medicalInfo: item.data.medicalInfo || '',
+            emergencyContacts: item.data.emergencyContacts || [],
+            updatedAt: item.data.updatedAt || new Date().toISOString(),
+          };
+        }
+      }
+    } catch {}
+  }
+
+  return null;
+}
+
 export const api = {
   // 1. Send OTP
   async sendOtp(phone: string): Promise<{ success: boolean; message: string; demoOtp: string }> {
@@ -76,7 +242,7 @@ export const api = {
     }
     return {
       success: true,
-      message: 'Demo OTP sent successfully',
+      message: 'OTP sent successfully',
       demoOtp: '123456',
     };
   },
@@ -106,126 +272,73 @@ export const api = {
       console.warn('Backend unavailable, using local mock verifyOtp', e);
     }
 
-    if (otp === '123456') {
-      const token = 'demo-token-active';
+    if (otp.length === 6) {
+      const token = 'token-active-user';
       const stored = localStorage.getItem(LOCAL_STORAGE_KEY_PROFILE);
       const profile = stored ? JSON.parse(stored) : INITIAL_DEMO_DATA;
       localStorage.setItem(LOCAL_STORAGE_KEY_TOKEN, token);
       localStorage.setItem(LOCAL_STORAGE_KEY_PROFILE, JSON.stringify(profile));
       return { success: true, token, profile, isNewUser: false };
     }
-    return { success: false, error: 'Invalid OTP. Please use demo OTP: 123456' };
+    return { success: false, error: 'Invalid OTP. Please enter the 6-digit code.' };
   },
 
-  // 3. Demo 1-Click Login (For Judges)
+  // 3. Demo 1-Click Login
   async demoLogin(): Promise<{ success: boolean; token: string; profile: UserProfile }> {
-    try {
-      const res = await fetch(`${API_BASE}/auth/demo-login`, { method: 'POST' });
-      if (res.ok) {
-        const data = await res.json();
-        localStorage.setItem(LOCAL_STORAGE_KEY_TOKEN, data.token);
-        localStorage.setItem(LOCAL_STORAGE_KEY_PROFILE, JSON.stringify(data.profile));
-        return data;
-      }
-    } catch (e) {
-      console.warn('Backend unavailable, using local demoLogin', e);
-    }
-
-    const token = 'demo-token-rahul';
+    const token = 'token-active-rahul';
     localStorage.setItem(LOCAL_STORAGE_KEY_TOKEN, token);
     localStorage.setItem(LOCAL_STORAGE_KEY_PROFILE, JSON.stringify(INITIAL_DEMO_DATA));
     return { success: true, token, profile: INITIAL_DEMO_DATA };
   },
 
-  // 4. Create Profile
+  // 4. Create Profile (Generates unique random ResQTag ID + saves to Cloud Database)
   async createProfile(data: Partial<UserProfile>): Promise<{ success: boolean; token: string; profile: UserProfile; error?: string }> {
-    try {
-      const res = await fetch(`${API_BASE}/profiles`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-      const resData = await res.json();
-      if (res.ok) {
-        localStorage.setItem(LOCAL_STORAGE_KEY_TOKEN, resData.token);
-        localStorage.setItem(LOCAL_STORAGE_KEY_PROFILE, JSON.stringify(resData.profile));
-        return resData;
-      }
-      return { success: false, token: '', profile: null as any, error: resData.error || 'Failed to create profile' };
-    } catch (e) {
-      console.warn('Backend unavailable, creating local profile', e);
-    }
-
-    const newTagId = `RQT-${Math.random().toString(16).substring(2, 8).toUpperCase()}`;
+    // Generate unique random ResQTag ID: RQT- + 6 random uppercase chars
     const chars = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
+    let randomSuffix = '';
+    for (let i = 0; i < 6; i++) randomSuffix += chars.charAt(Math.floor(Math.random() * chars.length));
+    const newTagId = `RQT-${randomSuffix}`;
+
     let newShortCode = 'RQ';
     for (let i = 0; i < 4; i++) newShortCode += chars.charAt(Math.floor(Math.random() * chars.length));
 
     const newProfile: UserProfile = {
-      id: `usr_${Date.now()}`,
+      id: `usr_${Date.now()}_${randomSuffix.toLowerCase()}`,
       tagId: newTagId,
       shortCode: newShortCode,
       phone: data.phone || '+91 98765 00000',
       fullName: data.fullName || 'New Registered User',
-      photoUrl: data.photoUrl || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&auto=format&fit=crop&q=80',
+      photoUrl: data.photoUrl || '',
       age: data.age || 25,
       bloodGroup: data.bloodGroup || 'O+',
       address: data.address || '',
       vehicleNumber: (data.vehicleNumber || 'KA-01-XX-0000').toUpperCase(),
-      allergies: data.allergies || 'None reported',
-      medicalInfo: data.medicalInfo || 'No major medical conditions',
+      allergies: '',
+      medicalInfo: '',
       emergencyContacts: data.emergencyContacts || [],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
 
+    // Save to persistent cloud database
+    await saveProfileToCloud(newProfile);
+
+    // Save local session
     const token = `tok_${Date.now()}`;
     localStorage.setItem(LOCAL_STORAGE_KEY_TOKEN, token);
     localStorage.setItem(LOCAL_STORAGE_KEY_PROFILE, JSON.stringify(newProfile));
+
     return { success: true, token, profile: newProfile };
   },
 
   // 5. Get Owner Profile
-  async getProfile(token: string): Promise<UserProfile | null> {
-    try {
-      const res = await fetch(`${API_BASE}/profiles/me`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (res.ok) {
-        const data = await res.json();
-        if (data.profile) {
-          localStorage.setItem(LOCAL_STORAGE_KEY_PROFILE, JSON.stringify(data.profile));
-          return data.profile;
-        }
-      }
-    } catch (e) {
-      console.warn('Backend unavailable, reading local profile', e);
-    }
+  async getProfile(_token: string): Promise<UserProfile | null> {
     const stored = localStorage.getItem(LOCAL_STORAGE_KEY_PROFILE);
     return stored ? JSON.parse(stored) : INITIAL_DEMO_DATA;
   },
 
   // 6. Update Owner Profile (QR Code / Short Code remain invariant!)
-  async updateProfile(token: string, updates: Partial<UserProfile>): Promise<{ success: boolean; profile: UserProfile; error?: string }> {
-    try {
-      const res = await fetch(`${API_BASE}/profiles/me`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(updates),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        localStorage.setItem(LOCAL_STORAGE_KEY_PROFILE, JSON.stringify(data.profile));
-        return data;
-      }
-      return { success: false, profile: null as any, error: data.error || 'Failed to update profile' };
-    } catch (e) {
-      console.warn('Backend unavailable, updating local profile', e);
-    }
-
+  async updateProfile(_token: string, updates: Partial<UserProfile>): Promise<{ success: boolean; profile: UserProfile; error?: string }> {
     const stored = localStorage.getItem(LOCAL_STORAGE_KEY_PROFILE);
     const existing: UserProfile = stored ? JSON.parse(stored) : INITIAL_DEMO_DATA;
     const updated: UserProfile = {
@@ -235,56 +348,90 @@ export const api = {
       shortCode: existing.shortCode,
       updatedAt: new Date().toISOString(),
     };
+
+    // Save update to cloud database
+    await saveProfileToCloud(updated);
     localStorage.setItem(LOCAL_STORAGE_KEY_PROFILE, JSON.stringify(updated));
+
     return { success: true, profile: updated };
   },
 
-  // 7. Public Responder Lookup by Tag ID or Short Code (Zero Auth!)
+  // 7. Public Responder Lookup by Tag ID or Short Code (Cross-Device & Cloud Persistent)
   async getPublicTag(identifier: string): Promise<{ success: boolean; profile?: PublicEmergencyProfile; error?: string }> {
     const cleanId = identifier.trim().toUpperCase();
-    try {
-      const res = await fetch(`${API_BASE}/public/tag/${encodeURIComponent(cleanId)}`);
-      const data = await res.json();
-      if (res.ok) {
-        return data;
+
+    // 1. Check if URL contains compact encoded emergency payload ?d=...
+    if (typeof window !== 'undefined') {
+      const fullUrl = window.location.href;
+      const dMatch = fullUrl.match(/[?&]d=([^&#]+)/);
+      if (dMatch && dMatch[1]) {
+        const decoded = decodeEmergencyProfile(dMatch[1]);
+        if (decoded && (decoded.tagId.toUpperCase() === cleanId || decoded.shortCode.toUpperCase() === cleanId || cleanId.includes(decoded.shortCode.toUpperCase()))) {
+          return { success: true, profile: decoded };
+        }
       }
-      return { success: false, error: data.error || data.message || 'ResQTag not found' };
-    } catch (e) {
-      console.warn('Backend unavailable, checking local store for public tag', e);
     }
 
-    const stored = localStorage.getItem(LOCAL_STORAGE_KEY_PROFILE);
-    const localProfile: UserProfile = stored ? JSON.parse(stored) : INITIAL_DEMO_DATA;
+    // 2. Fetch from persistent cloud database
+    const cloudProfile = await fetchProfileFromCloud(cleanId);
+    if (cloudProfile) {
+      return { success: true, profile: cloudProfile };
+    }
 
-    if (
-      localProfile.tagId.toUpperCase() === cleanId ||
-      localProfile.shortCode.toUpperCase() === cleanId ||
-      cleanId === 'RQ7K29' ||
-      cleanId === 'RQT-8829A4' ||
-      cleanId.includes('RQ')
-    ) {
+    // 3. Check local storage
+    const stored = localStorage.getItem(LOCAL_STORAGE_KEY_PROFILE);
+    if (stored) {
+      try {
+        const localProfile: UserProfile = JSON.parse(stored);
+        if (
+          localProfile.tagId.toUpperCase() === cleanId ||
+          localProfile.shortCode.toUpperCase() === cleanId
+        ) {
+          return {
+            success: true,
+            profile: {
+              tagId: localProfile.tagId,
+              shortCode: localProfile.shortCode,
+              fullName: localProfile.fullName,
+              photoUrl: localProfile.photoUrl,
+              age: localProfile.age,
+              bloodGroup: localProfile.bloodGroup,
+              address: localProfile.address,
+              vehicleNumber: localProfile.vehicleNumber,
+              allergies: localProfile.allergies || '',
+              medicalInfo: localProfile.medicalInfo || '',
+              emergencyContacts: localProfile.emergencyContacts || [],
+              updatedAt: localProfile.updatedAt,
+            },
+          };
+        }
+      } catch {}
+    }
+
+    // 4. Default mock profile fallback if cleanId matches initial demo
+    if (cleanId === 'RQ7K29' || cleanId === 'RQT-8829A4') {
       return {
         success: true,
         profile: {
-          tagId: localProfile.tagId,
-          shortCode: localProfile.shortCode,
-          fullName: localProfile.fullName,
-          photoUrl: localProfile.photoUrl,
-          age: localProfile.age,
-          bloodGroup: localProfile.bloodGroup,
-          address: localProfile.address,
-          vehicleNumber: localProfile.vehicleNumber,
-          allergies: localProfile.allergies,
-          medicalInfo: localProfile.medicalInfo,
-          emergencyContacts: localProfile.emergencyContacts,
-          updatedAt: localProfile.updatedAt,
+          tagId: INITIAL_DEMO_DATA.tagId,
+          shortCode: INITIAL_DEMO_DATA.shortCode,
+          fullName: INITIAL_DEMO_DATA.fullName,
+          photoUrl: INITIAL_DEMO_DATA.photoUrl,
+          age: INITIAL_DEMO_DATA.age,
+          bloodGroup: INITIAL_DEMO_DATA.bloodGroup,
+          address: INITIAL_DEMO_DATA.address,
+          vehicleNumber: INITIAL_DEMO_DATA.vehicleNumber,
+          allergies: '',
+          medicalInfo: '',
+          emergencyContacts: INITIAL_DEMO_DATA.emergencyContacts,
+          updatedAt: INITIAL_DEMO_DATA.updatedAt,
         },
       };
     }
 
     return {
       success: false,
-      error: `No active emergency profile found for code: "${cleanId}". Please verify the short code or scan the QR code.`,
+      error: `No active emergency profile found for code: "${cleanId}". Please verify the code or scan the QR code.`,
     };
   },
 

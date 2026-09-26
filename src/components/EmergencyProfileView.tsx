@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  AlertTriangle, 
   Heart, 
   MapPin, 
   Car, 
-  FileText, 
   ShieldCheck, 
   ShieldAlert, 
   Ambulance, 
@@ -168,10 +166,10 @@ export const EmergencyProfileView: React.FC<EmergencyProfileViewProps> = ({ iden
             Scan Another Tag
           </button>
           <button
-            onClick={() => onNavigate('emergency-profile', 'RQ7K29')}
+            onClick={() => onNavigate('home')}
             className="px-5 py-2.5 rounded-xl btn-rose-outline text-[#2B2020] font-bold text-xs"
           >
-            Open Demo Tag (RQ7K29)
+            Return to Home
           </button>
         </div>
       </div>
@@ -343,31 +341,6 @@ export const EmergencyProfileView: React.FC<EmergencyProfileViewProps> = ({ iden
             <span className="text-3xl sm:text-4xl font-black font-mono">
               {profile.bloodGroup}
             </span>
-          </div>
-        </div>
-
-        {/* Allergies & Medical Info */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {/* Allergies Box */}
-          <div className="p-4 rounded-2xl bg-rose-50/80 border border-red-200 space-y-1.5">
-            <div className="flex items-center gap-1.5 text-[#C62828] text-xs font-bold uppercase tracking-wider">
-              <AlertTriangle className="w-4 h-4 text-[#E53935]" />
-              <span>Severe Allergies</span>
-            </div>
-            <p className="text-sm font-bold text-[#2B2020] leading-relaxed">
-              {profile.allergies || 'None reported'}
-            </p>
-          </div>
-
-          {/* Medical Notes Box */}
-          <div className="p-4 rounded-2xl bg-white/80 border border-red-100 space-y-1.5">
-            <div className="flex items-center gap-1.5 text-[#2B2020] text-xs font-bold uppercase tracking-wider">
-              <FileText className="w-4 h-4 text-[#E53935]" />
-              <span>Medical Conditions & Notes</span>
-            </div>
-            <p className="text-xs font-medium text-[#2B2020] leading-relaxed">
-              {profile.medicalInfo || 'No conditions reported'}
-            </p>
           </div>
         </div>
 
