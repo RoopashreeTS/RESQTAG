@@ -81,7 +81,7 @@ const AppContent: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-navy-950 text-slate-100 flex flex-col font-sans">
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans">
       {/* 1. Top Hackathon Quick Banner */}
       <DemoControlBanner
         onNavigate={handleNavigate}
@@ -140,15 +140,15 @@ const AppContent: React.FC = () => {
       </main>
 
       {/* 4. Footer */}
-      <footer className="border-t border-navy-800 bg-navy-900 py-8 px-4 text-center text-xs text-slate-400 space-y-2 no-print">
-        <div className="flex items-center justify-center gap-2 font-mono font-bold text-slate-200">
+      <footer className="border-t border-slate-200 bg-white py-8 px-4 text-center text-xs text-slate-500 space-y-2 no-print">
+        <div className="flex flex-wrap items-center justify-center gap-2 font-mono font-bold text-slate-700">
           <span>RESQTAG</span>
           <span>•</span>
-          <span className="text-emergency-500">EMERGENCY QR</span>
+          <span className="text-emergency-600">EMERGENCY QR</span>
           <span>+</span>
-          <span className="text-emerald-400">SAFEJOURNEY PROACTIVE MONITORING</span>
+          <span className="text-safe-600">SAFEJOURNEY PROACTIVE MONITORING</span>
         </div>
-        <p className="text-[11px] text-slate-500">
+        <p className="text-[11px] text-slate-400">
           “When the victim cannot speak, ResQTag speaks for them.” • Built for Hackathon Demo
         </p>
       </footer>

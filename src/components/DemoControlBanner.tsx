@@ -11,19 +11,19 @@ export const DemoControlBanner: React.FC<DemoControlBannerProps> = ({ onNavigate
   const { quickDemoLogin, resetDemo, profile, activeJourney, setCheckinPromptOpen } = useAuth();
 
   return (
-    <aside aria-label="Hackathon quick demo controls" className="bg-gradient-to-r from-navy-900 via-navy-850 to-navy-900 border-b border-navy-750/80 px-3 py-2">
-      <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2 text-xs">
+    <aside aria-label="Hackathon quick demo controls" className="bg-slate-900 border-b border-slate-800 text-slate-200 px-3 py-1.5 text-xs no-print">
+      <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <span className="flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30">
-            <Sparkles className="w-3.5 h-3.5" />
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-amber-400/10 text-amber-300 font-bold border border-amber-400/20 text-[11px]">
+            <Sparkles className="w-3 h-3" />
             HACKATHON DEMO
           </span>
-          <span className="text-slate-300 hidden md:inline">
+          <span className="text-slate-400 hidden md:inline text-[11px]">
             Fast-track evaluator controls:
           </span>
           {profile && (
-            <span className="hidden sm:inline-block px-2 py-0.5 rounded bg-navy-800 text-slate-300 border border-navy-700">
-              Active Tag: <strong className="text-white font-mono">{profile.shortCode}</strong> ({profile.fullName})
+            <span className="hidden sm:inline-block px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 font-mono text-[11px]">
+              Active Tag: <strong className="text-white">{profile.shortCode}</strong> ({profile.fullName})
             </span>
           )}
         </div>
@@ -38,11 +38,11 @@ export const DemoControlBanner: React.FC<DemoControlBannerProps> = ({ onNavigate
                 onNavigate('safejourney');
               }
             }}
-            className="flex items-center gap-1 px-2.5 py-1 rounded bg-emerald-950/60 hover:bg-emerald-900 text-emerald-300 border border-emerald-500/40 hover:border-emerald-400 transition-all font-semibold"
+            className="flex items-center gap-1 px-2 py-0.5 rounded bg-safe-900/50 hover:bg-safe-900 text-safe-300 border border-safe-700/50 hover:border-safe-500 transition-colors text-[11px] font-medium"
             title="Open or test SafeJourney proactive monitoring"
           >
-            <Trees className="w-3 h-3 text-emerald-400" />
-            <span>{activeJourney ? 'Trigger Check-in (SafeJourney)' : 'SafeJourney Demo'}</span>
+            <Trees className="w-3 h-3 text-safe-400" />
+            <span>{activeJourney ? 'Trigger Safe Check' : 'SafeJourney Demo'}</span>
           </button>
 
           <button
@@ -50,29 +50,29 @@ export const DemoControlBanner: React.FC<DemoControlBannerProps> = ({ onNavigate
               await quickDemoLogin();
               onNavigate('dashboard');
             }}
-            className="flex items-center gap-1 px-2.5 py-1 rounded bg-navy-800 hover:bg-navy-750 text-brand-cyan border border-brand-cyan/30 hover:border-brand-cyan transition-all"
+            className="flex items-center gap-1 px-2 py-0.5 rounded bg-brand-950 hover:bg-brand-900 text-brand-300 border border-brand-800 hover:border-brand-600 transition-colors text-[11px] font-medium"
             title="Load fictional Rahul Kumar profile"
           >
-            <Activity className="w-3 h-3" />
-            <span>Load Profile (Rahul)</span>
+            <Activity className="w-3 h-3 text-brand-400" />
+            <span>Load Profile</span>
           </button>
 
           <button
             onClick={onOpenSimulator}
-            className="flex items-center gap-1 px-2.5 py-1 rounded bg-emergency-600/20 hover:bg-emergency-600/30 text-emergency-500 border border-emergency-500/40 hover:border-emergency-500 transition-all font-semibold"
+            className="flex items-center gap-1 px-2 py-0.5 rounded bg-emergency-950 hover:bg-emergency-900 text-emergency-300 border border-emergency-800 hover:border-emergency-600 transition-colors text-[11px] font-medium"
             title="Simulate complete accident rescue scenario"
           >
-            <AlertTriangle className="w-3 h-3 text-emergency-500" />
+            <AlertTriangle className="w-3 h-3 text-emergency-400" />
             <span>Simulate Accident</span>
           </button>
 
           <button
             onClick={() => onNavigate('scan')}
-            className="flex items-center gap-1 px-2.5 py-1 rounded bg-navy-800 hover:bg-navy-750 text-slate-200 border border-navy-700 hover:border-slate-500 transition-all"
+            className="flex items-center gap-1 px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-750 text-slate-300 border border-slate-700 hover:border-slate-600 transition-colors text-[11px]"
             title="Open camera or enter backup code"
           >
-            <QrCode className="w-3 h-3 text-slate-300" />
-            <span>Scan Tag (RQ7K29)</span>
+            <QrCode className="w-3 h-3 text-slate-400" />
+            <span>Scan (RQ7K29)</span>
           </button>
 
           <button
@@ -82,7 +82,7 @@ export const DemoControlBanner: React.FC<DemoControlBannerProps> = ({ onNavigate
                 onNavigate('landing');
               }
             }}
-            className="p-1 text-slate-400 hover:text-slate-200 hover:bg-navy-800 rounded transition-colors"
+            className="p-1 text-slate-400 hover:text-slate-200 hover:bg-slate-800 rounded transition-colors"
             title="Reset demo data"
           >
             <RefreshCw className="w-3 h-3" />

@@ -26,12 +26,12 @@ interface SafeJourneySetupWizardProps {
 }
 
 const DESTINATION_OPTIONS: { type: JourneyDestinationType; label: string; icon: React.ReactNode; desc: string }[] = [
-  { type: 'Forest / Trekking Area', label: 'Forest / Trekking Area', icon: <Trees className="w-5 h-5 text-emerald-400" />, desc: 'Trails, woods, national parks & hiking' },
-  { type: 'Hill / Mountain Area', label: 'Hill / Mountain Area', icon: <Mountain className="w-5 h-5 text-brand-cyan" />, desc: 'High altitude peaks, valleys & climbing' },
-  { type: 'Camping Area', label: 'Camping Area', icon: <Tent className="w-5 h-5 text-amber-400" />, desc: 'Overnight wilderness camps & riverside' },
-  { type: 'Remote / Isolated Area', label: 'Remote / Isolated Area', icon: <Compass className="w-5 h-5 text-emergency-500" />, desc: 'Low signal regions & off-grid zones' },
-  { type: 'Long-Distance Travel', label: 'Long-Distance Travel', icon: <Car className="w-5 h-5 text-blue-400" />, desc: 'Solo highway road trips & intercity transit' },
-  { type: 'Other', label: 'Other Location', icon: <MapPin className="w-5 h-5 text-purple-400" />, desc: 'Custom destination or daily solo transit' },
+  { type: 'Forest / Trekking Area', label: 'Forest / Trekking Area', icon: <Trees className="w-5 h-5 text-safe-700" />, desc: 'Trails, woods, national parks & hiking' },
+  { type: 'Hill / Mountain Area', label: 'Hill / Mountain Area', icon: <Mountain className="w-5 h-5 text-brand-600" />, desc: 'High altitude peaks, valleys & climbing' },
+  { type: 'Camping Area', label: 'Camping Area', icon: <Tent className="w-5 h-5 text-amber-600" />, desc: 'Overnight wilderness camps & riverside' },
+  { type: 'Remote / Isolated Area', label: 'Remote / Isolated Area', icon: <Compass className="w-5 h-5 text-emergency-600" />, desc: 'Low signal regions & off-grid zones' },
+  { type: 'Long-Distance Travel', label: 'Long-Distance Travel', icon: <Car className="w-5 h-5 text-blue-600" />, desc: 'Solo highway road trips & transit' },
+  { type: 'Other', label: 'Other Location', icon: <MapPin className="w-5 h-5 text-purple-600" />, desc: 'Custom destination or daily solo transit' },
 ];
 
 export const SafeJourneySetupWizard: React.FC<SafeJourneySetupWizardProps> = ({ onJourneyStarted, onCancel }) => {
@@ -140,28 +140,28 @@ export const SafeJourneySetupWizard: React.FC<SafeJourneySetupWizardProps> = ({ 
   };
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8 space-y-6">
+    <div className="max-w-2xl mx-auto px-4 py-8 space-y-6 text-slate-900">
       {/* Step Header */}
       <div className="space-y-2">
-        <div className="flex items-center justify-between text-xs font-semibold text-slate-400">
-          <span className={step >= 1 ? 'text-emerald-400 font-bold' : ''}>1. Destination</span>
-          <span className={step >= 2 ? 'text-emerald-400 font-bold' : ''}>2. Solo Status</span>
-          <span className={step >= 3 ? 'text-emerald-400 font-bold' : ''}>3. Schedule</span>
-          <span className={step >= 4 ? 'text-emerald-400 font-bold' : ''}>4. Start</span>
+        <div className="flex items-center justify-between text-xs font-semibold text-slate-500">
+          <span className={step >= 1 ? 'text-safe-700 font-bold' : ''}>1. Destination</span>
+          <span className={step >= 2 ? 'text-safe-700 font-bold' : ''}>2. Solo Status</span>
+          <span className={step >= 3 ? 'text-safe-700 font-bold' : ''}>3. Schedule</span>
+          <span className={step >= 4 ? 'text-safe-700 font-bold' : ''}>4. Start</span>
         </div>
-        <div className="w-full bg-navy-800 h-2 rounded-full overflow-hidden">
+        <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
           <div
-            className="bg-gradient-to-r from-emerald-500 to-brand-cyan h-full transition-all duration-300"
+            className="bg-safe-600 h-full transition-all duration-300"
             style={{ width: `${(step / 4) * 100}%` }}
           />
         </div>
       </div>
 
       {/* Main Form Card */}
-      <div className="bg-navy-900 border border-navy-750 rounded-2xl p-6 sm:p-8 shadow-card space-y-6">
+      <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-card space-y-6">
         {errorMessage && (
-          <div className="p-3.5 rounded-xl bg-emergency-600/20 border border-emergency-500/50 text-emergency-200 text-xs flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4 text-emergency-500 shrink-0" />
+          <div className="p-3.5 rounded-xl bg-emergency-50 border border-emergency-200 text-emergency-800 text-xs flex items-center gap-2">
+            <AlertTriangle className="w-4 h-4 text-emergency-600 shrink-0" />
             <span>{errorMessage}</span>
           </div>
         )}
@@ -170,13 +170,13 @@ export const SafeJourneySetupWizard: React.FC<SafeJourneySetupWizardProps> = ({ 
         {step === 1 && (
           <div className="space-y-6">
             <div>
-              <span className="text-[11px] font-bold text-emerald-400 uppercase tracking-wider block">
-                Question 1 of 2
+              <span className="text-[11px] font-bold text-safe-700 uppercase tracking-wider block">
+                Step 1 of 4
               </span>
-              <h2 className="text-xl font-bold text-white mt-1">
-                Where are you going?
+              <h2 className="text-xl font-bold text-slate-900 mt-1">
+                Where are you travelling?
               </h2>
-              <p className="text-xs text-slate-300">
+              <p className="text-xs text-slate-500">
                 Select your journey terrain to configure appropriate safety parameters.
               </p>
             </div>
@@ -186,18 +186,18 @@ export const SafeJourneySetupWizard: React.FC<SafeJourneySetupWizardProps> = ({ 
                 <div
                   key={opt.type}
                   onClick={() => setDestinationType(opt.type)}
-                  className={`p-4 rounded-xl border cursor-pointer transition-all flex items-start gap-3 ${
+                  className={`p-4 rounded-2xl border cursor-pointer transition-all flex items-start gap-3 ${
                     destinationType === opt.type
-                      ? 'bg-emerald-950/40 border-emerald-500 shadow-glow-blue'
-                      : 'bg-navy-850 border-navy-750 hover:border-slate-500'
+                      ? 'bg-safe-50 border-safe-500 shadow-sm'
+                      : 'bg-white border-slate-200 hover:border-slate-300'
                   }`}
                 >
-                  <div className="p-2 rounded-lg bg-navy-800 border border-navy-700 shrink-0">
+                  <div className="p-2 rounded-xl bg-slate-50 border border-slate-200 shrink-0">
                     {opt.icon}
                   </div>
                   <div className="space-y-0.5">
-                    <div className="text-xs font-bold text-white">{opt.label}</div>
-                    <div className="text-[11px] text-slate-400 leading-tight">{opt.desc}</div>
+                    <div className="text-xs font-bold text-slate-900">{opt.label}</div>
+                    <div className="text-[11px] text-slate-500 leading-tight">{opt.desc}</div>
                   </div>
                 </div>
               ))}
@@ -205,7 +205,7 @@ export const SafeJourneySetupWizard: React.FC<SafeJourneySetupWizardProps> = ({ 
 
             {/* Custom destination details */}
             <div className="space-y-1.5 pt-2">
-              <label className="text-xs font-semibold text-slate-300">
+              <label className="text-xs font-semibold text-slate-700">
                 Specific Location / Trail Name (Optional)
               </label>
               <input
@@ -213,22 +213,22 @@ export const SafeJourneySetupWizard: React.FC<SafeJourneySetupWizardProps> = ({ 
                 placeholder="e.g. Savandurga Trek Trail #2, Bandipur Forest Border"
                 value={customDestination}
                 onChange={(e) => setCustomDestination(e.target.value)}
-                className="w-full text-xs px-3.5 py-2.5 bg-navy-800 border border-navy-700 rounded-xl text-white focus:outline-none focus:border-emerald-500"
+                className="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-safe-600 focus:bg-white transition-colors"
               />
             </div>
 
-            <div className="flex justify-between items-center pt-4 border-t border-navy-800">
+            <div className="flex justify-between items-center pt-4 border-t border-slate-100">
               <button
                 type="button"
                 onClick={onCancel}
-                className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white"
+                className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-500 hover:text-slate-800"
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={() => setStep(2)}
-                className="px-6 py-2.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow-sm flex items-center gap-1.5 transition-all"
+                className="px-6 py-2.5 rounded-xl text-xs font-bold bg-brand-600 hover:bg-brand-700 text-white shadow-sm flex items-center gap-1.5 transition-all"
               >
                 <span>Continue</span>
                 <ArrowRight className="w-4 h-4" />
@@ -241,14 +241,14 @@ export const SafeJourneySetupWizard: React.FC<SafeJourneySetupWizardProps> = ({ 
         {step === 2 && (
           <div className="space-y-6">
             <div>
-              <span className="text-[11px] font-bold text-emerald-400 uppercase tracking-wider block">
-                Question 2 of 2
+              <span className="text-[11px] font-bold text-safe-700 uppercase tracking-wider block">
+                Step 2 of 4
               </span>
-              <h2 className="text-xl font-bold text-white mt-1">
+              <h2 className="text-xl font-bold text-slate-900 mt-1">
                 Are you travelling alone?
               </h2>
-              <p className="text-xs text-slate-300">
-                SafeJourney is specifically designed to provide proactive safety coverage for solo adventurers.
+              <p className="text-xs text-slate-500">
+                SafeJourney is designed to provide proactive safety coverage for solo travelers.
               </p>
             </div>
 
@@ -258,15 +258,15 @@ export const SafeJourneySetupWizard: React.FC<SafeJourneySetupWizardProps> = ({ 
                 onClick={() => setIsSolo(true)}
                 className={`p-5 rounded-2xl border cursor-pointer transition-all space-y-2 ${
                   isSolo === true
-                    ? 'bg-emerald-950/50 border-emerald-500 shadow-glow-blue'
-                    : 'bg-navy-850 border-navy-750 hover:border-slate-500'
+                    ? 'bg-safe-50 border-safe-500 shadow-sm'
+                    : 'bg-white border-slate-200 hover:border-slate-300'
                 }`}
               >
-                <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-xl bg-safe-100 text-safe-700 flex items-center justify-center">
                   <User className="w-5 h-5" />
                 </div>
-                <div className="text-sm font-bold text-white">Yes, I&apos;m travelling alone</div>
-                <div className="text-xs text-slate-400 leading-relaxed">
+                <div className="text-sm font-bold text-slate-900">Yes, I&apos;m travelling alone</div>
+                <div className="text-xs text-slate-500 leading-relaxed">
                   Full proactive solo monitoring enabled. Scheduled safety check-ins and emergency contact alerts.
                 </div>
               </div>
@@ -276,35 +276,35 @@ export const SafeJourneySetupWizard: React.FC<SafeJourneySetupWizardProps> = ({ 
                 onClick={() => setIsSolo(false)}
                 className={`p-5 rounded-2xl border cursor-pointer transition-all space-y-2 ${
                   isSolo === false
-                    ? 'bg-navy-800 border-amber-500 shadow-sm'
-                    : 'bg-navy-850 border-navy-750 hover:border-slate-500'
+                    ? 'bg-slate-100 border-slate-400 shadow-sm'
+                    : 'bg-white border-slate-200 hover:border-slate-300'
                 }`}
               >
-                <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center">
                   <Users className="w-5 h-5" />
                 </div>
-                <div className="text-sm font-bold text-white">No, I&apos;m travelling with others</div>
-                <div className="text-xs text-slate-400 leading-relaxed">
-                  Group travel mode. Proactive monitoring will still keep your external emergency contacts notified.
+                <div className="text-sm font-bold text-slate-900">No, I&apos;m travelling with others</div>
+                <div className="text-xs text-slate-500 leading-relaxed">
+                  Group travel mode. Proactive monitoring will keep your external emergency contacts updated.
                 </div>
               </div>
             </div>
 
             {/* Advisory note if group selected */}
             {!isSolo && (
-              <div className="p-4 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-200 text-xs flex items-start gap-2.5">
-                <Info className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+              <div className="p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs flex items-start gap-2.5">
+                <Info className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
                 <p>
                   Proactive solo monitoring is mainly intended for people travelling alone, but you may still proceed to keep your family and trusted contacts updated.
                 </p>
               </div>
             )}
 
-            <div className="flex justify-between items-center pt-4 border-t border-navy-800">
+            <div className="flex justify-between items-center pt-4 border-t border-slate-100">
               <button
                 type="button"
                 onClick={() => setStep(1)}
-                className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white flex items-center gap-1"
+                className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-500 hover:text-slate-800 flex items-center gap-1"
               >
                 <ArrowLeft className="w-4 h-4" />
                 <span>Back</span>
@@ -312,7 +312,7 @@ export const SafeJourneySetupWizard: React.FC<SafeJourneySetupWizardProps> = ({ 
               <button
                 type="button"
                 onClick={() => setStep(3)}
-                className="px-6 py-2.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow-sm flex items-center gap-1.5 transition-all"
+                className="px-6 py-2.5 rounded-xl text-xs font-bold bg-brand-600 hover:bg-brand-700 text-white shadow-sm flex items-center gap-1.5 transition-all"
               >
                 <span>Continue to Schedule</span>
                 <ArrowRight className="w-4 h-4" />
@@ -325,13 +325,13 @@ export const SafeJourneySetupWizard: React.FC<SafeJourneySetupWizardProps> = ({ 
         {step === 3 && (
           <div className="space-y-6">
             <div>
-              <span className="text-[11px] font-bold text-emerald-400 uppercase tracking-wider block">
-                Schedule & Settings
+              <span className="text-[11px] font-bold text-safe-700 uppercase tracking-wider block">
+                Step 3 of 4
               </span>
-              <h2 className="text-xl font-bold text-white mt-1">
-                Journey Schedule & Check-in Timing
+              <h2 className="text-xl font-bold text-slate-900 mt-1">
+                Schedule & Check-in Timing
               </h2>
-              <p className="text-xs text-slate-300">
+              <p className="text-xs text-slate-500">
                 Set your expected duration and the frequency of automated safety check-ins.
               </p>
             </div>
@@ -339,7 +339,7 @@ export const SafeJourneySetupWizard: React.FC<SafeJourneySetupWizardProps> = ({ 
             {/* Timings */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-slate-300 flex items-center gap-1">
+                <label className="text-xs font-semibold text-slate-700 flex items-center gap-1">
                   <Clock className="w-3.5 h-3.5 text-slate-400" />
                   Journey Start Time
                 </label>
@@ -347,12 +347,12 @@ export const SafeJourneySetupWizard: React.FC<SafeJourneySetupWizardProps> = ({ 
                   type="time"
                   value={startTime}
                   onChange={(e) => setStartTime(e.target.value)}
-                  className="w-full text-xs px-3 py-2.5 bg-navy-800 border border-navy-700 rounded-xl text-white font-mono"
+                  className="w-full text-xs px-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 font-mono"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-slate-300 flex items-center gap-1">
+                <label className="text-xs font-semibold text-slate-700 flex items-center gap-1">
                   <Clock className="w-3.5 h-3.5 text-slate-400" />
                   Expected Return / End Time
                 </label>
@@ -360,15 +360,15 @@ export const SafeJourneySetupWizard: React.FC<SafeJourneySetupWizardProps> = ({ 
                   type="time"
                   value={expectedEndTime}
                   onChange={(e) => setExpectedEndTime(e.target.value)}
-                  className="w-full text-xs px-3 py-2.5 bg-navy-800 border border-navy-700 rounded-xl text-white font-mono"
+                  className="w-full text-xs px-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 font-mono"
                 />
               </div>
             </div>
 
             {/* Check-in Interval */}
             <div className="space-y-2">
-              <label className="text-xs font-semibold text-slate-300">
-                Safety Check-in Interval (Production setting)
+              <label className="text-xs font-semibold text-slate-700">
+                Safety Check-in Interval
               </label>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 {[30, 60, 120, 240].map((mins) => (
@@ -378,22 +378,22 @@ export const SafeJourneySetupWizard: React.FC<SafeJourneySetupWizardProps> = ({ 
                     onClick={() => setIntervalMinutes(mins)}
                     className={`py-2 px-3 rounded-xl text-xs font-bold border transition-all ${
                       intervalMinutes === mins
-                        ? 'bg-emerald-600 text-white border-emerald-500 shadow-sm'
-                        : 'bg-navy-800 text-slate-300 border-navy-700 hover:border-slate-500'
+                        ? 'bg-safe-600 text-white border-safe-600 shadow-sm'
+                        : 'bg-white text-slate-700 border-slate-300 hover:border-slate-400'
                     }`}
                   >
-                    {mins === 60 ? 'Every 1 Hour (Default)' : mins >= 60 ? `Every ${mins / 60} Hours` : `Every ${mins} Mins`}
+                    {mins === 60 ? 'Every 1 Hour' : mins >= 60 ? `Every ${mins / 60} Hours` : `Every ${mins} Mins`}
                   </button>
                 ))}
               </div>
             </div>
 
             {/* HACKATHON DEMO MODE HELPER */}
-            <div className="p-4 rounded-2xl bg-amber-500/10 border-2 border-amber-500/40 space-y-3">
+            <div className="p-4 rounded-2xl bg-amber-50/70 border border-amber-200 space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-amber-300 flex items-center gap-1.5">
-                  <Sparkles className="w-4 h-4 text-amber-400" />
-                  HACKATHON DEMO MODE (Accelerated Check-in)
+                <span className="text-xs font-bold text-amber-900 flex items-center gap-1.5">
+                  <Sparkles className="w-4 h-4 text-amber-600" />
+                  HACKATHON DEMO MODE (Fast Interval)
                 </span>
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input
@@ -402,18 +402,18 @@ export const SafeJourneySetupWizard: React.FC<SafeJourneySetupWizardProps> = ({ 
                     onChange={(e) => setIsDemoMode(e.target.checked)}
                     className="sr-only peer"
                   />
-                  <div className="w-9 h-5 bg-navy-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-500"></div>
+                  <div className="w-9 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-600"></div>
                 </label>
               </div>
 
               {isDemoMode && (
                 <div className="space-y-2 pt-1">
-                  <div className="flex items-center gap-2 text-xs text-slate-200">
+                  <div className="flex items-center gap-2 text-xs text-slate-700">
                     <span>Demo Interval:</span>
                     <select
                       value={demoIntervalSeconds}
                       onChange={(e) => setDemoIntervalSeconds(Number(e.target.value))}
-                      className="bg-navy-850 text-amber-300 font-mono font-bold text-xs px-2.5 py-1 rounded-lg border border-navy-700"
+                      className="bg-white text-amber-800 font-mono font-bold text-xs px-2.5 py-1 rounded-lg border border-amber-300"
                     >
                       <option value={15}>15 Seconds (Rapid Demo)</option>
                       <option value={20}>20 Seconds (Recommended)</option>
@@ -421,27 +421,27 @@ export const SafeJourneySetupWizard: React.FC<SafeJourneySetupWizardProps> = ({ 
                       <option value={60}>1 Minute</option>
                     </select>
                   </div>
-                  <p className="text-[11px] text-amber-200/80 leading-tight">
-                    * Demo interval is for demonstration only so judges do not have to wait one hour. Real SafeJourney uses the configured safety interval.
+                  <p className="text-[11px] text-amber-800/80 leading-tight">
+                    * Accelerated interval for judge evaluation so you do not need to wait an entire hour.
                   </p>
                 </div>
               )}
             </div>
 
             {/* CONSENT-BASED LOCATION PROMPT */}
-            <div className="p-4 rounded-xl bg-navy-850 border border-navy-750 space-y-3">
+            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-white flex items-center gap-1.5">
-                  <Navigation className="w-4 h-4 text-brand-cyan" />
-                  Consent-Based Location Inclusion
+                <span className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+                  <Navigation className="w-4 h-4 text-brand-600" />
+                  Consent-Based Location
                 </span>
                 <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${
-                  locationConsent ? 'bg-emerald-500/20 text-emerald-400' : 'bg-slate-800 text-slate-400'
+                  locationConsent ? 'bg-safe-100 text-safe-800' : 'bg-slate-200 text-slate-600'
                 }`}>
-                  {locationConsent ? 'Location Enabled' : 'Location Private'}
+                  {locationConsent ? 'Location Allowed' : 'Location Private'}
                 </span>
               </div>
-              <p className="text-[11px] text-slate-300 leading-relaxed">
+              <p className="text-[11px] text-slate-600 leading-relaxed">
                 If enabled, your approximate GPS coordinates are saved with your check-ins and only shared with emergency contacts if an alert is triggered.
               </p>
               <div className="flex gap-2">
@@ -449,7 +449,7 @@ export const SafeJourneySetupWizard: React.FC<SafeJourneySetupWizardProps> = ({ 
                   type="button"
                   onClick={handleRequestLocation}
                   disabled={isRequestingLocation}
-                  className="px-3 py-1.5 rounded-lg bg-navy-800 hover:bg-navy-750 text-brand-cyan border border-brand-cyan/40 text-xs font-semibold flex items-center gap-1.5"
+                  className="px-3 py-1.5 rounded-xl bg-white hover:bg-slate-100 text-brand-700 border border-brand-300 text-xs font-semibold flex items-center gap-1.5 shadow-sm"
                 >
                   <Navigation className="w-3.5 h-3.5" />
                   <span>{isRequestingLocation ? 'Obtaining GPS...' : currentLocation?.status === 'Location shared' ? '✓ Location Granted' : 'Share Location'}</span>
@@ -460,18 +460,18 @@ export const SafeJourneySetupWizard: React.FC<SafeJourneySetupWizardProps> = ({ 
                     setLocationConsent(false);
                     setCurrentLocation(undefined);
                   }}
-                  className="px-3 py-1.5 rounded-lg bg-navy-800 text-slate-400 hover:text-white text-xs"
+                  className="px-3 py-1.5 rounded-xl bg-white text-slate-600 hover:text-slate-900 border border-slate-300 text-xs"
                 >
                   Keep Private
                 </button>
               </div>
             </div>
 
-            <div className="flex justify-between items-center pt-4 border-t border-navy-800">
+            <div className="flex justify-between items-center pt-4 border-t border-slate-100">
               <button
                 type="button"
                 onClick={() => setStep(2)}
-                className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white flex items-center gap-1"
+                className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-500 hover:text-slate-800 flex items-center gap-1"
               >
                 <ArrowLeft className="w-4 h-4" />
                 <span>Back</span>
@@ -479,7 +479,7 @@ export const SafeJourneySetupWizard: React.FC<SafeJourneySetupWizardProps> = ({ 
               <button
                 type="button"
                 onClick={() => setStep(4)}
-                className="px-6 py-2.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow-sm flex items-center gap-1.5 transition-all"
+                className="px-6 py-2.5 rounded-xl text-xs font-bold bg-brand-600 hover:bg-brand-700 text-white shadow-sm flex items-center gap-1.5 transition-all"
               >
                 <span>Review Summary</span>
                 <ArrowRight className="w-4 h-4" />
@@ -492,60 +492,60 @@ export const SafeJourneySetupWizard: React.FC<SafeJourneySetupWizardProps> = ({ 
         {step === 4 && (
           <div className="space-y-6">
             <div>
-              <span className="text-[11px] font-bold text-emerald-400 uppercase tracking-wider block">
-                Final Confirmation
+              <span className="text-[11px] font-bold text-safe-700 uppercase tracking-wider block">
+                Step 4 of 4
               </span>
-              <h2 className="text-xl font-bold text-white mt-1">
+              <h2 className="text-xl font-bold text-slate-900 mt-1">
                 SafeJourney Summary
               </h2>
-              <p className="text-xs text-slate-300">
+              <p className="text-xs text-slate-500">
                 Review your journey parameters before activating proactive monitoring.
               </p>
             </div>
 
             {/* Summary Box */}
-            <div className="p-5 rounded-2xl bg-navy-850 border border-navy-700 space-y-3 text-xs">
-              <div className="flex justify-between items-center border-b border-navy-750 pb-2">
-                <span className="text-slate-400">Journey Type:</span>
-                <strong className="text-white">{destinationType} {customDestination ? `(${customDestination})` : ''}</strong>
+            <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-3 text-xs">
+              <div className="flex justify-between items-center border-b border-slate-200 pb-2">
+                <span className="text-slate-500">Journey Type:</span>
+                <strong className="text-slate-900">{destinationType} {customDestination ? `(${customDestination})` : ''}</strong>
               </div>
 
-              <div className="flex justify-between items-center border-b border-navy-750 pb-2">
-                <span className="text-slate-400">Travelling:</span>
-                <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold">
+              <div className="flex justify-between items-center border-b border-slate-200 pb-2">
+                <span className="text-slate-500">Travelling:</span>
+                <span className="px-2 py-0.5 rounded bg-safe-100 text-safe-800 font-bold">
                   {isSolo ? '👤 Alone' : '👥 With Group'}
                 </span>
               </div>
 
-              <div className="flex justify-between items-center border-b border-navy-750 pb-2">
-                <span className="text-slate-400">Journey Started:</span>
-                <span className="font-mono text-white">Now ({startTime})</span>
+              <div className="flex justify-between items-center border-b border-slate-200 pb-2">
+                <span className="text-slate-500">Journey Started:</span>
+                <span className="font-mono text-slate-900">Now ({startTime})</span>
               </div>
 
-              <div className="flex justify-between items-center border-b border-navy-750 pb-2">
-                <span className="text-slate-400">Expected Return:</span>
-                <span className="font-mono text-white">{expectedEndTime}</span>
+              <div className="flex justify-between items-center border-b border-slate-200 pb-2">
+                <span className="text-slate-500">Expected Return:</span>
+                <span className="font-mono text-slate-900">{expectedEndTime}</span>
               </div>
 
-              <div className="flex justify-between items-center border-b border-navy-750 pb-2">
-                <span className="text-slate-400">Safety Check Interval:</span>
-                <strong className="text-amber-300">
+              <div className="flex justify-between items-center border-b border-slate-200 pb-2">
+                <span className="text-slate-500">Safety Check Interval:</span>
+                <strong className="text-brand-700">
                   {isDemoMode ? `Every ${demoIntervalSeconds}s (Demo Mode)` : `Every ${intervalMinutes} mins`}
                 </strong>
               </div>
 
-              <div className="flex justify-between items-center border-b border-navy-750 pb-2">
-                <span className="text-slate-400">Location Status:</span>
-                <span className="text-slate-300">
+              <div className="flex justify-between items-center border-b border-slate-200 pb-2">
+                <span className="text-slate-500">Location Status:</span>
+                <span className="text-slate-800">
                   {locationConsent && currentLocation?.lat ? '📍 Coordinates Included' : 'Location not shared'}
                 </span>
               </div>
 
               <div className="space-y-1 pt-1">
-                <span className="text-slate-400 block">Registered Emergency Contacts to Alert:</span>
+                <span className="text-slate-500 block">Registered Emergency Contacts:</span>
                 <div className="flex flex-wrap gap-1.5">
                   {(profile?.emergencyContacts || []).map((c, i) => (
-                    <span key={i} className="px-2 py-0.5 rounded bg-navy-800 text-slate-200 border border-navy-700 text-[11px]">
+                    <span key={i} className="px-2 py-0.5 rounded bg-white text-slate-700 border border-slate-300 text-[11px]">
                       {c.name} ({c.relationship})
                     </span>
                   ))}
@@ -559,12 +559,12 @@ export const SafeJourneySetupWizard: React.FC<SafeJourneySetupWizardProps> = ({ 
                 type="button"
                 onClick={handleStartJourneySubmit}
                 disabled={isStarting}
-                className="w-full py-4 rounded-xl font-bold text-sm bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-600 text-white shadow-glow-blue hover:brightness-110 disabled:opacity-50 transition-all flex items-center justify-center gap-2"
+                className="w-full py-4 rounded-2xl font-bold text-sm bg-safe-600 hover:bg-safe-700 text-white shadow-sm disabled:opacity-50 transition-all flex items-center justify-center gap-2"
               >
                 <ShieldCheck className="w-5 h-5" />
                 <span>{isStarting ? 'Activating SafeJourney...' : 'START SAFEJOURNEY'}</span>
               </button>
-              <p className="text-[11px] text-center text-slate-400">
+              <p className="text-[11px] text-center text-slate-500">
                 “SafeJourney is active” will appear with automated scheduled checks.
               </p>
             </div>
@@ -573,7 +573,7 @@ export const SafeJourneySetupWizard: React.FC<SafeJourneySetupWizardProps> = ({ 
               <button
                 type="button"
                 onClick={() => setStep(3)}
-                className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white flex items-center gap-1"
+                className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-500 hover:text-slate-800 flex items-center gap-1"
               >
                 <ArrowLeft className="w-4 h-4" />
                 <span>Back to Schedule</span>

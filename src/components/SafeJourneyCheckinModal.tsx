@@ -26,20 +26,23 @@ export const SafeJourneyCheckinModal: React.FC<SafeJourneyCheckinModalProps> = (
 
   const [timeLeft, setTimeLeft] = useState(initialSeconds);
   const [markedSafeSuccess, setMarkedSafeSuccess] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
 
+  // Reset timer on open
   useEffect(() => {
-    if (!isOpen) {
+    if (isOpen) {
       setTimeLeft(initialSeconds);
       setMarkedSafeSuccess(false);
-      return;
     }
+  }, [isOpen, initialSeconds]);
+
+  // Window countdown timer
+  useEffect(() => {
+    if (!isOpen || markedSafeSuccess) return;
 
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
           clearInterval(timer);
-          // 10-minute timeout expired without response -> Trigger missed check-in alert!
           triggerJourneyMissed();
           onClose();
           return 0;
@@ -49,112 +52,98 @@ export const SafeJourneyCheckinModal: React.FC<SafeJourneyCheckinModalProps> = (
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [isOpen, initialSeconds, triggerJourneyMissed, onClose]);
+  }, [isOpen, markedSafeSuccess, triggerJourneyMissed, onClose]);
 
-  if (!isOpen || !activeJourney) return null;
+  if (!isOpen) return null;
 
-  const handleMarkSafe = async () => {
-    setIsProcessing(true);
-    const success = await checkinJourney();
-    if (success) {
-      setMarkedSafeSuccess(true);
-      setTimeout(() => {
-        setIsProcessing(false);
-        onClose();
-      }, 1500);
-    } else {
-      setIsProcessing(false);
-    }
+  const formatTime = (secs: number) => {
+    const m = Math.floor(secs / 60);
+    const s = secs % 60;
+    return `${m}:${s < 10 ? '0' : ''}${s}`;
+  };
+
+  const handleImSafe = async () => {
+    setMarkedSafeSuccess(true);
+    await checkinJourney(undefined, 'Confirmed safe via scheduled check-in');
+    setTimeout(() => {
+      onClose();
+    }, 1200);
   };
 
   const handleNeedHelp = async () => {
-    setIsProcessing(true);
-    await triggerJourneySos(undefined, 'User pressed 🆘 I NEED HELP on Safety Check Modal');
-    setIsProcessing(false);
+    await triggerJourneySos(undefined, 'SOS requested during scheduled check-in');
     onClose();
   };
 
-  const minutes = Math.floor(timeLeft / 60);
-  const seconds = timeLeft % 60;
-  const formattedCountdown = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in">
-      <div className="bg-gradient-to-b from-navy-900 to-navy-950 border-4 border-amber-500 rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-6 shadow-2xl relative text-center">
-        {/* Glowing emergency ring */}
-        <div className="w-16 h-16 rounded-2xl bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center justify-center mx-auto shadow-glow-blue">
-          <Bell className="w-8 h-8 animate-bounce" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-in fade-in">
+      <div className="bg-white border border-slate-200 rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-6 shadow-2xl relative overflow-hidden text-slate-900">
+        
+        {/* Top subtle response window indicator */}
+        <div className="bg-slate-50 border border-slate-200 rounded-xl p-2.5 flex items-center justify-between text-xs">
+          <div className="flex items-center gap-1.5 text-slate-600 font-medium">
+            <Clock className="w-4 h-4 text-brand-600" />
+            <span>Response Window</span>
+          </div>
+          <span className="font-mono font-bold text-slate-900 bg-white px-2 py-0.5 rounded border border-slate-200">
+            {formatTime(timeLeft)}
+          </span>
         </div>
 
+        {/* Content */}
+        <div className="text-center space-y-3">
+          <div className="w-14 h-14 rounded-2xl bg-brand-50 text-brand-600 border border-brand-100 flex items-center justify-center mx-auto shadow-sm">
+            <Bell className="w-7 h-7" />
+          </div>
+
+          <div className="space-y-1">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 font-mono">
+              🔔 RESQTAG SAFETY CHECK
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-950">
+              Are you safe?
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-600 max-w-xs mx-auto">
+              Please confirm your safety. If unanswered before the timer expires, an automated alert will notify your emergency contacts.
+            </p>
+          </div>
+        </div>
+
+        {/* Success Confirmation State */}
         {markedSafeSuccess ? (
-          <div className="py-6 space-y-3 animate-in zoom-in-95">
-            <div className="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center justify-center mx-auto">
-              <CheckCircle2 className="w-10 h-10" />
-            </div>
-            <h3 className="text-xl font-black text-white">✓ You&apos;re marked safe.</h3>
-            <p className="text-xs text-slate-300">Next safety check scheduled automatically.</p>
+          <div className="p-4 rounded-2xl bg-safe-50 border border-safe-200 text-center space-y-2 animate-in zoom-in-95">
+            <CheckCircle2 className="w-8 h-8 text-safe-600 mx-auto" />
+            <h4 className="text-sm font-bold text-safe-800">Check-in Confirmed</h4>
+            <p className="text-xs text-safe-700">Safety timer refreshed. Continue your journey safely.</p>
           </div>
         ) : (
-          <>
-            {/* Header */}
-            <div className="space-y-1">
-              <span className="text-[11px] font-bold text-amber-400 uppercase tracking-widest bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20">
-                🔔 RESQTAG SAFETY CHECK
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-black text-white pt-1">
-                Are you safe?
-              </h2>
-              <p className="text-xs text-slate-300">
-                Scheduled check-in for <strong className="text-white">{activeJourney.destinationType}</strong>
-              </p>
-            </div>
+          /* Two Large Focused Action Buttons */
+          <div className="space-y-3">
+            {/* Button 1: I'M SAFE */}
+            <button
+              type="button"
+              onClick={handleImSafe}
+              className="w-full py-4 px-6 rounded-2xl font-bold text-base bg-safe-600 hover:bg-safe-700 text-white shadow-sm flex items-center justify-center gap-2.5 transition-all active:scale-[0.99]"
+            >
+              <CheckCircle2 className="w-5 h-5" />
+              <span>I&apos;M SAFE</span>
+            </button>
 
-            {/* Response Window Countdown */}
-            <div className="p-3.5 rounded-xl bg-navy-850 border border-navy-750 space-y-1">
-              <div className="flex items-center justify-center gap-2 text-xs text-slate-300">
-                <Clock className="w-4 h-4 text-amber-400" />
-                <span>Safety check sent. Waiting for response…</span>
-              </div>
-              <div className="text-2xl font-black font-mono text-amber-300">
-                {formattedCountdown}
-              </div>
-              <p className="text-[10px] text-slate-400">
-                {isDemo
-                  ? '⚡ Demo Response Window (20s accelerated countdown)'
-                  : 'Response Window: 10 Minutes before emergency alert is triggered'}
-              </p>
-            </div>
-
-            {/* The Two Main Action Buttons */}
-            <div className="space-y-3 pt-2">
-              {/* Button 1: I'M SAFE */}
-              <button
-                type="button"
-                onClick={handleMarkSafe}
-                disabled={isProcessing}
-                className="w-full py-4 rounded-2xl font-black text-base bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-600 hover:brightness-110 text-white shadow-glow-blue active:scale-95 transition-all flex items-center justify-center gap-2.5"
-              >
-                <CheckCircle2 className="w-6 h-6" />
-                <span>🟢 I&apos;M SAFE</span>
-              </button>
-
-              {/* Button 2: I NEED HELP */}
-              <button
-                type="button"
-                onClick={handleNeedHelp}
-                disabled={isProcessing}
-                className="w-full py-3.5 rounded-2xl font-black text-sm bg-gradient-to-r from-emergency-600 to-emergency-700 hover:bg-emergency-500 text-white shadow-glow-red active:scale-95 transition-all flex items-center justify-center gap-2"
-              >
-                <ShieldAlert className="w-5 h-5" />
-                <span>🆘 I NEED HELP</span>
-              </button>
-            </div>
-
-            <p className="text-[11px] text-slate-400">
-              * If you do not respond before the timer expires, an automated alert will notify your registered emergency contacts.
-            </p>
-          </>
+            {/* Button 2: I NEED HELP */}
+            <button
+              type="button"
+              onClick={handleNeedHelp}
+              className="w-full py-4 px-6 rounded-2xl font-bold text-sm bg-emergency-600 hover:bg-emergency-700 text-white shadow-glow-red flex items-center justify-center gap-2.5 transition-all active:scale-[0.99]"
+            >
+              <ShieldAlert className="w-5 h-5" />
+              <span>I NEED HELP</span>
+            </button>
+          </div>
         )}
+
+        <div className="text-center text-[11px] text-slate-500">
+          🔒 Zero tracking • Alerts sent only upon missed check-in or SOS
+        </div>
       </div>
     </div>
   );

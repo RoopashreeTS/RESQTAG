@@ -9,19 +9,19 @@ import {
   Save, 
   AlertCircle, 
   CheckCircle2, 
-  ShieldCheck, 
   Heart, 
   Printer, 
   Clock, 
   Smartphone, 
   Sparkles, 
   ExternalLink,
-  Trees
+  Trees,
+  Bell
 } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { useAuth } from '../context/AuthContext';
 import { api, INITIAL_DEMO_DATA } from '../services/api';
-import type { ScanEvent, BloodGroup, EmergencyContact } from '../types';
+import type { ScanEvent, BloodGroup, EmergencyContact, JourneyAlert } from '../types';
 
 interface OwnerDashboardProps {
   onNavigate: (view: string, param?: string) => void;
@@ -31,11 +31,11 @@ interface OwnerDashboardProps {
 const BLOOD_GROUPS: BloodGroup[] = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 
 export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOpenSimulator }) => {
-  const { profile, token, logout, updateProfile, resetDemo } = useAuth();
+  const { profile, token, logout, updateProfile, resetDemo, activeJourney } = useAuth();
   const current = profile || INITIAL_DEMO_DATA;
 
-  // Active Tab
-  const [activeTab, setActiveTab] = useState<'overview' | 'profile' | 'qr' | 'history' | 'settings'>('overview');
+  // Active Tab: dashboard, qr, safejourney, history, notifications, profile, settings
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'profile' | 'qr' | 'history' | 'notifications' | 'settings'>('dashboard');
 
   // Profile Edit State
   const [fullName, setFullName] = useState(current.fullName);
@@ -61,8 +61,9 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
   const [saveSuccessMessage, setSaveSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // Scan History
+  // Scan History & Alerts
   const [scans, setScans] = useState<ScanEvent[]>([]);
+  const [alerts, setAlerts] = useState<JourneyAlert[]>([]);
   const [isLoadingScans, setIsLoadingScans] = useState(false);
 
   // Sync state if profile changes
@@ -88,21 +89,25 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
     }
   }, [profile]);
 
-  // Load scan history
+  // Load scan history and alerts
   useEffect(() => {
-    const fetchScans = async () => {
+    const fetchData = async () => {
       setIsLoadingScans(true);
       try {
-        const data = await api.getScanHistory(token || undefined, current.tagId);
-        setScans(data);
+        const [scanData, alertData] = await Promise.all([
+          api.getScanHistory(token || undefined, current.tagId),
+          api.getSafeJourneyAlerts()
+        ]);
+        setScans(scanData);
+        setAlerts(alertData);
       } catch (err) {
-        console.error('Failed to load scan history:', err);
+        console.error('Failed to load dashboard logs:', err);
       } finally {
         setIsLoadingScans(false);
       }
     };
 
-    fetchScans();
+    fetchData();
   }, [token, current.tagId, activeTab]);
 
   // Save Profile Handler
@@ -150,9 +155,10 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
   const scanUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/#scan/${current.shortCode}`;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-      {/* Top Banner / User Welcome */}
-      <div className="bg-navy-900 border border-navy-750 rounded-2xl p-6 shadow-card flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 text-slate-900">
+      
+      {/* Top Welcome Header */}
+      <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-card flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <img
             src={
@@ -160,117 +166,150 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
               'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80'
             }
             alt={current.fullName}
-            className="w-16 h-16 rounded-2xl object-cover border-2 border-emergency-500 shadow-glow-red"
+            className="w-16 h-16 rounded-2xl object-cover border-2 border-slate-200 shadow-sm"
           />
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-xl sm:text-2xl font-black text-white">{current.fullName}</h1>
-              <span className="px-2 py-0.5 rounded-full bg-emergency-600/20 text-emergency-500 text-[10px] font-bold border border-emergency-500/30">
+              <h1 className="text-xl sm:text-2xl font-black text-slate-950">{current.fullName}</h1>
+              <span className="px-2.5 py-0.5 rounded-full bg-safe-50 text-safe-700 text-[10px] font-bold border border-safe-200">
                 ACTIVE TAG
               </span>
             </div>
-            <div className="flex items-center gap-3 text-xs text-slate-300 mt-1 font-mono">
-              <span>TAG ID: <strong className="text-white">{current.tagId}</strong></span>
+            <div className="flex flex-wrap items-center gap-3 text-xs text-slate-600 mt-1 font-mono">
+              <span>TAG ID: <strong className="text-slate-900">{current.tagId}</strong></span>
               <span>•</span>
-              <span>CODE: <strong className="text-amber-300">{current.shortCode}</strong></span>
+              <span>CODE: <strong className="text-brand-700">{current.shortCode}</strong></span>
               <span>•</span>
-              <span className="text-emergency-500 font-bold">BLOOD: {current.bloodGroup}</span>
+              <span className="text-emergency-600 font-bold">BLOOD: {current.bloodGroup}</span>
             </div>
           </div>
         </div>
 
-        {/* Quick Simulator Link */}
-        <button
-          onClick={onOpenSimulator}
-          className="px-4 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-bold transition-all flex items-center gap-1.5"
-        >
-          <Sparkles className="w-3.5 h-3.5" />
-          <span>Simulate Emergency Scan</span>
-        </button>
+        {/* Action button */}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={onOpenSimulator}
+            className="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-colors flex items-center gap-1.5 shadow-sm"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-brand-400" />
+            <span>Simulate Incident</span>
+          </button>
+        </div>
       </div>
 
       {/* Main Layout Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
         {/* Left Sidebar Navigation */}
-        <div className="lg:col-span-3 space-y-2">
-          <nav className="bg-navy-900 border border-navy-750 rounded-2xl p-2 space-y-1">
+        <div className="lg:col-span-3 space-y-4">
+          <nav className="bg-white border border-slate-200 rounded-3xl p-2.5 space-y-1 shadow-card">
+            
+            {/* 1. Dashboard */}
             <button
-              onClick={() => setActiveTab('overview')}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition-all ${
-                activeTab === 'overview'
-                  ? 'bg-emergency-600 text-white shadow-glow-red'
-                  : 'text-slate-300 hover:text-white hover:bg-navy-800'
+              onClick={() => setActiveTab('dashboard')}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold transition-all ${
+                activeTab === 'dashboard'
+                  ? 'bg-slate-900 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
               }`}
             >
               <LayoutDashboard className="w-4 h-4" />
-              <span>Dashboard Overview</span>
+              <span>Dashboard</span>
             </button>
 
-            <button
-              onClick={() => setActiveTab('profile')}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition-all ${
-                activeTab === 'profile'
-                  ? 'bg-emergency-600 text-white shadow-glow-red'
-                  : 'text-slate-300 hover:text-white hover:bg-navy-800'
-              }`}
-            >
-              <User className="w-4 h-4" />
-              <span>My Profile & Medical Info</span>
-            </button>
-
+            {/* 2. Emergency QR */}
             <button
               onClick={() => setActiveTab('qr')}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition-all ${
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold transition-all ${
                 activeTab === 'qr'
-                  ? 'bg-emergency-600 text-white shadow-glow-red'
-                  : 'text-slate-300 hover:text-white hover:bg-navy-800'
+                  ? 'bg-slate-900 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
               }`}
             >
               <QrCode className="w-4 h-4" />
-              <span>My QR & Stickers</span>
+              <span>Emergency QR</span>
             </button>
 
+            {/* 3. SafeJourney */}
             <button
               onClick={() => onNavigate('safejourney')}
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold text-emerald-400 hover:bg-emerald-950/40 border border-emerald-500/20 hover:border-emerald-500/50 transition-all"
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold text-safe-700 hover:bg-safe-50 border border-safe-200 transition-all"
             >
-              <Trees className="w-4 h-4 text-emerald-400" />
-              <span>🌲 SafeJourney (Proactive)</span>
+              <Trees className="w-4 h-4 text-safe-600" />
+              <div className="flex-1 text-left flex justify-between items-center">
+                <span>SafeJourney</span>
+                {activeJourney && (
+                  <span className="w-2 h-2 rounded-full bg-safe-600 animate-pulse"></span>
+                )}
+              </div>
             </button>
 
+            {/* 4. Scan History */}
             <button
               onClick={() => setActiveTab('history')}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition-all ${
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold transition-all ${
                 activeTab === 'history'
-                  ? 'bg-emergency-600 text-white shadow-glow-red'
-                  : 'text-slate-300 hover:text-white hover:bg-navy-800'
+                  ? 'bg-slate-900 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
               }`}
             >
               <History className="w-4 h-4" />
               <div className="flex-1 text-left flex justify-between items-center">
                 <span>Scan History</span>
-                <span className="px-1.5 py-0.5 rounded bg-navy-950 text-brand-cyan text-[10px] font-mono">
+                <span className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 text-[10px] font-mono">
                   {scans.length}
                 </span>
               </div>
             </button>
 
+            {/* 5. Notifications / Alerts */}
+            <button
+              onClick={() => setActiveTab('notifications')}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold transition-all ${
+                activeTab === 'notifications'
+                  ? 'bg-slate-900 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+              }`}
+            >
+              <Bell className="w-4 h-4" />
+              <div className="flex-1 text-left flex justify-between items-center">
+                <span>Notifications</span>
+                <span className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 text-[10px] font-mono">
+                  {alerts.length}
+                </span>
+              </div>
+            </button>
+
+            {/* 6. Profile */}
+            <button
+              onClick={() => setActiveTab('profile')}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold transition-all ${
+                activeTab === 'profile'
+                  ? 'bg-slate-900 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+              }`}
+            >
+              <User className="w-4 h-4" />
+              <span>Profile</span>
+            </button>
+
+            {/* 7. Settings */}
             <button
               onClick={() => setActiveTab('settings')}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition-all ${
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold transition-all ${
                 activeTab === 'settings'
-                  ? 'bg-emergency-600 text-white shadow-glow-red'
-                  : 'text-slate-300 hover:text-white hover:bg-navy-800'
+                  ? 'bg-slate-900 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
               }`}
             >
               <Settings className="w-4 h-4" />
-              <span>Settings & Security</span>
+              <span>Settings</span>
             </button>
 
-            <div className="pt-2 border-t border-navy-800">
+            <div className="pt-2 border-t border-slate-100">
               <button
                 onClick={logout}
-                className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-bold text-rose-400 hover:bg-rose-500/10 transition-colors"
+                className="w-full flex items-center gap-3 px-4 py-2.5 rounded-2xl text-xs font-bold text-rose-600 hover:bg-rose-50 transition-colors"
               >
                 <LogOut className="w-4 h-4" />
                 <span>Logout</span>
@@ -278,15 +317,15 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
             </div>
           </nav>
 
-          {/* Quick Public Preview Card */}
-          <div className="bg-navy-900 border border-navy-750 rounded-2xl p-4 text-center space-y-3">
-            <div className="text-xs font-bold text-slate-300">Public Responder View</div>
-            <div className="p-2 bg-white rounded-xl inline-block shadow-inner">
+          {/* Public Preview Box */}
+          <div className="bg-white border border-slate-200 rounded-3xl p-5 text-center space-y-3 shadow-card">
+            <div className="text-xs font-bold text-slate-700">Public Responder View</div>
+            <div className="p-2 bg-slate-50 border border-slate-200 rounded-2xl inline-block">
               <QRCodeSVG value={scanUrl} size={110} />
             </div>
             <button
               onClick={() => onNavigate('emergency-profile', current.shortCode)}
-              className="w-full py-2 rounded-xl bg-navy-800 hover:bg-navy-750 text-brand-cyan border border-navy-700 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
+              className="w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-brand-700 border border-slate-300 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
             >
               <span>Test Public View</span>
               <ExternalLink className="w-3.5 h-3.5" />
@@ -294,213 +333,251 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
           </div>
         </div>
 
-        {/* Right Content Area */}
+        {/* Right Content Area: Widgets & Tabs */}
         <div className="lg:col-span-9 space-y-6">
-          {/* TAB 1: OVERVIEW */}
-          {activeTab === 'overview' && (
+          
+          {/* TAB 1: MAIN DASHBOARD OVERVIEW WITH ALL 5 REQUIRED WIDGETS */}
+          {activeTab === 'dashboard' && (
             <div className="space-y-6">
-              {/* Stat Cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="p-5 rounded-2xl bg-navy-900 border border-navy-750 space-y-1">
-                  <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                    Total Tag Scans
+              
+              {/* 5 Widgets Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                
+                {/* Widget 1: Emergency QR Status */}
+                <div className="bg-white border border-slate-200 rounded-3xl p-6 space-y-4 shadow-card">
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <div className="flex items-center gap-2">
+                      <QrCode className="w-5 h-5 text-brand-600" />
+                      <h3 className="text-sm font-bold text-slate-900">Emergency QR Status</h3>
+                    </div>
+                    <span className="px-2 py-0.5 rounded-full bg-safe-50 text-safe-700 text-[10px] font-bold border border-safe-200">
+                      ✓ Active & Ready
+                    </span>
                   </div>
-                  <div className="text-3xl font-black text-white font-mono">{scans.length}</div>
-                  <div className="text-[11px] text-emerald-400 flex items-center gap-1">
-                    <CheckCircle2 className="w-3 h-3" />
-                    <span>Emergency logging active</span>
-                  </div>
-                </div>
 
-                <div className="p-5 rounded-2xl bg-navy-900 border border-navy-750 space-y-1">
-                  <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                    Last Scan Recorded
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
+                      <span className="text-[10px] text-slate-500 block">SHORT CODE</span>
+                      <strong className="text-slate-900 font-mono text-sm">{current.shortCode}</strong>
+                    </div>
+                    <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
+                      <span className="text-[10px] text-slate-500 block">BLOOD GROUP</span>
+                      <strong className="text-emergency-600 font-mono text-sm">{current.bloodGroup}</strong>
+                    </div>
+                    <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 col-span-2">
+                      <span className="text-[10px] text-slate-500 block">VEHICLE ASSIGNED</span>
+                      <strong className="text-slate-800 font-mono">{current.vehicleNumber}</strong>
+                    </div>
                   </div>
-                  <div className="text-sm font-bold text-white">
-                    {scans.length > 0 ? new Date(scans[0].timestamp).toLocaleDateString() : 'No scans yet'}
-                  </div>
-                  <div className="text-[11px] text-slate-400">
-                    {scans.length > 0 ? new Date(scans[0].timestamp).toLocaleTimeString() : 'Ready for emergency'}
-                  </div>
-                </div>
 
-                <div className="p-5 rounded-2xl bg-navy-900 border border-navy-750 space-y-1">
-                  <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                    Profile Status
-                  </div>
-                  <div className="text-sm font-bold text-emerald-400 flex items-center gap-1">
-                    <ShieldCheck className="w-4 h-4" />
-                    <span>100% Complete</span>
-                  </div>
-                  <div className="text-[11px] text-slate-400 font-mono">
-                    Vehicle: {current.vehicleNumber}
-                  </div>
-                </div>
-              </div>
-
-              {/* Emergency Profile Summary Card */}
-              <div className="bg-navy-900 border border-navy-750 rounded-2xl p-6 space-y-5">
-                <div className="flex items-center justify-between border-b border-navy-800 pb-3">
-                  <h3 className="text-base font-bold text-white flex items-center gap-2">
-                    <ShieldCheck className="w-5 h-5 text-emergency-500" />
-                    Emergency Identity Summary
-                  </h3>
                   <button
-                    onClick={() => setActiveTab('profile')}
-                    className="text-xs font-bold text-brand-cyan hover:underline"
+                    onClick={() => setActiveTab('qr')}
+                    className="w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold text-xs transition-colors"
                   >
-                    Edit Profile
+                    View QR & Decal Stickers
                   </button>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                  <div className="p-3.5 rounded-xl bg-navy-850 border border-navy-750 space-y-1">
-                    <span className="text-[10px] uppercase font-bold text-slate-400">Blood Group</span>
-                    <div className="text-xl font-black font-mono text-emergency-500">{current.bloodGroup}</div>
+                {/* Widget 2: SafeJourney Status */}
+                <div className="bg-white border border-slate-200 rounded-3xl p-6 space-y-4 shadow-card">
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <div className="flex items-center gap-2">
+                      <Trees className="w-5 h-5 text-safe-600" />
+                      <h3 className="text-sm font-bold text-slate-900">SafeJourney Status</h3>
+                    </div>
+                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                      activeJourney ? 'bg-safe-50 text-safe-700 border border-safe-200' : 'bg-slate-100 text-slate-600'
+                    }`}>
+                      {activeJourney ? '● Monitoring Active' : 'Idle'}
+                    </span>
                   </div>
 
-                  <div className="p-3.5 rounded-xl bg-navy-850 border border-navy-750 space-y-1">
-                    <span className="text-[10px] uppercase font-bold text-slate-400">Vehicle Registered</span>
-                    <div className="text-base font-bold font-mono text-white">{current.vehicleNumber}</div>
-                  </div>
+                  {activeJourney ? (
+                    <div className="space-y-2 text-xs">
+                      <div className="p-3 rounded-xl bg-safe-50 border border-safe-200 space-y-1">
+                        <span className="text-slate-600 block text-[11px]">Current Destination:</span>
+                        <strong className="text-safe-900 block">{activeJourney.destinationType}</strong>
+                      </div>
+                      <div className="flex justify-between text-xs text-slate-600 pt-1">
+                        <span>Check-in Interval: <strong>{activeJourney.isDemoMode ? `${activeJourney.demoIntervalSeconds}s (Demo)` : `${activeJourney.intervalMinutes}m`}</strong></span>
+                        <span>Check-ins: <strong>{activeJourney.totalCheckins}</strong></span>
+                      </div>
+                    </div>
+                  ) : (
+                    <p className="text-xs text-slate-500 py-3">
+                      No active SafeJourney running. Start proactive monitoring for solo trekking or remote travel.
+                    </p>
+                  )}
 
-                  <div className="p-3.5 rounded-xl bg-navy-850 border border-navy-750 space-y-1 sm:col-span-2">
-                    <span className="text-[10px] uppercase font-bold text-amber-400">Critical Allergies</span>
-                    <div className="text-xs font-medium text-white">{current.allergies || 'None reported'}</div>
-                  </div>
-
-                  <div className="p-3.5 rounded-xl bg-navy-850 border border-navy-750 space-y-1 sm:col-span-2">
-                    <span className="text-[10px] uppercase font-bold text-brand-cyan">Medical Conditions</span>
-                    <div className="text-xs font-medium text-slate-200">{current.medicalInfo || 'No major conditions'}</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Recent Scan History Feed */}
-              <div className="bg-navy-900 border border-navy-750 rounded-2xl p-6 space-y-4">
-                <div className="flex items-center justify-between border-b border-navy-800 pb-3">
-                  <h3 className="text-base font-bold text-white flex items-center gap-2">
-                    <Clock className="w-5 h-5 text-brand-cyan" />
-                    Recent Scan Events
-                  </h3>
                   <button
-                    onClick={() => setActiveTab('history')}
-                    className="text-xs font-bold text-brand-cyan hover:underline"
+                    onClick={() => onNavigate('safejourney')}
+                    className="w-full py-2.5 rounded-xl bg-safe-600 hover:bg-safe-700 text-white font-semibold text-xs transition-colors"
                   >
-                    View All ({scans.length})
+                    {activeJourney ? 'Open Active SafeJourney' : 'Start SafeJourney'}
                   </button>
                 </div>
 
-                {scans.length === 0 ? (
-                  <p className="text-xs text-slate-400 py-4 text-center">No scan events recorded yet.</p>
-                ) : (
-                  <div className="space-y-3">
-                    {scans.slice(0, 3).map((scan) => (
-                      <div
-                        key={scan.id}
-                        className="p-3.5 rounded-xl bg-navy-850 border border-navy-750 flex items-center justify-between text-xs"
-                      >
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-2">
-                            <span className="font-bold text-white">
-                              {new Date(scan.timestamp).toLocaleDateString()} at {new Date(scan.timestamp).toLocaleTimeString()}
-                            </span>
-                            <span
-                              className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                                scan.locationStatus === 'Location shared'
-                                  ? 'bg-emerald-500/20 text-emerald-400'
-                                  : 'bg-slate-800 text-slate-400'
-                              }`}
-                            >
-                              {scan.locationStatus}
-                            </span>
-                          </div>
-                          <div className="text-[11px] text-slate-400">
-                            {scan.approxLocation || 'Location not shared'}
-                          </div>
+                {/* Widget 3: Emergency Contacts */}
+                <div className="bg-white border border-slate-200 rounded-3xl p-6 space-y-4 shadow-card">
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <div className="flex items-center gap-2">
+                      <Heart className="w-5 h-5 text-emergency-600" />
+                      <h3 className="text-sm font-bold text-slate-900">Emergency Contacts</h3>
+                    </div>
+                    <button
+                      onClick={() => setActiveTab('profile')}
+                      className="text-xs text-brand-600 hover:underline font-semibold"
+                    >
+                      Edit
+                    </button>
+                  </div>
+
+                  <div className="space-y-2 text-xs">
+                    {current.emergencyContacts.slice(0, 3).map((c, i) => (
+                      <div key={i} className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+                        <div>
+                          <span className="font-bold text-slate-900 block">{c.name}</span>
+                          <span className="text-[10px] text-slate-500">{c.relationship} • {c.phone}</span>
                         </div>
-                        <span className="text-[10px] text-slate-500 font-mono hidden sm:inline">
-                          {scan.scannerDevice}
-                        </span>
+                        {c.isPrimary && (
+                          <span className="px-2 py-0.5 rounded bg-emergency-100 text-emergency-800 text-[10px] font-bold">
+                            PRIMARY
+                          </span>
+                        )}
                       </div>
                     ))}
                   </div>
-                )}
+                </div>
+
+                {/* Widget 4: Recent Scans */}
+                <div className="bg-white border border-slate-200 rounded-3xl p-6 space-y-4 shadow-card">
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <div className="flex items-center gap-2">
+                      <History className="w-5 h-5 text-brand-600" />
+                      <h3 className="text-sm font-bold text-slate-900">Recent Scans</h3>
+                    </div>
+                    <button
+                      onClick={() => setActiveTab('history')}
+                      className="text-xs text-brand-600 hover:underline font-semibold"
+                    >
+                      View All ({scans.length})
+                    </button>
+                  </div>
+
+                  {scans.length === 0 ? (
+                    <p className="text-xs text-slate-400 py-4 text-center">No scan events recorded yet.</p>
+                  ) : (
+                    <div className="space-y-2 text-xs">
+                      {scans.slice(0, 2).map((s) => (
+                        <div key={s.id} className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 space-y-0.5">
+                          <div className="flex justify-between items-center">
+                            <span className="font-mono font-bold text-slate-900">{new Date(s.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                            <span className="text-[10px] font-bold text-safe-700">{s.locationStatus}</span>
+                          </div>
+                          <p className="text-[11px] text-slate-500 truncate">{s.approxLocation || 'Direct lookup'}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Widget 5: Recent Alerts (Full Width) */}
+                <div className="bg-white border border-slate-200 rounded-3xl p-6 space-y-4 shadow-card md:col-span-2">
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <div className="flex items-center gap-2">
+                      <Bell className="w-5 h-5 text-emergency-600" />
+                      <h3 className="text-sm font-bold text-slate-900">Recent Emergency Alerts & Notifications</h3>
+                    </div>
+                    <span className="text-xs font-mono text-slate-500">{alerts.length} Total Alerts</span>
+                  </div>
+
+                  {alerts.length === 0 ? (
+                    <p className="text-xs text-slate-500 py-3">No active emergency alerts recorded. All systems normal.</p>
+                  ) : (
+                    <div className="space-y-2 text-xs">
+                      {alerts.slice(0, 3).map((a) => (
+                        <div key={a.id} className="p-3 rounded-xl bg-emergency-50 border border-emergency-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                          <div>
+                            <span className="font-bold text-emergency-900 block">
+                              {a.alertType === 'manual_sos' ? '🆘 Emergency SOS Alert' : '🚨 Missed Safety Check-in Alert'}
+                            </span>
+                            <span className="text-[11px] text-slate-600">{a.notes || `Alert triggered during journey (${a.journeyType})`}</span>
+                          </div>
+                          <span className="text-[10px] font-mono text-slate-500 shrink-0">
+                            {new Date(a.timestamp).toLocaleTimeString()}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
               </div>
+
             </div>
           )}
 
-          {/* TAB 2: MY PROFILE & EDIT */}
+          {/* TAB 2: PROFILE EDIT */}
           {activeTab === 'profile' && (
-            <form onSubmit={handleSaveProfile} className="bg-navy-900 border border-navy-750 rounded-2xl p-6 sm:p-8 space-y-6">
-              <div className="border-b border-navy-800 pb-4">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                    <User className="w-5 h-5 text-emergency-500" />
-                    Edit Emergency Profile
-                  </h2>
-                  <span className="px-2.5 py-1 rounded bg-brand-cyan/20 text-brand-cyan text-[11px] font-bold border border-brand-cyan/30">
-                    QR Stays Active Forever
-                  </span>
-                </div>
-                <p className="text-xs text-slate-400 mt-1">
-                  Updates sync instantly with your existing ResQTag (<span className="font-mono text-amber-300">{current.shortCode}</span>). No need to reprint stickers!
+            <form onSubmit={handleSaveProfile} className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-6 shadow-card">
+              <div className="border-b border-slate-100 pb-4">
+                <h2 className="text-xl font-bold text-slate-950 flex items-center gap-2">
+                  <User className="w-5 h-5 text-brand-600" />
+                  Edit Emergency Profile
+                </h2>
+                <p className="text-xs text-slate-500 mt-1">
+                  Updates sync dynamically with your permanent ResQTag (<span className="font-mono text-slate-900 font-bold">{current.shortCode}</span>).
                 </p>
               </div>
 
-              {/* Feedback messages */}
               {saveSuccessMessage && (
-                <div className="p-4 rounded-xl bg-emerald-500/20 border border-emerald-500/50 text-emerald-200 text-xs flex items-center gap-2">
-                  <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
+                <div className="p-3.5 rounded-xl bg-safe-50 border border-safe-200 text-safe-800 text-xs flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-safe-600 shrink-0" />
                   <span>{saveSuccessMessage}</span>
                 </div>
               )}
 
               {errorMessage && (
-                <div className="p-4 rounded-xl bg-emergency-600/20 border border-emergency-500/50 text-emergency-200 text-xs flex items-center gap-2">
-                  <AlertCircle className="w-5 h-5 text-emergency-500 shrink-0" />
+                <div className="p-3.5 rounded-xl bg-emergency-50 border border-emergency-200 text-emergency-800 text-xs flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 text-emergency-600 shrink-0" />
                   <span>{errorMessage}</span>
                 </div>
               )}
 
-              {/* Two Column Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {/* Full Name */}
                 <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-300">Full Name</label>
+                  <label className="text-xs font-semibold text-slate-700">Full Name</label>
                   <input
                     type="text"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    className="w-full text-sm px-3 py-2.5 bg-navy-800 border border-navy-700 rounded-xl text-white focus:outline-none focus:border-emergency-500"
+                    className="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900"
                     required
                   />
                 </div>
 
-                {/* Age */}
                 <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-300">Age</label>
+                  <label className="text-xs font-semibold text-slate-700">Age</label>
                   <input
                     type="number"
                     value={age}
                     onChange={(e) => setAge(e.target.value)}
-                    className="w-full text-sm px-3 py-2.5 bg-navy-800 border border-navy-700 rounded-xl text-white focus:outline-none focus:border-emergency-500"
+                    className="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900"
                   />
                 </div>
 
-                {/* Blood Group */}
                 <div className="space-y-1 sm:col-span-2">
-                  <label className="text-xs font-semibold text-slate-300">Blood Group</label>
+                  <label className="text-xs font-semibold text-slate-700">Blood Group</label>
                   <div className="grid grid-cols-4 sm:grid-cols-8 gap-1.5">
                     {BLOOD_GROUPS.map((bg) => (
                       <button
                         key={bg}
                         type="button"
                         onClick={() => setBloodGroup(bg)}
-                        className={`py-2 text-xs font-bold rounded-lg border transition-all ${
+                        className={`py-2 text-xs font-bold rounded-xl border transition-all ${
                           bloodGroup === bg
-                            ? 'bg-emergency-600 text-white border-emergency-500 shadow-glow-red'
-                            : 'bg-navy-800 text-slate-300 border-navy-700 hover:border-slate-500'
+                            ? 'bg-emergency-600 text-white border-emergency-600 shadow-sm'
+                            : 'bg-white text-slate-700 border-slate-300 hover:border-slate-400'
                         }`}
                       >
                         {bg}
@@ -509,62 +586,58 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
                   </div>
                 </div>
 
-                {/* Vehicle Number */}
                 <div className="space-y-1 sm:col-span-2">
-                  <label className="text-xs font-semibold text-slate-300">Vehicle Registration Number</label>
+                  <label className="text-xs font-semibold text-slate-700">Vehicle Registration Number</label>
                   <input
                     type="text"
                     value={vehicleNumber}
                     onChange={(e) => setVehicleNumber(e.target.value.toUpperCase())}
-                    className="w-full text-sm px-3 py-2.5 bg-navy-800 border border-navy-700 rounded-xl text-white font-mono uppercase focus:outline-none focus:border-emergency-500"
+                    className="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 font-mono uppercase"
                     required
                   />
                 </div>
 
-                {/* Allergies */}
                 <div className="space-y-1 sm:col-span-2">
-                  <label className="text-xs font-semibold text-slate-300">Known Allergies (Medication / Food)</label>
+                  <label className="text-xs font-semibold text-slate-700">Known Allergies</label>
                   <input
                     type="text"
                     value={allergies}
                     onChange={(e) => setAllergies(e.target.value)}
-                    className="w-full text-sm px-3 py-2.5 bg-navy-800 border border-navy-700 rounded-xl text-white focus:outline-none focus:border-emergency-500"
+                    className="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900"
                   />
                 </div>
 
-                {/* Medical Information */}
                 <div className="space-y-1 sm:col-span-2">
-                  <label className="text-xs font-semibold text-slate-300">Important Medical Conditions & Notes</label>
+                  <label className="text-xs font-semibold text-slate-700">Important Medical Information</label>
                   <textarea
                     rows={3}
                     value={medicalInfo}
                     onChange={(e) => setMedicalInfo(e.target.value)}
-                    className="w-full text-sm px-3 py-2.5 bg-navy-800 border border-navy-700 rounded-xl text-white focus:outline-none focus:border-emergency-500"
+                    className="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900"
                   />
                 </div>
 
-                {/* Address */}
                 <div className="space-y-1 sm:col-span-2">
-                  <label className="text-xs font-semibold text-slate-300">Residential Address</label>
+                  <label className="text-xs font-semibold text-slate-700">Residential Address</label>
                   <input
                     type="text"
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
-                    className="w-full text-sm px-3 py-2.5 bg-navy-800 border border-navy-700 rounded-xl text-white focus:outline-none focus:border-emergency-500"
+                    className="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900"
                   />
                 </div>
               </div>
 
-              {/* Emergency Contacts Section */}
-              <div className="space-y-4 pt-4 border-t border-navy-800">
-                <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                  <Heart className="w-4 h-4 text-emergency-500" />
-                  Emergency Contacts
+              {/* Contacts */}
+              <div className="space-y-3 pt-4 border-t border-slate-100">
+                <h3 className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+                  <Heart className="w-4 h-4 text-emergency-600" />
+                  <span>Emergency Contacts</span>
                 </h3>
 
                 {emergencyContacts.map((contact, idx) => (
-                  <div key={contact.id || idx} className="p-3.5 rounded-xl bg-navy-850 border border-navy-750 space-y-2">
-                    <span className="text-[11px] font-bold text-slate-300 uppercase">
+                  <div key={contact.id || idx} className="p-3 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                    <span className="text-[11px] font-bold text-slate-700 uppercase">
                       Contact {idx + 1} {contact.isPrimary && '(Primary SOS)'}
                     </span>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
@@ -577,7 +650,7 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
                           copy[idx].name = e.target.value;
                           setEmergencyContacts(copy);
                         }}
-                        className="text-xs px-3 py-2 bg-navy-800 border border-navy-700 rounded-lg text-white"
+                        className="text-xs px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-900"
                       />
                       <input
                         type="text"
@@ -588,7 +661,7 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
                           copy[idx].relationship = e.target.value;
                           setEmergencyContacts(copy);
                         }}
-                        className="text-xs px-3 py-2 bg-navy-800 border border-navy-700 rounded-lg text-white"
+                        className="text-xs px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-900"
                       />
                       <input
                         type="text"
@@ -599,57 +672,56 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
                           copy[idx].phone = e.target.value;
                           setEmergencyContacts(copy);
                         }}
-                        className="text-xs px-3 py-2 bg-navy-800 border border-navy-700 rounded-lg text-white font-mono"
+                        className="text-xs px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-900 font-mono"
                       />
                     </div>
                   </div>
                 ))}
               </div>
 
-              {/* Submit Button */}
-              <div className="flex justify-end pt-4 border-t border-navy-800">
+              <div className="flex justify-end pt-4 border-t border-slate-100">
                 <button
                   type="submit"
                   disabled={isSaving}
-                  className="px-8 py-3 rounded-xl bg-gradient-to-r from-emergency-600 to-emergency-700 text-white font-bold text-sm shadow-glow-red hover:brightness-110 disabled:opacity-50 transition-all flex items-center gap-2"
+                  className="px-6 py-3 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs shadow-sm transition-all flex items-center gap-2"
                 >
                   <Save className="w-4 h-4" />
-                  <span>{isSaving ? 'Saving Changes...' : 'Save & Update Profile'}</span>
+                  <span>{isSaving ? 'Saving...' : 'Save & Update Profile'}</span>
                 </button>
               </div>
             </form>
           )}
 
-          {/* TAB 3: MY QR & STICKERS */}
+          {/* TAB 3: QR & STICKERS */}
           {activeTab === 'qr' && (
-            <div className="bg-navy-900 border border-navy-750 rounded-2xl p-6 sm:p-8 space-y-6">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-navy-800 pb-4">
+            <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-6 shadow-card">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
                 <div>
-                  <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                    <QrCode className="w-5 h-5 text-emergency-500" />
-                    My ResQTag Sticker & Digital Pass
+                  <h2 className="text-xl font-bold text-slate-950 flex items-center gap-2">
+                    <QrCode className="w-5 h-5 text-brand-600" />
+                    My ResQTag Sticker
                   </h2>
-                  <p className="text-xs text-slate-400">
+                  <p className="text-xs text-slate-500">
                     Your unique emergency identifier connected to this profile.
                   </p>
                 </div>
                 <button
                   onClick={() => onNavigate('sticker')}
-                  className="px-4 py-2 rounded-xl bg-emergency-600 hover:bg-emergency-500 text-white text-xs font-bold shadow-glow-red flex items-center gap-1.5 transition-all"
+                  className="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold shadow-sm flex items-center gap-1.5 transition-all"
                 >
                   <Printer className="w-4 h-4" />
-                  <span>Open Printable Sheet</span>
+                  <span>Print Weatherproof Sticker</span>
                 </button>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                 {/* Physical Sticker Card Preview */}
-                <div className="bg-white text-slate-900 rounded-2xl p-6 border-4 border-slate-900 shadow-sticker max-w-sm mx-auto text-center space-y-3">
+                <div className="bg-white text-slate-900 rounded-2xl p-6 border-2 border-slate-900 shadow-sticker max-w-sm mx-auto text-center space-y-3">
                   <div className="bg-emergency-600 text-white py-1 px-3 rounded text-xs font-black uppercase tracking-wider">
                     SCAN IN CASE OF EMERGENCY
                   </div>
 
-                  <div className="p-2 bg-white border border-slate-300 rounded-xl inline-block shadow-inner">
+                  <div className="p-2 bg-slate-50 border border-slate-200 rounded-xl inline-block shadow-inner">
                     <QRCodeSVG value={scanUrl} size={150} level="H" />
                   </div>
 
@@ -666,25 +738,24 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
                   </div>
                 </div>
 
-                {/* Info & Details */}
-                <div className="space-y-4 text-xs text-slate-300">
-                  <div className="p-4 rounded-xl bg-navy-850 border border-navy-750 space-y-2">
-                    <h4 className="font-bold text-white flex items-center gap-2">
-                      <Sparkles className="w-4 h-4 text-amber-400" />
+                <div className="space-y-4 text-xs text-slate-600">
+                  <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                    <h4 className="font-bold text-slate-900 flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 text-brand-600" />
                       Dynamic Cloud Resolution
                     </h4>
                     <p className="leading-relaxed">
-                      Because the QR points to your permanent Tag ID (<code className="font-mono text-amber-300">{current.shortCode}</code>), you can update your phone numbers or medical info at any time without needing to replace printed physical decals.
+                      Because the QR points to your permanent Tag ID (<code className="font-mono text-slate-900 font-bold">{current.shortCode}</code>), you can update your phone numbers or medical info at any time without needing to replace printed decals.
                     </p>
                   </div>
 
-                  <div className="p-4 rounded-xl bg-navy-850 border border-navy-750 space-y-2">
-                    <h4 className="font-bold text-white flex items-center gap-2">
-                      <Smartphone className="w-4 h-4 text-brand-cyan" />
+                  <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                    <h4 className="font-bold text-slate-900 flex items-center gap-2">
+                      <Smartphone className="w-4 h-4 text-safe-600" />
                       Zero App Required
                     </h4>
                     <p className="leading-relaxed">
-                      Responders, good samaritans, and paramedics can scan this with any iPhone or Android camera app directly in the default browser.
+                      Responders, good samaritans, and paramedics can scan this with any iPhone or Android camera app directly in their default browser.
                     </p>
                   </div>
                 </div>
@@ -694,18 +765,18 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
 
           {/* TAB 4: SCAN HISTORY */}
           {activeTab === 'history' && (
-            <div className="bg-navy-900 border border-navy-750 rounded-2xl p-6 sm:p-8 space-y-6">
-              <div className="flex items-center justify-between border-b border-navy-800 pb-4">
+            <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-6 shadow-card">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-4">
                 <div>
-                  <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                    <History className="w-5 h-5 text-emergency-500" />
+                  <h2 className="text-xl font-bold text-slate-950 flex items-center gap-2">
+                    <History className="w-5 h-5 text-brand-600" />
                     Scan History Log
                   </h2>
-                  <p className="text-xs text-slate-400">
-                    Real-time audit log of every time your ResQTag was scanned.
+                  <p className="text-xs text-slate-500">
+                    Audit log of every time your ResQTag was scanned.
                   </p>
                 </div>
-                <span className="px-2.5 py-1 rounded bg-navy-800 text-slate-300 text-xs font-mono font-bold border border-navy-700">
+                <span className="px-2.5 py-1 rounded bg-slate-100 text-slate-700 text-xs font-mono font-bold border border-slate-200">
                   {scans.length} Events
                 </span>
               </div>
@@ -714,7 +785,7 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
                 <div className="py-12 text-center text-xs text-slate-400">Loading scan logs...</div>
               ) : scans.length === 0 ? (
                 <div className="py-12 text-center text-xs text-slate-400 space-y-2">
-                  <Clock className="w-8 h-8 mx-auto text-slate-600" />
+                  <Clock className="w-8 h-8 mx-auto text-slate-400" />
                   <p>No scan events logged yet.</p>
                 </div>
               ) : (
@@ -722,47 +793,37 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
                   {scans.map((scan) => (
                     <div
                       key={scan.id}
-                      className="p-4 rounded-xl bg-navy-850 border border-navy-750 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs"
+                      className="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs"
                     >
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">
-                          <span className="font-bold text-white font-mono">
-                            {new Date(scan.timestamp).toLocaleDateString('en-US', {
-                              day: 'numeric',
-                              month: 'short',
-                              year: 'numeric',
-                            })}
-                          </span>
-                          <span className="text-slate-400 font-mono">
-                            {new Date(scan.timestamp).toLocaleTimeString([], {
-                              hour: '2-digit',
-                              minute: '2-digit',
-                            })}
+                          <span className="font-bold text-slate-900 font-mono">
+                            {new Date(scan.timestamp).toLocaleDateString()} at {new Date(scan.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                           </span>
                           <span
                             className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                               scan.locationStatus === 'Location shared'
-                                ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                                : 'bg-slate-800 text-slate-400 border border-slate-700'
+                                ? 'bg-safe-50 text-safe-700 border border-safe-200'
+                                : 'bg-slate-200 text-slate-600'
                             }`}
                           >
                             {scan.locationStatus}
                           </span>
                         </div>
 
-                        <div className="flex items-center gap-3 text-slate-300 font-mono text-[11px]">
+                        <div className="flex items-center gap-3 text-slate-600 font-mono text-[11px]">
                           <span>Vehicle: <strong>{scan.vehicleNumber || current.vehicleNumber}</strong></span>
                           <span>•</span>
                           <span>Device: {scan.scannerDevice}</span>
                         </div>
 
-                        <div className="text-[11px] text-slate-400">
+                        <div className="text-[11px] text-slate-500">
                           Location: {scan.approxLocation || 'Location not shared'}
                         </div>
                       </div>
 
                       <div className="text-right">
-                        <span className="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded font-semibold border border-emerald-500/20">
+                        <span className="text-[10px] text-safe-700 bg-safe-50 px-2.5 py-1 rounded font-semibold border border-safe-200">
                           ✓ Contacts Notified
                         </span>
                       </div>
@@ -773,23 +834,57 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
             </div>
           )}
 
-          {/* TAB 5: SETTINGS & SECURITY */}
+          {/* TAB 5: NOTIFICATIONS & ALERTS */}
+          {activeTab === 'notifications' && (
+            <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-6 shadow-card">
+              <div className="border-b border-slate-100 pb-4">
+                <h2 className="text-xl font-bold text-slate-950 flex items-center gap-2">
+                  <Bell className="w-5 h-5 text-emergency-600" />
+                  Notifications & Incident Alerts
+                </h2>
+                <p className="text-xs text-slate-500">
+                  Real-time alerts sent to your emergency contacts.
+                </p>
+              </div>
+
+              {alerts.length === 0 ? (
+                <div className="py-12 text-center text-xs text-slate-400">
+                  No emergency alerts recorded.
+                </div>
+              ) : (
+                <div className="space-y-3 text-xs">
+                  {alerts.map((a) => (
+                    <div key={a.id} className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-slate-900">
+                          {a.alertType === 'manual_sos' ? '🆘 Emergency SOS Alert' : '🚨 Missed Safety Check-in Alert'}
+                        </span>
+                        <span className="font-mono text-[10px] text-slate-500">{new Date(a.timestamp).toLocaleTimeString()}</span>
+                      </div>
+                      <p className="text-slate-600">{a.notes || `Emergency alert triggered for ${a.userName} on journey (${a.journeyType})`}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* TAB 6: SETTINGS & HACKATHON RESET */}
           {activeTab === 'settings' && (
-            <div className="bg-navy-900 border border-navy-750 rounded-2xl p-6 sm:p-8 space-y-6">
-              <div className="border-b border-navy-800 pb-4">
-                <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                  <Settings className="w-5 h-5 text-emergency-500" />
+            <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-6 shadow-card">
+              <div className="border-b border-slate-100 pb-4">
+                <h2 className="text-xl font-bold text-slate-950 flex items-center gap-2">
+                  <Settings className="w-5 h-5 text-slate-700" />
                   Account & Hackathon Demo Settings
                 </h2>
               </div>
 
               <div className="space-y-4 text-xs">
-                {/* Reset demo data */}
-                <div className="p-4 rounded-xl bg-navy-850 border border-navy-750 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div>
-                    <h4 className="font-bold text-white">Reset Fictional Demo Data</h4>
-                    <p className="text-slate-400 text-[11px] mt-0.5">
-                      Restores Rahul Kumar (KA-01-AB-1234) and initial scan events for fresh hackathon judging.
+                    <h4 className="font-bold text-slate-900">Reset Fictional Demo Data</h4>
+                    <p className="text-slate-500 text-[11px] mt-0.5">
+                      Restores Rahul Kumar (KA-01-AB-1234) for fresh hackathon judging.
                     </p>
                   </div>
                   <button
@@ -799,24 +894,19 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
                         alert('Demo data successfully reset!');
                       }
                     }}
-                    className="px-4 py-2 rounded-xl bg-navy-800 hover:bg-rose-950/40 text-rose-300 border border-rose-500/40 font-bold transition-colors"
+                    className="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-sm transition-colors"
                   >
-                    Reset Demo State
+                    Reset Demo
                   </button>
-                </div>
-
-                {/* Privacy & Security guarantee */}
-                <div className="p-4 rounded-xl bg-navy-850 border border-navy-750 space-y-2">
-                  <h4 className="font-bold text-white">Privacy & Security Policies</h4>
-                  <p className="text-slate-400 text-[11px] leading-relaxed">
-                    ResQTag adheres to zero-knowledge QR encoding. No sensitive credentials or plaintext database contents are stored inside physical QR codes. Location is only captured when explicitly permitted by the scanner.
-                  </p>
                 </div>
               </div>
             </div>
           )}
+
         </div>
+
       </div>
+
     </div>
   );
 };

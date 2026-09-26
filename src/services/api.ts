@@ -509,6 +509,33 @@ export const api = {
     return { success: false };
   },
 
+  // 12.b Get Checkins for Journey
+  async getSafeJourneyCheckins(journeyId: string): Promise<JourneyCheckin[]> {
+    try {
+      const res = await fetch(`${API_BASE}/safejourney/active`);
+      if (res.ok) {
+        const data = await res.json();
+        return data.checkins || [];
+      }
+    } catch (e) {
+      console.warn('Backend unavailable, reading local checkins', e);
+    }
+    const journeys: SafeJourney[] = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_JOURNEYS) || '[]');
+    const journey = journeys.find(j => j.id === journeyId);
+    if (journey && journey.lastCheckinTime) {
+      return [
+        {
+          id: 'chk_1',
+          journeyId: journey.id,
+          timestamp: journey.lastCheckinTime,
+          status: 'safe',
+          notes: 'Safe Journey Check-in'
+        }
+      ];
+    }
+    return [];
+  },
+
   // 13. Immediate SOS (🆘 I NEED HELP)
   async triggerSafeJourneySos(journeyId: string, location?: JourneyLocation, reason?: string): Promise<{ success: boolean; alert?: JourneyAlert; message?: string }> {
     try {

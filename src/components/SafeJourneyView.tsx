@@ -52,82 +52,80 @@ export const SafeJourneyView: React.FC<SafeJourneyViewProps> = ({ onNavigate }) 
 
   // Otherwise, render the SafeJourney Main Landing & Start Portal
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12 pb-20">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12 pb-20 text-slate-900">
+      
       {/* 1. HERO SECTION */}
-      <div className="relative bg-gradient-to-r from-navy-900 via-navy-850 to-navy-900 border-2 border-emerald-500/40 rounded-3xl p-8 sm:p-12 shadow-2xl overflow-hidden space-y-6">
-        {/* Glow accent */}
-        <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
-
-        <div className="max-w-2xl space-y-4">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-bold">
-            <Trees className="w-4 h-4" />
+      <div className="bg-white border border-slate-200 rounded-3xl p-8 sm:p-12 shadow-card space-y-6">
+        <div className="max-w-3xl space-y-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-safe-50 text-safe-700 border border-safe-200 text-xs font-bold">
+            <Trees className="w-3.5 h-3.5" />
             <span>PROACTIVE SAFETY MONITORING</span>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
-            ResQTag <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">SafeJourney</span>
+          <h1 className="text-3xl sm:text-5xl font-black text-slate-950 tracking-tight">
+            ResQTag <span className="text-safe-600">SafeJourney</span>
           </h1>
 
-          <p className="text-base sm:text-lg text-slate-300 leading-relaxed font-medium">
+          <p className="text-base sm:text-xl text-slate-700 font-semibold">
             Stay connected. Check in. Get help when you need it.
           </p>
 
-          <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+          <p className="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-2xl">
             Proactive safety check-in schedule designed for solo hikers, remote campers, forest trekkers, and highway travellers. If a scheduled check-in is missed, your trusted emergency contacts are automatically alerted.
           </p>
 
-          {/* Big Start Button */}
-          <div className="pt-3 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          {/* Action Buttons */}
+          <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
             <button
               onClick={() => setSubView('setup')}
-              className="px-8 py-4 rounded-2xl font-black text-base bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-600 hover:brightness-110 text-white shadow-glow-blue hover:scale-[1.02] active:scale-98 transition-all flex items-center justify-center gap-2.5"
+              className="px-7 py-3.5 rounded-xl font-bold text-sm bg-safe-600 hover:bg-safe-700 text-white shadow-sm transition-all flex items-center justify-center gap-2.5 active:scale-[0.99]"
             >
-              <Trees className="w-5 h-5" />
+              <Trees className="w-4 h-4" />
               <span>START SAFEJOURNEY</span>
             </button>
 
             <button
               onClick={() => setSubView('history')}
-              className="px-6 py-4 rounded-2xl font-bold text-sm bg-navy-800 hover:bg-navy-750 text-slate-200 border border-navy-700 hover:border-slate-500 transition-colors flex items-center justify-center gap-2"
+              className="px-6 py-3.5 rounded-xl font-semibold text-sm bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 transition-colors flex items-center justify-center gap-2"
             >
-              <History className="w-4 h-4 text-emerald-400" />
-              <span>View Journey History</span>
+              <History className="w-4 h-4 text-slate-600" />
+              <span>View Past Journeys</span>
             </button>
           </div>
         </div>
       </div>
 
       {/* 2. THE TWO CONNECTED RESQTAG SAFETY PILLARS */}
-      <div className="space-y-4">
+      <div className="space-y-6">
         <div className="text-center space-y-1">
-          <h2 className="text-xl sm:text-2xl font-bold text-white">
+          <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900">
             Two Connected Pillars of ResQTag Safety
           </h2>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-slate-500">
             Comprehensive emergency coverage before, during, and after incidents.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Pillar 1: Emergency QR */}
-          <div className="bg-navy-900 border border-navy-750 rounded-2xl p-6 space-y-4">
+          <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-4 shadow-card hover:shadow-card-hover transition-all">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-emergency-600 text-white flex items-center justify-center shadow-glow-red">
+              <div className="w-10 h-10 rounded-xl bg-emergency-50 border border-emergency-200 text-emergency-600 flex items-center justify-center">
                 <QrCode className="w-5 h-5" />
               </div>
               <div>
-                <span className="text-[10px] font-bold uppercase text-emergency-500 bg-emergency-500/10 px-2 py-0.5 rounded border border-emergency-500/20">
+                <span className="text-[10px] font-bold uppercase text-emergency-700 bg-emergency-50 px-2 py-0.5 rounded border border-emergency-200">
                   PILLAR 1: POST-ACCIDENT
                 </span>
-                <h3 className="text-base font-bold text-white mt-0.5">ResQTag Emergency QR</h3>
+                <h3 className="text-base font-bold text-slate-900 mt-0.5">ResQTag Emergency QR</h3>
               </div>
             </div>
-            <p className="text-xs text-slate-300 leading-relaxed">
+            <p className="text-xs text-slate-600 leading-relaxed">
               When an accident victim cannot speak, physical QR stickers on helmets or vehicles allow any first responder to instantly scan, retrieve vital blood group/allergies, and 1-tap call family.
             </p>
             <button
               onClick={() => onNavigate('scan')}
-              className="text-xs font-bold text-emergency-500 hover:underline flex items-center gap-1"
+              className="text-xs font-bold text-slate-900 hover:text-brand-600 flex items-center gap-1 transition-colors"
             >
               <span>Scan or View Emergency QR</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -135,24 +133,24 @@ export const SafeJourneyView: React.FC<SafeJourneyViewProps> = ({ onNavigate }) 
           </div>
 
           {/* Pillar 2: SafeJourney */}
-          <div className="bg-navy-900 border-2 border-emerald-500/40 rounded-2xl p-6 space-y-4 shadow-sm">
+          <div className="bg-white border border-safe-200 rounded-2xl p-6 space-y-4 shadow-card hover:shadow-card-hover transition-all">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow-glow-blue">
+              <div className="w-10 h-10 rounded-xl bg-safe-50 border border-safe-200 text-safe-700 flex items-center justify-center">
                 <Trees className="w-5 h-5" />
               </div>
               <div>
-                <span className="text-[10px] font-bold uppercase text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                <span className="text-[10px] font-bold uppercase text-safe-800 bg-safe-50 px-2 py-0.5 rounded border border-safe-200">
                   PILLAR 2: PROACTIVE MONITORING
                 </span>
-                <h3 className="text-base font-bold text-white mt-0.5">ResQTag SafeJourney</h3>
+                <h3 className="text-base font-bold text-slate-900 mt-0.5">ResQTag SafeJourney</h3>
               </div>
             </div>
-            <p className="text-xs text-slate-300 leading-relaxed">
+            <p className="text-xs text-slate-600 leading-relaxed">
               Proactive safety monitoring when travelling alone in remote, forest, or mountain zones. Periodic check-in prompts ensure you are safe — failing to respond triggers automated family alerts.
             </p>
             <button
               onClick={() => setSubView('setup')}
-              className="text-xs font-bold text-emerald-400 hover:underline flex items-center gap-1"
+              className="text-xs font-bold text-safe-700 hover:text-safe-900 flex items-center gap-1 transition-colors"
             >
               <span>Start SafeJourney Setup</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -162,39 +160,39 @@ export const SafeJourneyView: React.FC<SafeJourneyViewProps> = ({ onNavigate }) 
       </div>
 
       {/* 3. HOW SAFEJOURNEY WORKS */}
-      <div className="bg-navy-900 border border-navy-750 rounded-2xl p-6 sm:p-8 space-y-6">
-        <h3 className="text-lg font-bold text-white flex items-center gap-2">
-          <ShieldCheck className="w-5 h-5 text-emerald-400" />
+      <div className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 space-y-6 shadow-sm">
+        <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <ShieldCheck className="w-5 h-5 text-safe-600" />
           <span>How SafeJourney Proactive Monitoring Works</span>
         </h3>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-          <div className="p-4 rounded-xl bg-navy-850 border border-navy-750 space-y-2">
-            <div className="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
+          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+            <div className="w-7 h-7 rounded-lg bg-slate-200 text-slate-800 flex items-center justify-center font-bold">
               1
             </div>
-            <h4 className="font-bold text-white">1. Configure Solo Journey</h4>
-            <p className="text-slate-300 leading-relaxed">
+            <h4 className="font-bold text-slate-900">1. Configure Solo Journey</h4>
+            <p className="text-slate-600 leading-relaxed">
               Select destination (Forest, Mountain, Camping, Highway), journey duration, and check-in interval (e.g. 1 hour).
             </p>
           </div>
 
-          <div className="p-4 rounded-xl bg-navy-850 border border-navy-750 space-y-2">
-            <div className="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-300 flex items-center justify-center font-bold">
+          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+            <div className="w-7 h-7 rounded-lg bg-brand-100 text-brand-700 flex items-center justify-center font-bold">
               2
             </div>
-            <h4 className="font-bold text-white">2. Periodic Safety Check</h4>
-            <p className="text-slate-300 leading-relaxed">
+            <h4 className="font-bold text-slate-900">2. Periodic Safety Check</h4>
+            <p className="text-slate-600 leading-relaxed">
               At every interval, SafeJourney prompts <strong>“Are you safe?”</strong> with 1-tap <strong>“I&apos;M SAFE”</strong> or <strong>“🆘 I NEED HELP”</strong>.
             </p>
           </div>
 
-          <div className="p-4 rounded-xl bg-navy-850 border border-navy-750 space-y-2">
-            <div className="w-7 h-7 rounded-lg bg-emergency-600/20 text-emergency-500 flex items-center justify-center font-bold">
+          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+            <div className="w-7 h-7 rounded-lg bg-emergency-100 text-emergency-700 flex items-center justify-center font-bold">
               3
             </div>
-            <h4 className="font-bold text-white">3. Missed-Check Escalation</h4>
-            <p className="text-slate-300 leading-relaxed">
+            <h4 className="font-bold text-slate-900">3. Missed-Check Escalation</h4>
+            <p className="text-slate-600 leading-relaxed">
               If unanswered after 10 minutes, an automated alert with last known location is sent to your registered emergency contacts.
             </p>
           </div>
