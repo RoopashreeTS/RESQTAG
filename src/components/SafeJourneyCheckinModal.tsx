@@ -20,7 +20,6 @@ export const SafeJourneyCheckinModal: React.FC<SafeJourneyCheckinModalProps> = (
     triggerJourneyMissed 
   } = useAuth();
 
-  // 10-minute response window (Accelerated for hackathon demo: 20 seconds in demo mode, or 600s in production)
   const isDemo = activeJourney?.isDemoMode ?? true;
   const initialSeconds = isDemo ? 20 : 600;
 
@@ -76,34 +75,34 @@ export const SafeJourneyCheckinModal: React.FC<SafeJourneyCheckinModalProps> = (
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-in fade-in">
-      <div className="bg-white border border-slate-200 rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-6 shadow-2xl relative overflow-hidden text-slate-900">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#2B2020]/75 backdrop-blur-sm animate-in fade-in">
+      <div className="glass-card-rose-solid rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-6 shadow-2xl relative overflow-hidden text-[#2B2020]">
         
         {/* Top subtle response window indicator */}
-        <div className="bg-slate-50 border border-slate-200 rounded-xl p-2.5 flex items-center justify-between text-xs">
-          <div className="flex items-center gap-1.5 text-slate-600 font-medium">
-            <Clock className="w-4 h-4 text-brand-600" />
+        <div className="bg-[#FFF7F7] border border-red-100 rounded-2xl p-2.5 flex items-center justify-between text-xs">
+          <div className="flex items-center gap-1.5 text-[#806F6F] font-medium">
+            <Clock className="w-4 h-4 text-[#E53935]" />
             <span>Response Window</span>
           </div>
-          <span className="font-mono font-bold text-slate-900 bg-white px-2 py-0.5 rounded border border-slate-200">
+          <span className="font-mono font-bold text-[#E53935] bg-white px-2.5 py-0.5 rounded-lg border border-red-200">
             {formatTime(timeLeft)}
           </span>
         </div>
 
         {/* Content */}
         <div className="text-center space-y-3">
-          <div className="w-14 h-14 rounded-2xl bg-brand-50 text-brand-600 border border-brand-100 flex items-center justify-center mx-auto shadow-sm">
+          <div className="w-14 h-14 rounded-2xl bg-[#FFEFEF] text-[#E53935] border border-red-200 flex items-center justify-center mx-auto shadow-sm animate-pulse">
             <Bell className="w-7 h-7" />
           </div>
 
           <div className="space-y-1">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 font-mono">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#E53935] font-mono">
               🔔 RESQTAG SAFETY CHECK
             </span>
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-950">
+            <h2 className="text-2xl sm:text-3xl font-black text-[#2B2020]">
               Are you safe?
             </h2>
-            <p className="text-xs sm:text-sm text-slate-600 max-w-xs mx-auto">
+            <p className="text-xs sm:text-sm text-[#806F6F] max-w-xs mx-auto">
               Please confirm your safety. If unanswered before the timer expires, an automated alert will notify your emergency contacts.
             </p>
           </div>
@@ -111,10 +110,10 @@ export const SafeJourneyCheckinModal: React.FC<SafeJourneyCheckinModalProps> = (
 
         {/* Success Confirmation State */}
         {markedSafeSuccess ? (
-          <div className="p-4 rounded-2xl bg-safe-50 border border-safe-200 text-center space-y-2 animate-in zoom-in-95">
-            <CheckCircle2 className="w-8 h-8 text-safe-600 mx-auto" />
-            <h4 className="text-sm font-bold text-safe-800">Check-in Confirmed</h4>
-            <p className="text-xs text-safe-700">Safety timer refreshed. Continue your journey safely.</p>
+          <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-center space-y-2 animate-in zoom-in-95 shadow-sm">
+            <CheckCircle2 className="w-8 h-8 text-emerald-600 mx-auto" />
+            <h4 className="text-sm font-bold text-emerald-800">Check-in Confirmed</h4>
+            <p className="text-xs text-emerald-700">Safety timer refreshed. Continue your journey safely.</p>
           </div>
         ) : (
           /* Two Large Focused Action Buttons */
@@ -123,7 +122,7 @@ export const SafeJourneyCheckinModal: React.FC<SafeJourneyCheckinModalProps> = (
             <button
               type="button"
               onClick={handleImSafe}
-              className="w-full py-4 px-6 rounded-2xl font-bold text-base bg-safe-600 hover:bg-safe-500 text-white shadow-glow-green flex items-center justify-center gap-2.5 transition-all duration-250 hover:-translate-y-0.5 active:scale-[0.97]"
+              className="w-full btn-rose-safe py-4 px-6 rounded-2xl font-bold text-base flex items-center justify-center gap-2.5"
             >
               <CheckCircle2 className="w-5 h-5 text-white" />
               <span>I&apos;M SAFE</span>
@@ -133,7 +132,7 @@ export const SafeJourneyCheckinModal: React.FC<SafeJourneyCheckinModalProps> = (
             <button
               type="button"
               onClick={handleNeedHelp}
-              className="w-full py-4 px-6 rounded-2xl font-bold text-sm bg-emergency-600 hover:bg-emergency-500 text-white shadow-glow-red animate-pulse-emergency flex items-center justify-center gap-2.5 transition-all duration-250 hover:-translate-y-0.5 active:scale-[0.97]"
+              className="w-full btn-rose-sos py-4 px-6 rounded-2xl font-bold text-sm flex items-center justify-center gap-2.5"
             >
               <ShieldAlert className="w-5 h-5 text-white" />
               <span>I NEED HELP</span>
@@ -141,7 +140,7 @@ export const SafeJourneyCheckinModal: React.FC<SafeJourneyCheckinModalProps> = (
           </div>
         )}
 
-        <div className="text-center text-[11px] text-slate-500">
+        <div className="text-center text-[11px] text-[#806F6F]">
           🔒 Zero tracking • Alerts sent only upon missed check-in or SOS
         </div>
       </div>

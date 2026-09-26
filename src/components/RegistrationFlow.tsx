@@ -189,50 +189,64 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({ onNavigate }
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 text-slate-900">
+    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 text-[#2B2020] relative z-10">
       {/* Step Indicator */}
       <div className="mb-8">
-        <div className="flex items-center justify-between text-xs font-semibold text-slate-500 mb-2">
-          <span className={step >= 1 ? 'text-brand-700 font-bold' : ''}>1. Identity & Medical</span>
-          <span className={step >= 2 ? 'text-brand-700 font-bold' : ''}>2. SOS Contacts</span>
-          <span className={step >= 3 ? 'text-brand-700 font-bold' : ''}>3. OTP Verification</span>
-          <span className={step >= 4 ? 'text-safe-700 font-bold' : ''}>4. Tag Generated</span>
+        <div className="flex items-center justify-between text-xs font-semibold text-[#806F6F] mb-2.5">
+          <span className={step >= 1 ? 'text-[#E53935] font-bold flex items-center gap-1' : ''}>
+            <span className="w-5 h-5 rounded-full inline-flex items-center justify-center text-[10px] bg-red-100 text-[#E53935] font-black">1</span>
+            Identity & Medical
+          </span>
+          <span className={step >= 2 ? 'text-[#E53935] font-bold flex items-center gap-1' : ''}>
+            <span className="w-5 h-5 rounded-full inline-flex items-center justify-center text-[10px] bg-red-100 text-[#E53935] font-black">2</span>
+            SOS Contacts
+          </span>
+          <span className={step >= 3 ? 'text-[#E53935] font-bold flex items-center gap-1' : ''}>
+            <span className="w-5 h-5 rounded-full inline-flex items-center justify-center text-[10px] bg-red-100 text-[#E53935] font-black">3</span>
+            OTP Verification
+          </span>
+          <span className={step >= 4 ? 'text-emerald-700 font-bold flex items-center gap-1' : ''}>
+            <span className="w-5 h-5 rounded-full inline-flex items-center justify-center text-[10px] bg-emerald-100 text-emerald-700 font-black">4</span>
+            Tag Ready
+          </span>
         </div>
-        <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+        <div className="w-full bg-[#FFE5E5] h-2.5 rounded-full overflow-hidden p-0.5 border border-red-200">
           <div
-            className="bg-brand-600 h-full transition-all duration-300"
+            className="bg-gradient-to-r from-[#E53935] to-[#FF6B6B] h-full rounded-full transition-all duration-300 shadow-sm"
             style={{ width: `${(step / 4) * 100}%` }}
           />
         </div>
       </div>
 
       {/* Main Container Card */}
-      <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-card space-y-6">
+      <div className="glass-card-rose-solid rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl">
         {/* Error Alert */}
         {errorMessage && (
-          <div className="p-3.5 rounded-xl bg-emergency-50 border border-emergency-200 text-emergency-800 text-xs flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4 text-emergency-600 shrink-0" />
-            <span>{errorMessage}</span>
+          <div className="p-3.5 rounded-xl bg-[#FFEFEF] border border-red-200 text-[#C62828] text-xs flex items-center gap-2 animate-in fade-in shadow-sm">
+            <AlertTriangle className="w-4 h-4 text-[#E53935] shrink-0" />
+            <span className="font-semibold">{errorMessage}</span>
           </div>
         )}
 
         {/* STEP 1: PERSONAL & MEDICAL INFORMATION */}
         {step === 1 && (
           <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-red-100 pb-4">
               <div>
-                <h2 className="text-xl font-bold text-slate-950 flex items-center gap-2">
-                  <User className="w-5 h-5 text-brand-600" />
+                <h2 className="text-xl font-bold text-[#2B2020] flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-[#FFEFEF] flex items-center justify-center text-[#E53935]">
+                    <User className="w-4 h-4" />
+                  </div>
                   Personal & Emergency Medical Details
                 </h2>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-[#806F6F] mt-0.5">
                   This vital information will be accessible to emergency responders upon scanning.
                 </p>
               </div>
               <button
                 type="button"
                 onClick={handlePrefillSample}
-                className="text-xs font-semibold text-brand-700 bg-brand-50 hover:bg-brand-100 border border-brand-200 px-3 py-1.5 rounded-xl transition-colors self-start sm:self-auto"
+                className="btn-rose-outline text-xs px-3.5 py-1.5 rounded-xl font-semibold self-start sm:self-auto"
               >
                 ⚡ Autofill Sample Data
               </button>
@@ -248,41 +262,41 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({ onNavigate }
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Full Name */}
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-slate-700 flex items-center gap-1">
-                  Full Name <span className="text-emergency-600">*</span>
+                <label className="text-xs font-semibold text-[#2B2020] flex items-center gap-1">
+                  Full Name <span className="text-[#E53935]">*</span>
                 </label>
                 <div className="relative">
-                  <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                  <User className="w-4 h-4 text-[#806F6F] absolute left-3.5 top-3" />
                   <input
                     type="text"
                     placeholder="e.g. Rahul Kumar"
                     value={fullName}
                     onChange={e => setFullName(e.target.value)}
-                    className="w-full text-xs pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-brand-600"
+                    className="w-full text-xs pl-10 pr-3.5 py-2.5 bg-white/90 border border-red-200 rounded-xl text-[#2B2020] focus:outline-none focus:border-[#E53935] focus:ring-2 focus:ring-[#E53935]/15 transition-all"
                   />
                 </div>
               </div>
 
               {/* Phone Number */}
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-slate-700 flex items-center gap-1">
-                  Owner Phone Number <span className="text-emergency-600">*</span>
+                <label className="text-xs font-semibold text-[#2B2020] flex items-center gap-1">
+                  Owner Phone Number <span className="text-[#E53935]">*</span>
                 </label>
                 <div className="relative">
-                  <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                  <Phone className="w-4 h-4 text-[#806F6F] absolute left-3.5 top-3" />
                   <input
                     type="text"
                     placeholder="+91 98450 11223"
                     value={phone}
                     onChange={e => setPhone(e.target.value)}
-                    className="w-full text-xs pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 font-mono focus:outline-none focus:border-brand-600"
+                    className="w-full text-xs pl-10 pr-3.5 py-2.5 bg-white/90 border border-red-200 rounded-xl text-[#2B2020] font-mono focus:outline-none focus:border-[#E53935] focus:ring-2 focus:ring-[#E53935]/15 transition-all"
                   />
                 </div>
               </div>
 
               {/* Age */}
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-slate-700">
+                <label className="text-xs font-semibold text-[#2B2020]">
                   Age
                 </label>
                 <input
@@ -290,14 +304,14 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({ onNavigate }
                   placeholder="24"
                   value={age}
                   onChange={e => setAge(e.target.value)}
-                  className="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-brand-600"
+                  className="w-full text-xs px-3.5 py-2.5 bg-white/90 border border-red-200 rounded-xl text-[#2B2020] focus:outline-none focus:border-[#E53935] focus:ring-2 focus:ring-[#E53935]/15 transition-all"
                 />
               </div>
 
               {/* Blood Group */}
               <div className="space-y-1">
-                <label className="text-xs font-semibold text-slate-700 flex items-center gap-1">
-                  Blood Group <span className="text-emergency-600">* (Critical for Triage)</span>
+                <label className="text-xs font-semibold text-[#2B2020] flex items-center gap-1">
+                  Blood Group <span className="text-[#E53935] font-bold">* (Critical for Triage)</span>
                 </label>
                 <div className="grid grid-cols-4 gap-1.5">
                   {BLOOD_GROUPS.map(bg => (
@@ -307,8 +321,8 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({ onNavigate }
                       onClick={() => setBloodGroup(bg)}
                       className={`py-2 text-xs font-bold rounded-xl border transition-all ${
                         bloodGroup === bg
-                          ? 'bg-emergency-600 text-white border-emergency-600 shadow-sm'
-                          : 'bg-white text-slate-700 border-slate-300 hover:border-slate-400'
+                          ? 'bg-gradient-to-r from-[#E53935] to-[#C62828] text-white border-[#C62828] shadow-md -translate-y-0.5'
+                          : 'bg-white/80 text-[#2B2020] border-red-200 hover:border-[#E53935]/60 hover:bg-[#FFEFEF]'
                       }`}
                     >
                       {bg}
@@ -319,27 +333,27 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({ onNavigate }
 
               {/* Vehicle Number */}
               <div className="space-y-1 sm:col-span-2">
-                <label className="text-xs font-semibold text-slate-700 flex items-center gap-1">
-                  Vehicle Registration Number <span className="text-emergency-600">*</span>
+                <label className="text-xs font-semibold text-[#2B2020] flex items-center gap-1">
+                  Vehicle Registration Number <span className="text-[#E53935]">*</span>
                 </label>
                 <div className="relative">
-                  <Car className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                  <Car className="w-4 h-4 text-[#806F6F] absolute left-3.5 top-3" />
                   <input
                     type="text"
                     placeholder="e.g. KA-01-AB-1234 / MH-12-CD-5678"
                     value={vehicleNumber}
                     onChange={e => setVehicleNumber(e.target.value.toUpperCase())}
-                    className="w-full text-xs pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 font-mono uppercase focus:outline-none focus:border-brand-600"
+                    className="w-full text-xs pl-10 pr-3.5 py-2.5 bg-white/90 border border-red-200 rounded-xl text-[#2B2020] font-mono uppercase focus:outline-none focus:border-[#E53935] focus:ring-2 focus:ring-[#E53935]/15 transition-all"
                   />
                 </div>
-                <p className="text-[11px] text-slate-500">
+                <p className="text-[11px] text-[#806F6F]">
                   Affixing the ResQTag on your helmet or vehicle connects this identifier.
                 </p>
               </div>
 
               {/* Allergies */}
               <div className="space-y-1 sm:col-span-2">
-                <label className="text-xs font-semibold text-slate-700 flex items-center gap-1">
+                <label className="text-xs font-semibold text-[#2B2020] flex items-center gap-1">
                   <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
                   Known Allergies (Medications / Food / Environmental)
                 </label>
@@ -348,14 +362,14 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({ onNavigate }
                   placeholder="e.g. Penicillin, Peanuts, Sulfa drugs (or 'None')"
                   value={allergies}
                   onChange={e => setAllergies(e.target.value)}
-                  className="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-brand-600"
+                  className="w-full text-xs px-3.5 py-2.5 bg-white/90 border border-red-200 rounded-xl text-[#2B2020] focus:outline-none focus:border-[#E53935] focus:ring-2 focus:ring-[#E53935]/15 transition-all"
                 />
               </div>
 
               {/* Medical Information */}
               <div className="space-y-1 sm:col-span-2">
-                <label className="text-xs font-semibold text-slate-700 flex items-center gap-1">
-                  <FileText className="w-3.5 h-3.5 text-brand-600" />
+                <label className="text-xs font-semibold text-[#2B2020] flex items-center gap-1">
+                  <FileText className="w-3.5 h-3.5 text-[#E53935]" />
                   Important Medical Info & Emergency Notes
                 </label>
                 <textarea
@@ -363,14 +377,14 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({ onNavigate }
                   placeholder="e.g. Asthmatic (carries blue inhaler in bag), Diabetic Type 2"
                   value={medicalInfo}
                   onChange={e => setMedicalInfo(e.target.value)}
-                  className="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-brand-600"
+                  className="w-full text-xs px-3.5 py-2.5 bg-white/90 border border-red-200 rounded-xl text-[#2B2020] focus:outline-none focus:border-[#E53935] focus:ring-2 focus:ring-[#E53935]/15 transition-all"
                 />
               </div>
 
               {/* Address */}
               <div className="space-y-1 sm:col-span-2">
-                <label className="text-xs font-semibold text-slate-700 flex items-center gap-1">
-                  <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                <label className="text-xs font-semibold text-[#2B2020] flex items-center gap-1">
+                  <MapPin className="w-3.5 h-3.5 text-[#806F6F]" />
                   Residential Address
                 </label>
                 <input
@@ -378,17 +392,17 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({ onNavigate }
                   placeholder="e.g. #402, Sunshine Residency, Indiranagar, Bengaluru"
                   value={address}
                   onChange={e => setAddress(e.target.value)}
-                  className="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-brand-600"
+                  className="w-full text-xs px-3.5 py-2.5 bg-white/90 border border-red-200 rounded-xl text-[#2B2020] focus:outline-none focus:border-[#E53935] focus:ring-2 focus:ring-[#E53935]/15 transition-all"
                 />
               </div>
             </div>
 
             {/* Navigation Buttons */}
-            <div className="flex justify-between items-center pt-4 border-t border-slate-100">
+            <div className="flex justify-between items-center pt-4 border-t border-red-100">
               <button
                 type="button"
                 onClick={() => onNavigate('landing')}
-                className="px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-500 hover:text-slate-800 transition-colors flex items-center gap-1.5"
+                className="px-4 py-2.5 rounded-xl text-xs font-semibold text-[#806F6F] hover:text-[#2B2020] hover:bg-[#FFEFEF] transition-all flex items-center gap-1.5"
               >
                 <ArrowLeft className="w-4 h-4" />
                 Cancel
@@ -398,7 +412,7 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({ onNavigate }
                 onClick={() => {
                   if (validateStep1()) setStep(2);
                 }}
-                className="px-6 py-2.5 rounded-xl text-xs font-bold bg-brand-600 hover:bg-brand-700 text-white shadow-sm transition-all flex items-center gap-2"
+                className="btn-rose-primary px-6 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2"
               >
                 <span>Continue to SOS Contacts</span>
                 <ArrowRight className="w-4 h-4" />
@@ -410,24 +424,26 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({ onNavigate }
         {/* STEP 2: EMERGENCY CONTACTS */}
         {step === 2 && (
           <div className="space-y-6">
-            <div className="border-b border-slate-100 pb-4">
-              <h2 className="text-xl font-bold text-slate-950 flex items-center gap-2">
-                <Heart className="w-5 h-5 text-emergency-600" />
+            <div className="border-b border-red-100 pb-4">
+              <h2 className="text-xl font-bold text-[#2B2020] flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-[#FFEFEF] flex items-center justify-center text-[#E53935]">
+                  <Heart className="w-4 h-4" />
+                </div>
                 Trusted Emergency Contacts
               </h2>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-[#806F6F] mt-0.5">
                 Responders can 1-tap call these numbers directly from the scanned emergency screen.
               </p>
             </div>
 
             {/* Contact 1 (Primary) */}
-            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-300 space-y-3 relative">
+            <div className="p-4 rounded-2xl bg-white/80 border-2 border-red-200/90 space-y-3 relative shadow-sm">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-                  <ShieldCheck className="w-4 h-4 text-safe-600" />
+                <span className="text-xs font-bold text-[#2B2020] uppercase tracking-wider flex items-center gap-1.5">
+                  <ShieldCheck className="w-4 h-4 text-emerald-600" />
                   Primary Emergency Contact 1 (Required)
                 </span>
-                <span className="px-2 py-0.5 rounded bg-emergency-100 text-emergency-800 text-[10px] font-bold border border-emergency-200">
+                <span className="px-2.5 py-0.5 rounded-lg bg-[#FFEFEF] text-[#E53935] text-[10px] font-black border border-red-200">
                   PRIMARY SOS
                 </span>
               </div>
@@ -438,28 +454,28 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({ onNavigate }
                   placeholder="Full Name (e.g. Ramesh Kumar)"
                   value={contact1.name}
                   onChange={e => setContact1({ ...contact1, name: e.target.value })}
-                  className="text-xs px-3 py-2 bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-brand-600"
+                  className="text-xs px-3 py-2.5 bg-white border border-red-200 rounded-xl text-[#2B2020] focus:outline-none focus:border-[#E53935] focus:ring-2 focus:ring-[#E53935]/15"
                 />
                 <input
                   type="text"
                   placeholder="Relationship (e.g. Father, Spouse)"
                   value={contact1.relationship}
                   onChange={e => setContact1({ ...contact1, relationship: e.target.value })}
-                  className="text-xs px-3 py-2 bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-brand-600"
+                  className="text-xs px-3 py-2.5 bg-white border border-red-200 rounded-xl text-[#2B2020] focus:outline-none focus:border-[#E53935] focus:ring-2 focus:ring-[#E53935]/15"
                 />
                 <input
                   type="text"
                   placeholder="Phone (e.g. +91 98765 43210)"
                   value={contact1.phone}
                   onChange={e => setContact1({ ...contact1, phone: e.target.value })}
-                  className="text-xs px-3 py-2 bg-white border border-slate-300 rounded-xl text-slate-900 font-mono focus:outline-none focus:border-brand-600"
+                  className="text-xs px-3 py-2.5 bg-white border border-red-200 rounded-xl text-[#2B2020] font-mono focus:outline-none focus:border-[#E53935] focus:ring-2 focus:ring-[#E53935]/15"
                 />
               </div>
             </div>
 
             {/* Contact 2 */}
-            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
-              <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+            <div className="p-4 rounded-2xl bg-white/60 border border-red-100 space-y-3">
+              <span className="text-xs font-bold text-[#806F6F] uppercase tracking-wider">
                 Emergency Contact 2 (Secondary)
               </span>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -468,28 +484,28 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({ onNavigate }
                   placeholder="Full Name (e.g. Priya Sharma)"
                   value={contact2.name}
                   onChange={e => setContact2({ ...contact2, name: e.target.value })}
-                  className="text-xs px-3 py-2 bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-brand-600"
+                  className="text-xs px-3 py-2.5 bg-white border border-red-200 rounded-xl text-[#2B2020] focus:outline-none focus:border-[#E53935] focus:ring-2 focus:ring-[#E53935]/15"
                 />
                 <input
                   type="text"
                   placeholder="Relationship (e.g. Spouse / Brother)"
                   value={contact2.relationship}
                   onChange={e => setContact2({ ...contact2, relationship: e.target.value })}
-                  className="text-xs px-3 py-2 bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-brand-600"
+                  className="text-xs px-3 py-2.5 bg-white border border-red-200 rounded-xl text-[#2B2020] focus:outline-none focus:border-[#E53935] focus:ring-2 focus:ring-[#E53935]/15"
                 />
                 <input
                   type="text"
                   placeholder="Phone (+91 ...)"
                   value={contact2.phone}
                   onChange={e => setContact2({ ...contact2, phone: e.target.value })}
-                  className="text-xs px-3 py-2 bg-white border border-slate-300 rounded-xl text-slate-900 font-mono focus:outline-none focus:border-brand-600"
+                  className="text-xs px-3 py-2.5 bg-white border border-red-200 rounded-xl text-[#2B2020] font-mono focus:outline-none focus:border-[#E53935] focus:ring-2 focus:ring-[#E53935]/15"
                 />
               </div>
             </div>
 
             {/* Contact 3 */}
-            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
-              <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+            <div className="p-4 rounded-2xl bg-white/60 border border-red-100 space-y-3">
+              <span className="text-xs font-bold text-[#806F6F] uppercase tracking-wider">
                 Emergency Contact 3 (Doctor / Neighbor)
               </span>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -498,31 +514,31 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({ onNavigate }
                   placeholder="Full Name (e.g. Dr. Arvind Swamy)"
                   value={contact3.name}
                   onChange={e => setContact3({ ...contact3, name: e.target.value })}
-                  className="text-xs px-3 py-2 bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-brand-600"
+                  className="text-xs px-3 py-2.5 bg-white border border-red-200 rounded-xl text-[#2B2020] focus:outline-none focus:border-[#E53935] focus:ring-2 focus:ring-[#E53935]/15"
                 />
                 <input
                   type="text"
                   placeholder="Relationship (e.g. Doctor / Friend)"
                   value={contact3.relationship}
                   onChange={e => setContact3({ ...contact3, relationship: e.target.value })}
-                  className="text-xs px-3 py-2 bg-white border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-brand-600"
+                  className="text-xs px-3 py-2.5 bg-white border border-red-200 rounded-xl text-[#2B2020] focus:outline-none focus:border-[#E53935] focus:ring-2 focus:ring-[#E53935]/15"
                 />
                 <input
                   type="text"
                   placeholder="Phone (+91 ...)"
                   value={contact3.phone}
                   onChange={e => setContact3({ ...contact3, phone: e.target.value })}
-                  className="text-xs px-3 py-2 bg-white border border-slate-300 rounded-xl text-slate-900 font-mono focus:outline-none focus:border-brand-600"
+                  className="text-xs px-3 py-2.5 bg-white border border-red-200 rounded-xl text-[#2B2020] font-mono focus:outline-none focus:border-[#E53935] focus:ring-2 focus:ring-[#E53935]/15"
                 />
               </div>
             </div>
 
             {/* Navigation Buttons */}
-            <div className="flex justify-between items-center pt-4 border-t border-slate-100">
+            <div className="flex justify-between items-center pt-4 border-t border-red-100">
               <button
                 type="button"
                 onClick={() => setStep(1)}
-                className="px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-500 hover:text-slate-800 transition-colors flex items-center gap-1.5"
+                className="px-4 py-2.5 rounded-xl text-xs font-semibold text-[#806F6F] hover:text-[#2B2020] hover:bg-[#FFEFEF] transition-colors flex items-center gap-1.5"
               >
                 <ArrowLeft className="w-4 h-4" />
                 Back to Details
@@ -533,7 +549,7 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({ onNavigate }
                   if (validateStep2()) handleSendOtp();
                 }}
                 disabled={isSendingOtp}
-                className="px-6 py-2.5 rounded-xl text-xs font-bold bg-brand-600 hover:bg-brand-700 text-white shadow-sm transition-all flex items-center gap-2"
+                className="btn-rose-primary px-6 py-2.5 rounded-xl text-xs font-bold flex items-center gap-2"
               >
                 {isSendingOtp ? (
                   <span>Sending OTP...</span>
@@ -551,35 +567,35 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({ onNavigate }
         {/* STEP 3: PHONE & OTP VERIFICATION */}
         {step === 3 && (
           <div className="space-y-6 max-w-md mx-auto text-center">
-            <div className="w-14 h-14 rounded-2xl bg-brand-50 text-brand-600 border border-brand-200 flex items-center justify-center mx-auto">
+            <div className="w-14 h-14 rounded-2xl bg-[#FFEFEF] text-[#E53935] border border-red-200 flex items-center justify-center mx-auto shadow-sm">
               <Lock className="w-7 h-7" />
             </div>
 
             <div className="space-y-1">
-              <h2 className="text-xl font-bold text-slate-950">Verify Phone Number</h2>
-              <p className="text-xs text-slate-500">
-                We sent a 6-digit authentication code to <strong className="text-slate-900 font-mono">{phone}</strong>
+              <h2 className="text-xl font-bold text-[#2B2020]">Verify Phone Number</h2>
+              <p className="text-xs text-[#806F6F]">
+                We sent a 6-digit authentication code to <strong className="text-[#2B2020] font-mono">{phone}</strong>
               </p>
             </div>
 
             {/* Safe Demo OTP Helper Banner */}
-            <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs space-y-2 text-left">
+            <div className="p-4 rounded-2xl bg-[#FFEFEF] border border-red-200 text-[#2B2020] text-xs space-y-2.5 text-left shadow-sm">
               <div className="flex items-center justify-between">
-                <span className="font-bold flex items-center gap-1">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+                <span className="font-bold flex items-center gap-1.5 text-[#C62828]">
+                  <Sparkles className="w-4 h-4 text-[#E53935]" />
                   HACKATHON DEMO OTP:
                 </span>
-                <span className="font-mono font-bold text-sm bg-amber-200/60 px-2 py-0.5 rounded text-amber-900">
+                <span className="font-mono font-black text-sm bg-white px-2.5 py-0.5 rounded-lg border border-red-200 text-[#E53935]">
                   {demoOtpCode}
                 </span>
               </div>
-              <p className="text-[11px] text-amber-800">
+              <p className="text-[11px] text-[#806F6F]">
                 For hackathon evaluation, click below to autofill this code immediately.
               </p>
               <button
                 type="button"
                 onClick={() => setOtp(demoOtpCode)}
-                className="w-full py-2 px-3 rounded-xl bg-white hover:bg-amber-100 font-bold text-xs text-amber-900 border border-amber-300 shadow-sm transition-colors"
+                className="w-full py-2 px-3 rounded-xl bg-white hover:bg-red-50 font-bold text-xs text-[#E53935] border border-red-200 shadow-sm transition-all hover:-translate-y-0.5 active:scale-95"
               >
                 ⚡ 1-Click Autofill Code ({demoOtpCode})
               </button>
@@ -593,7 +609,7 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({ onNavigate }
                 placeholder="Enter 6-digit OTP"
                 value={otp}
                 onChange={e => setOtp(e.target.value.replace(/\D/g, ''))}
-                className="w-full text-2xl tracking-[0.5em] text-center font-mono py-3.5 bg-slate-50 border-2 border-slate-300 rounded-2xl text-slate-950 focus:outline-none focus:border-brand-600 focus:bg-white"
+                className="w-full text-2xl tracking-[0.5em] text-center font-mono py-3.5 bg-white border-2 border-red-200 rounded-2xl text-[#2B2020] focus:outline-none focus:border-[#E53935] focus:ring-4 focus:ring-[#E53935]/15 transition-all shadow-inner"
               />
             </div>
 
@@ -602,7 +618,7 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({ onNavigate }
               type="button"
               onClick={handleVerifyAndCreate}
               disabled={isVerifyingOtp}
-              className="w-full py-3.5 rounded-xl font-bold text-sm bg-brand-600 hover:bg-brand-700 text-white shadow-sm transition-all flex items-center justify-center gap-2"
+              className="w-full btn-rose-primary py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2"
             >
               {isVerifyingOtp ? (
                 <span>Generating ResQTag...</span>
@@ -614,18 +630,18 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({ onNavigate }
               )}
             </button>
 
-            <div className="flex justify-between items-center text-xs text-slate-500 pt-2">
+            <div className="flex justify-between items-center text-xs text-[#806F6F] pt-2">
               <button
                 type="button"
                 onClick={() => setStep(2)}
-                className="hover:text-slate-900"
+                className="hover:text-[#2B2020] transition-colors"
               >
                 Change Phone / Contacts
               </button>
               <button
                 type="button"
                 onClick={handleSendOtp}
-                className="text-brand-600 hover:underline font-semibold"
+                className="text-[#E53935] hover:underline font-semibold"
               >
                 Resend OTP
               </button>
@@ -636,57 +652,57 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({ onNavigate }
         {/* STEP 4: SUCCESS & RESQTAG GENERATED */}
         {step === 4 && createdProfile && (
           <div className="space-y-6 text-center">
-            <div className="w-16 h-16 rounded-full bg-safe-50 text-safe-600 border border-safe-200 flex items-center justify-center mx-auto">
+            <div className="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center mx-auto shadow-sm animate-bounce">
               <CheckCircle2 className="w-10 h-10" />
             </div>
 
             <div className="space-y-1.5">
-              <h2 className="text-2xl font-black text-slate-950">
+              <h2 className="text-2xl font-black text-[#2B2020]">
                 ResQTag Successfully Generated!
               </h2>
-              <p className="text-xs text-slate-500 max-w-md mx-auto">
+              <p className="text-xs text-[#806F6F] max-w-md mx-auto">
                 Your life-saving emergency profile is now active and connected to your unique ResQTag identifier.
               </p>
             </div>
 
             {/* Card Showing Generated Tag ID and Short Code */}
-            <div className="max-w-md mx-auto p-6 rounded-3xl bg-slate-50 border border-slate-200 text-left space-y-4">
-              <div className="flex justify-between items-center border-b border-slate-200 pb-3">
+            <div className="max-w-md mx-auto p-6 rounded-3xl bg-white/90 border border-red-200 text-left space-y-4 shadow-lg">
+              <div className="flex justify-between items-center border-b border-red-100 pb-3">
                 <div>
-                  <span className="text-[10px] uppercase font-bold text-slate-500">ResQTag Secure ID</span>
-                  <div className="text-sm font-mono font-bold text-slate-900">{createdProfile.tagId}</div>
+                  <span className="text-[10px] uppercase font-bold text-[#806F6F]">ResQTag Secure ID</span>
+                  <div className="text-sm font-mono font-bold text-[#2B2020]">{createdProfile.tagId}</div>
                 </div>
                 <div className="text-right">
-                  <span className="text-[10px] uppercase font-bold text-slate-500">Backup Short Code</span>
-                  <div className="text-lg font-mono font-black text-brand-700 bg-white px-2.5 py-0.5 rounded-lg border border-slate-200">
+                  <span className="text-[10px] uppercase font-bold text-[#806F6F]">Backup Short Code</span>
+                  <div className="text-lg font-mono font-black text-[#E53935] bg-[#FFEFEF] px-2.5 py-0.5 rounded-lg border border-red-200">
                     {createdProfile.shortCode}
                   </div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-2 text-xs text-slate-700">
+              <div className="grid grid-cols-2 gap-2 text-xs text-[#2B2020]">
                 <div>
-                  <span className="text-[10px] text-slate-500 block">NAME</span>
+                  <span className="text-[10px] text-[#806F6F] block font-semibold">NAME</span>
                   <strong>{createdProfile.fullName}</strong>
                 </div>
                 <div>
-                  <span className="text-[10px] text-slate-500 block">BLOOD GROUP</span>
-                  <strong className="text-emergency-600 font-bold">{createdProfile.bloodGroup}</strong>
+                  <span className="text-[10px] text-[#806F6F] block font-semibold">BLOOD GROUP</span>
+                  <strong className="text-[#E53935] font-bold">{createdProfile.bloodGroup}</strong>
                 </div>
                 <div>
-                  <span className="text-[10px] text-slate-500 block">VEHICLE</span>
+                  <span className="text-[10px] text-[#806F6F] block font-semibold">VEHICLE</span>
                   <strong>{createdProfile.vehicleNumber}</strong>
                 </div>
                 <div>
-                  <span className="text-[10px] text-slate-500 block">EMERGENCY CONTACT</span>
+                  <span className="text-[10px] text-[#806F6F] block font-semibold">EMERGENCY CONTACT</span>
                   <strong>{createdProfile.emergencyContacts[0]?.name}</strong>
                 </div>
               </div>
 
-              <div className="p-3 rounded-xl bg-white border border-slate-200 text-[11px] text-slate-600 flex items-center gap-2">
-                <Lock className="w-4 h-4 text-brand-600 shrink-0" />
+              <div className="p-3 rounded-xl bg-[#FFF7F7] border border-red-100 text-[11px] text-[#806F6F] flex items-center gap-2">
+                <Lock className="w-4 h-4 text-[#E53935] shrink-0" />
                 <span>
-                  <strong>Strict Privacy:</strong> The QR contains only the secure ID token, never unencrypted personal info.
+                  <strong className="text-[#2B2020]">Strict Privacy:</strong> The QR contains only the secure ID token, never unencrypted personal info.
                 </span>
               </div>
             </div>
@@ -696,7 +712,7 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({ onNavigate }
               <button
                 type="button"
                 onClick={() => onNavigate('dashboard')}
-                className="w-full sm:w-auto px-6 py-3 rounded-xl text-xs font-bold bg-white hover:bg-slate-100 text-slate-800 border border-slate-300 shadow-sm transition-all flex items-center justify-center gap-2"
+                className="w-full sm:w-auto btn-rose-outline px-6 py-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2"
               >
                 <span>Go to Owner Dashboard</span>
                 <ArrowRight className="w-4 h-4" />
@@ -705,7 +721,7 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({ onNavigate }
               <button
                 type="button"
                 onClick={() => onNavigate('sticker')}
-                className="w-full sm:w-auto px-6 py-3 rounded-xl text-xs font-bold bg-slate-900 hover:bg-slate-800 text-white shadow-sm transition-all flex items-center justify-center gap-2"
+                className="w-full sm:w-auto btn-rose-primary px-6 py-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2"
               >
                 <Printer className="w-4 h-4" />
                 <span>Print QR Stickers</span>

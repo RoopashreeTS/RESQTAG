@@ -156,35 +156,35 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
   const scanUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/#scan/${current.shortCode}`;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 text-slate-900">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 text-[#2B2020] relative z-10">
       
       {/* Top Welcome Header */}
-      <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-card flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="glass-card-rose-solid rounded-3xl p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xl">
         <div className="flex items-center gap-4">
           {current.photoUrl ? (
             <img
               src={current.photoUrl}
               alt={current.fullName}
-              className="w-16 h-16 rounded-2xl object-cover border-2 border-slate-200 shadow-sm bg-white shrink-0"
+              className="w-16 h-16 rounded-2xl object-cover border-2 border-[#E53935] shadow-md bg-white shrink-0"
             />
           ) : (
-            <div className="w-16 h-16 rounded-2xl bg-slate-100 border-2 border-slate-200 flex items-center justify-center text-slate-400 shrink-0">
-              <User className="w-8 h-8 text-slate-400" />
+            <div className="w-16 h-16 rounded-2xl bg-[#FFEFEF] border-2 border-red-200 flex items-center justify-center text-[#E53935] shrink-0">
+              <User className="w-8 h-8" />
             </div>
           )}
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-xl sm:text-2xl font-black text-slate-950">{current.fullName}</h1>
-              <span className="px-2.5 py-0.5 rounded-full bg-safe-50 text-safe-700 text-[10px] font-bold border border-safe-200">
+              <h1 className="text-xl sm:text-2xl font-black text-[#2B2020]">{current.fullName}</h1>
+              <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-black border border-emerald-300">
                 ACTIVE TAG
               </span>
             </div>
-            <div className="flex flex-wrap items-center gap-3 text-xs text-slate-600 mt-1 font-mono">
-              <span>TAG ID: <strong className="text-slate-900">{current.tagId}</strong></span>
+            <div className="flex flex-wrap items-center gap-3 text-xs text-[#806F6F] mt-1 font-mono">
+              <span>TAG ID: <strong className="text-[#2B2020]">{current.tagId}</strong></span>
               <span>•</span>
-              <span>CODE: <strong className="text-brand-700">{current.shortCode}</strong></span>
+              <span>CODE: <strong className="text-[#E53935] font-black">{current.shortCode}</strong></span>
               <span>•</span>
-              <span className="text-emergency-600 font-bold">BLOOD: {current.bloodGroup}</span>
+              <span className="text-[#E53935] font-bold">BLOOD: {current.bloodGroup}</span>
             </div>
           </div>
         </div>
@@ -193,9 +193,9 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
         <div className="flex items-center gap-2">
           <button
             onClick={onOpenSimulator}
-            className="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-colors flex items-center gap-1.5 shadow-sm"
+            className="btn-rose-primary px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-1.5"
           >
-            <Sparkles className="w-3.5 h-3.5 text-brand-400" />
+            <Sparkles className="w-3.5 h-3.5" />
             <span>Simulate Incident</span>
           </button>
         </div>
@@ -206,15 +206,15 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
         
         {/* Left Sidebar Navigation */}
         <div className="lg:col-span-3 space-y-4">
-          <nav className="bg-white border border-slate-200 rounded-3xl p-2.5 space-y-1 shadow-card">
+          <nav className="glass-card-rose-solid rounded-3xl p-3 space-y-1.5 shadow-lg">
             
             {/* 1. Dashboard */}
             <button
               onClick={() => setActiveTab('dashboard')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold transition-all ${
                 activeTab === 'dashboard'
-                  ? 'bg-slate-900 text-white shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                  ? 'bg-gradient-to-r from-[#E53935] to-[#FF6B6B] text-white shadow-rose-btn -translate-y-0.5'
+                  : 'text-[#806F6F] hover:text-[#2B2020] hover:bg-[#FFEFEF]'
               }`}
             >
               <LayoutDashboard className="w-4 h-4" />
@@ -226,8 +226,8 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
               onClick={() => setActiveTab('qr')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold transition-all ${
                 activeTab === 'qr'
-                  ? 'bg-slate-900 text-white shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                  ? 'bg-gradient-to-r from-[#E53935] to-[#FF6B6B] text-white shadow-rose-btn -translate-y-0.5'
+                  : 'text-[#806F6F] hover:text-[#2B2020] hover:bg-[#FFEFEF]'
               }`}
             >
               <QrCode className="w-4 h-4" />
@@ -237,13 +237,13 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
             {/* 3. SafeJourney */}
             <button
               onClick={() => onNavigate('safejourney')}
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold text-safe-700 hover:bg-safe-50 border border-safe-200 transition-all"
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold text-emerald-800 hover:bg-emerald-50 border border-emerald-200 transition-all hover:-translate-y-0.5 active:scale-95 bg-emerald-50/60"
             >
-              <Trees className="w-4 h-4 text-safe-600" />
+              <Trees className="w-4 h-4 text-emerald-600" />
               <div className="flex-1 text-left flex justify-between items-center">
                 <span>SafeJourney</span>
                 {activeJourney && (
-                  <span className="w-2 h-2 rounded-full bg-safe-600 animate-pulse"></span>
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 animate-ping"></span>
                 )}
               </div>
             </button>
@@ -253,14 +253,16 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
               onClick={() => setActiveTab('history')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold transition-all ${
                 activeTab === 'history'
-                  ? 'bg-slate-900 text-white shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                  ? 'bg-gradient-to-r from-[#E53935] to-[#FF6B6B] text-white shadow-rose-btn -translate-y-0.5'
+                  : 'text-[#806F6F] hover:text-[#2B2020] hover:bg-[#FFEFEF]'
               }`}
             >
               <History className="w-4 h-4" />
               <div className="flex-1 text-left flex justify-between items-center">
                 <span>Scan History</span>
-                <span className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 text-[10px] font-mono">
+                <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono ${
+                  activeTab === 'history' ? 'bg-white/30 text-white' : 'bg-red-100 text-[#E53935]'
+                }`}>
                   {scans.length}
                 </span>
               </div>
@@ -271,14 +273,16 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
               onClick={() => setActiveTab('notifications')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold transition-all ${
                 activeTab === 'notifications'
-                  ? 'bg-slate-900 text-white shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                  ? 'bg-gradient-to-r from-[#E53935] to-[#FF6B6B] text-white shadow-rose-btn -translate-y-0.5'
+                  : 'text-[#806F6F] hover:text-[#2B2020] hover:bg-[#FFEFEF]'
               }`}
             >
               <Bell className="w-4 h-4" />
               <div className="flex-1 text-left flex justify-between items-center">
                 <span>Notifications</span>
-                <span className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 text-[10px] font-mono">
+                <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono ${
+                  activeTab === 'notifications' ? 'bg-white/30 text-white' : 'bg-red-100 text-[#E53935]'
+                }`}>
                   {alerts.length}
                 </span>
               </div>
@@ -289,8 +293,8 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
               onClick={() => setActiveTab('profile')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold transition-all ${
                 activeTab === 'profile'
-                  ? 'bg-slate-900 text-white shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                  ? 'bg-gradient-to-r from-[#E53935] to-[#FF6B6B] text-white shadow-rose-btn -translate-y-0.5'
+                  : 'text-[#806F6F] hover:text-[#2B2020] hover:bg-[#FFEFEF]'
               }`}
             >
               <User className="w-4 h-4" />
@@ -302,18 +306,18 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
               onClick={() => setActiveTab('settings')}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold transition-all ${
                 activeTab === 'settings'
-                  ? 'bg-slate-900 text-white shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                  ? 'bg-gradient-to-r from-[#E53935] to-[#FF6B6B] text-white shadow-rose-btn -translate-y-0.5'
+                  : 'text-[#806F6F] hover:text-[#2B2020] hover:bg-[#FFEFEF]'
               }`}
             >
               <Settings className="w-4 h-4" />
               <span>Settings</span>
             </button>
 
-            <div className="pt-2 border-t border-slate-100">
+            <div className="pt-2 border-t border-red-100">
               <button
                 onClick={logout}
-                className="w-full flex items-center gap-3 px-4 py-2.5 rounded-2xl text-xs font-bold text-rose-600 hover:bg-rose-50 transition-colors"
+                className="w-full flex items-center gap-3 px-4 py-2.5 rounded-2xl text-xs font-bold text-[#E53935] hover:bg-[#FFEFEF] transition-colors"
               >
                 <LogOut className="w-4 h-4" />
                 <span>Logout</span>
@@ -322,14 +326,14 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
           </nav>
 
           {/* Public Preview Box */}
-          <div className="bg-white border border-slate-200 rounded-3xl p-5 text-center space-y-3 shadow-card">
-            <div className="text-xs font-bold text-slate-700">Public Responder View</div>
-            <div className="p-2 bg-slate-50 border border-slate-200 rounded-2xl inline-block">
+          <div className="glass-card-rose rounded-3xl p-5 text-center space-y-3 shadow-md">
+            <div className="text-xs font-bold text-[#2B2020]">Public Responder View</div>
+            <div className="p-2 bg-white border border-red-200 rounded-2xl inline-block shadow-sm">
               <QRCodeSVG value={scanUrl} size={110} />
             </div>
             <button
               onClick={() => onNavigate('emergency-profile', current.shortCode)}
-              className="w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-brand-700 border border-slate-300 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
+              className="w-full btn-rose-outline py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5"
             >
               <span>Test Public View</span>
               <ExternalLink className="w-3.5 h-3.5" />
@@ -348,49 +352,53 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 
                 {/* Widget 1: Emergency QR Status */}
-                <div className="bg-white border border-slate-200 rounded-3xl p-6 space-y-4 shadow-card">
-                  <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div className="glass-card-rose-solid rounded-3xl p-6 space-y-4 shadow-lg">
+                  <div className="flex items-center justify-between border-b border-red-100 pb-3">
                     <div className="flex items-center gap-2">
-                      <QrCode className="w-5 h-5 text-brand-600" />
-                      <h3 className="text-sm font-bold text-slate-900">Emergency QR Status</h3>
+                      <div className="w-8 h-8 rounded-lg bg-[#FFEFEF] flex items-center justify-center text-[#E53935]">
+                        <QrCode className="w-4 h-4" />
+                      </div>
+                      <h3 className="text-sm font-bold text-[#2B2020]">Emergency QR Status</h3>
                     </div>
-                    <span className="px-2 py-0.5 rounded-full bg-safe-50 text-safe-700 text-[10px] font-bold border border-safe-200">
+                    <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 text-[10px] font-bold border border-emerald-200">
                       ✓ Active & Ready
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2 text-xs">
-                    <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
-                      <span className="text-[10px] text-slate-500 block">SHORT CODE</span>
-                      <strong className="text-slate-900 font-mono text-sm">{current.shortCode}</strong>
+                  <div className="grid grid-cols-2 gap-2.5 text-xs">
+                    <div className="p-3 rounded-2xl bg-white/80 border border-red-100">
+                      <span className="text-[10px] text-[#806F6F] block font-semibold">SHORT CODE</span>
+                      <strong className="text-[#E53935] font-mono text-sm">{current.shortCode}</strong>
                     </div>
-                    <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
-                      <span className="text-[10px] text-slate-500 block">BLOOD GROUP</span>
-                      <strong className="text-emergency-600 font-mono text-sm">{current.bloodGroup}</strong>
+                    <div className="p-3 rounded-2xl bg-white/80 border border-red-100">
+                      <span className="text-[10px] text-[#806F6F] block font-semibold">BLOOD GROUP</span>
+                      <strong className="text-[#E53935] font-mono text-sm">{current.bloodGroup}</strong>
                     </div>
-                    <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 col-span-2">
-                      <span className="text-[10px] text-slate-500 block">VEHICLE ASSIGNED</span>
-                      <strong className="text-slate-800 font-mono">{current.vehicleNumber}</strong>
+                    <div className="p-3 rounded-2xl bg-white/80 border border-red-100 col-span-2">
+                      <span className="text-[10px] text-[#806F6F] block font-semibold">VEHICLE ASSIGNED</span>
+                      <strong className="text-[#2B2020] font-mono">{current.vehicleNumber}</strong>
                     </div>
                   </div>
 
                   <button
                     onClick={() => setActiveTab('qr')}
-                    className="w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold text-xs transition-colors"
+                    className="w-full btn-rose-outline py-2.5 rounded-xl text-xs font-semibold"
                   >
                     View QR & Decal Stickers
                   </button>
                 </div>
 
                 {/* Widget 2: SafeJourney Status */}
-                <div className="bg-white border border-slate-200 rounded-3xl p-6 space-y-4 shadow-card">
-                  <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div className="glass-card-rose-solid rounded-3xl p-6 space-y-4 shadow-lg">
+                  <div className="flex items-center justify-between border-b border-red-100 pb-3">
                     <div className="flex items-center gap-2">
-                      <Trees className="w-5 h-5 text-safe-600" />
-                      <h3 className="text-sm font-bold text-slate-900">SafeJourney Status</h3>
+                      <div className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600">
+                        <Trees className="w-4 h-4" />
+                      </div>
+                      <h3 className="text-sm font-bold text-[#2B2020]">SafeJourney Status</h3>
                     </div>
-                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                      activeJourney ? 'bg-safe-50 text-safe-700 border border-safe-200' : 'bg-slate-100 text-slate-600'
+                    <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
+                      activeJourney ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' : 'bg-slate-100 text-[#806F6F]'
                     }`}>
                       {activeJourney ? '● Monitoring Active' : 'Idle'}
                     </span>
@@ -398,39 +406,41 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
 
                   {activeJourney ? (
                     <div className="space-y-2 text-xs">
-                      <div className="p-3 rounded-xl bg-safe-50 border border-safe-200 space-y-1">
-                        <span className="text-slate-600 block text-[11px]">Current Destination:</span>
-                        <strong className="text-safe-900 block">{activeJourney.destinationType}</strong>
+                      <div className="p-3 rounded-2xl bg-emerald-50/70 border border-emerald-200 space-y-1">
+                        <span className="text-emerald-800 block text-[11px] font-semibold">Current Destination:</span>
+                        <strong className="text-emerald-950 block">{activeJourney.destinationType}</strong>
                       </div>
-                      <div className="flex justify-between text-xs text-slate-600 pt-1">
-                        <span>Check-in Interval: <strong>{activeJourney.isDemoMode ? `${activeJourney.demoIntervalSeconds}s (Demo)` : `${activeJourney.intervalMinutes}m`}</strong></span>
+                      <div className="flex justify-between text-xs text-[#806F6F] pt-1">
+                        <span>Interval: <strong>{activeJourney.isDemoMode ? `${activeJourney.demoIntervalSeconds}s (Demo)` : `${activeJourney.intervalMinutes}m`}</strong></span>
                         <span>Check-ins: <strong>{activeJourney.totalCheckins}</strong></span>
                       </div>
                     </div>
                   ) : (
-                    <p className="text-xs text-slate-500 py-3">
+                    <p className="text-xs text-[#806F6F] py-3">
                       No active SafeJourney running. Start proactive monitoring for solo trekking or remote travel.
                     </p>
                   )}
 
                   <button
                     onClick={() => onNavigate('safejourney')}
-                    className="w-full py-2.5 rounded-xl bg-safe-600 hover:bg-safe-700 text-white font-semibold text-xs transition-colors"
+                    className="w-full btn-rose-safe py-2.5 rounded-xl text-xs font-bold"
                   >
                     {activeJourney ? 'Open Active SafeJourney' : 'Start SafeJourney'}
                   </button>
                 </div>
 
                 {/* Widget 3: Emergency Contacts */}
-                <div className="bg-white border border-slate-200 rounded-3xl p-6 space-y-4 shadow-card">
-                  <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div className="glass-card-rose-solid rounded-3xl p-6 space-y-4 shadow-lg">
+                  <div className="flex items-center justify-between border-b border-red-100 pb-3">
                     <div className="flex items-center gap-2">
-                      <Heart className="w-5 h-5 text-emergency-600" />
-                      <h3 className="text-sm font-bold text-slate-900">Emergency Contacts</h3>
+                      <div className="w-8 h-8 rounded-lg bg-[#FFEFEF] flex items-center justify-center text-[#E53935]">
+                        <Heart className="w-4 h-4" />
+                      </div>
+                      <h3 className="text-sm font-bold text-[#2B2020]">Emergency Contacts</h3>
                     </div>
                     <button
                       onClick={() => setActiveTab('profile')}
-                      className="text-xs text-brand-600 hover:underline font-semibold"
+                      className="text-xs text-[#E53935] hover:underline font-bold"
                     >
                       Edit
                     </button>
@@ -438,13 +448,13 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
 
                   <div className="space-y-2 text-xs">
                     {current.emergencyContacts.slice(0, 3).map((c, i) => (
-                      <div key={i} className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+                      <div key={i} className="p-2.5 rounded-xl bg-white/80 border border-red-100 flex items-center justify-between">
                         <div>
-                          <span className="font-bold text-slate-900 block">{c.name}</span>
-                          <span className="text-[10px] text-slate-500">{c.relationship} • {c.phone}</span>
+                          <span className="font-bold text-[#2B2020] block">{c.name}</span>
+                          <span className="text-[10px] text-[#806F6F]">{c.relationship} • {c.phone}</span>
                         </div>
                         {c.isPrimary && (
-                          <span className="px-2 py-0.5 rounded bg-emergency-100 text-emergency-800 text-[10px] font-bold">
+                          <span className="px-2 py-0.5 rounded bg-[#FFEFEF] text-[#E53935] text-[10px] font-black border border-red-200">
                             PRIMARY
                           </span>
                         )}
@@ -454,31 +464,33 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
                 </div>
 
                 {/* Widget 4: Recent Scans */}
-                <div className="bg-white border border-slate-200 rounded-3xl p-6 space-y-4 shadow-card">
-                  <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div className="glass-card-rose-solid rounded-3xl p-6 space-y-4 shadow-lg">
+                  <div className="flex items-center justify-between border-b border-red-100 pb-3">
                     <div className="flex items-center gap-2">
-                      <History className="w-5 h-5 text-brand-600" />
-                      <h3 className="text-sm font-bold text-slate-900">Recent Scans</h3>
+                      <div className="w-8 h-8 rounded-lg bg-[#FFEFEF] flex items-center justify-center text-[#E53935]">
+                        <History className="w-4 h-4" />
+                      </div>
+                      <h3 className="text-sm font-bold text-[#2B2020]">Recent Scans</h3>
                     </div>
                     <button
                       onClick={() => setActiveTab('history')}
-                      className="text-xs text-brand-600 hover:underline font-semibold"
+                      className="text-xs text-[#E53935] hover:underline font-bold"
                     >
                       View All ({scans.length})
                     </button>
                   </div>
 
                   {scans.length === 0 ? (
-                    <p className="text-xs text-slate-400 py-4 text-center">No scan events recorded yet.</p>
+                    <p className="text-xs text-[#806F6F] py-4 text-center">No scan events recorded yet.</p>
                   ) : (
                     <div className="space-y-2 text-xs">
                       {scans.slice(0, 2).map((s) => (
-                        <div key={s.id} className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 space-y-0.5">
+                        <div key={s.id} className="p-2.5 rounded-xl bg-white/80 border border-red-100 space-y-0.5">
                           <div className="flex justify-between items-center">
-                            <span className="font-mono font-bold text-slate-900">{new Date(s.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                            <span className="text-[10px] font-bold text-safe-700">{s.locationStatus}</span>
+                            <span className="font-mono font-bold text-[#2B2020]">{new Date(s.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                            <span className="text-[10px] font-bold text-emerald-700">{s.locationStatus}</span>
                           </div>
-                          <p className="text-[11px] text-slate-500 truncate">{s.approxLocation || 'Direct lookup'}</p>
+                          <p className="text-[11px] text-[#806F6F] truncate">{s.approxLocation || 'Direct lookup'}</p>
                         </div>
                       ))}
                     </div>
@@ -486,28 +498,30 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
                 </div>
 
                 {/* Widget 5: Recent Alerts (Full Width) */}
-                <div className="bg-white border border-slate-200 rounded-3xl p-6 space-y-4 shadow-card md:col-span-2">
-                  <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div className="glass-card-rose-solid rounded-3xl p-6 space-y-4 shadow-lg md:col-span-2">
+                  <div className="flex items-center justify-between border-b border-red-100 pb-3">
                     <div className="flex items-center gap-2">
-                      <Bell className="w-5 h-5 text-emergency-600" />
-                      <h3 className="text-sm font-bold text-slate-900">Recent Emergency Alerts & Notifications</h3>
+                      <div className="w-8 h-8 rounded-lg bg-[#FFEFEF] flex items-center justify-center text-[#E53935]">
+                        <Bell className="w-4 h-4" />
+                      </div>
+                      <h3 className="text-sm font-bold text-[#2B2020]">Recent Emergency Alerts & Notifications</h3>
                     </div>
-                    <span className="text-xs font-mono text-slate-500">{alerts.length} Total Alerts</span>
+                    <span className="text-xs font-mono text-[#806F6F]">{alerts.length} Total Alerts</span>
                   </div>
 
                   {alerts.length === 0 ? (
-                    <p className="text-xs text-slate-500 py-3">No active emergency alerts recorded. All systems normal.</p>
+                    <p className="text-xs text-[#806F6F] py-3">No active emergency alerts recorded. All systems normal.</p>
                   ) : (
                     <div className="space-y-2 text-xs">
                       {alerts.slice(0, 3).map((a) => (
-                        <div key={a.id} className="p-3 rounded-xl bg-emergency-50 border border-emergency-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div key={a.id} className="p-3 rounded-2xl bg-[#FFEFEF] border border-red-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-sm">
                           <div>
-                            <span className="font-bold text-emergency-900 block">
+                            <span className="font-bold text-[#C62828] block">
                               {a.alertType === 'manual_sos' ? '🆘 Emergency SOS Alert' : '🚨 Missed Safety Check-in Alert'}
                             </span>
-                            <span className="text-[11px] text-slate-600">{a.notes || `Alert triggered during journey (${a.journeyType})`}</span>
+                            <span className="text-[11px] text-[#806F6F]">{a.notes || `Alert triggered during journey (${a.journeyType})`}</span>
                           </div>
-                          <span className="text-[10px] font-mono text-slate-500 shrink-0">
+                          <span className="text-[10px] font-mono text-[#806F6F] shrink-0">
                             {new Date(a.timestamp).toLocaleTimeString()}
                           </span>
                         </div>
@@ -523,33 +537,35 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
 
           {/* TAB 2: PROFILE EDIT */}
           {activeTab === 'profile' && (
-            <form onSubmit={handleSaveProfile} className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-6 shadow-card">
-              <div className="border-b border-slate-100 pb-4">
-                <h2 className="text-xl font-bold text-slate-950 flex items-center gap-2">
-                  <User className="w-5 h-5 text-brand-600" />
+            <form onSubmit={handleSaveProfile} className="glass-card-rose-solid rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl">
+              <div className="border-b border-red-100 pb-4">
+                <h2 className="text-xl font-bold text-[#2B2020] flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-[#FFEFEF] flex items-center justify-center text-[#E53935]">
+                    <User className="w-4 h-4" />
+                  </div>
                   Edit Emergency Profile
                 </h2>
-                <p className="text-xs text-slate-500 mt-1">
-                  Updates sync dynamically with your permanent ResQTag (<span className="font-mono text-slate-900 font-bold">{current.shortCode}</span>).
+                <p className="text-xs text-[#806F6F] mt-1">
+                  Updates sync dynamically with your permanent ResQTag (<span className="font-mono text-[#E53935] font-bold">{current.shortCode}</span>).
                 </p>
               </div>
 
               {saveSuccessMessage && (
-                <div className="p-3.5 rounded-xl bg-safe-50 border border-safe-200 text-safe-800 text-xs flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-safe-600 shrink-0" />
+                <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center gap-2 shadow-sm">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                   <span>{saveSuccessMessage}</span>
                 </div>
               )}
 
               {errorMessage && (
-                <div className="p-3.5 rounded-xl bg-emergency-50 border border-emergency-200 text-emergency-800 text-xs flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4 text-emergency-600 shrink-0" />
+                <div className="p-3.5 rounded-xl bg-[#FFEFEF] border border-red-200 text-[#C62828] text-xs flex items-center gap-2 shadow-sm">
+                  <AlertCircle className="w-4 h-4 text-[#E53935] shrink-0" />
                   <span>{errorMessage}</span>
                 </div>
               )}
 
               {/* Profile Photo Uploader */}
-              <div className="border-b border-slate-100 pb-6">
+              <div className="border-b border-red-100 pb-6">
                 <ProfilePhotoUploader
                   photoUrl={photoUrl || undefined}
                   onPhotoChange={(newUrl) => setPhotoUrl(newUrl || '')}
@@ -558,28 +574,28 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-700">Full Name</label>
+                  <label className="text-xs font-semibold text-[#2B2020]">Full Name</label>
                   <input
                     type="text"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    className="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900"
+                    className="w-full text-xs px-3.5 py-2.5 bg-white/90 border border-red-200 rounded-xl text-[#2B2020] focus:outline-none focus:border-[#E53935] focus:ring-2 focus:ring-[#E53935]/15 transition-all"
                     required
                   />
                 </div>
 
                 <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-700">Age</label>
+                  <label className="text-xs font-semibold text-[#2B2020]">Age</label>
                   <input
                     type="number"
                     value={age}
                     onChange={(e) => setAge(e.target.value)}
-                    className="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900"
+                    className="w-full text-xs px-3.5 py-2.5 bg-white/90 border border-red-200 rounded-xl text-[#2B2020] focus:outline-none focus:border-[#E53935] focus:ring-2 focus:ring-[#E53935]/15 transition-all"
                   />
                 </div>
 
                 <div className="space-y-1 sm:col-span-2">
-                  <label className="text-xs font-semibold text-slate-700">Blood Group</label>
+                  <label className="text-xs font-semibold text-[#2B2020]">Blood Group</label>
                   <div className="grid grid-cols-4 sm:grid-cols-8 gap-1.5">
                     {BLOOD_GROUPS.map((bg) => (
                       <button
@@ -588,8 +604,8 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
                         onClick={() => setBloodGroup(bg)}
                         className={`py-2 text-xs font-bold rounded-xl border transition-all ${
                           bloodGroup === bg
-                            ? 'bg-emergency-600 text-white border-emergency-600 shadow-sm'
-                            : 'bg-white text-slate-700 border-slate-300 hover:border-slate-400'
+                            ? 'bg-gradient-to-r from-[#E53935] to-[#C62828] text-white border-[#C62828] shadow-md -translate-y-0.5'
+                            : 'bg-white/80 text-[#2B2020] border-red-200 hover:border-[#E53935] hover:bg-[#FFEFEF]'
                         }`}
                       >
                         {bg}
@@ -599,57 +615,57 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
                 </div>
 
                 <div className="space-y-1 sm:col-span-2">
-                  <label className="text-xs font-semibold text-slate-700">Vehicle Registration Number</label>
+                  <label className="text-xs font-semibold text-[#2B2020]">Vehicle Registration Number</label>
                   <input
                     type="text"
                     value={vehicleNumber}
                     onChange={(e) => setVehicleNumber(e.target.value.toUpperCase())}
-                    className="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 font-mono uppercase"
+                    className="w-full text-xs px-3.5 py-2.5 bg-white/90 border border-red-200 rounded-xl text-[#2B2020] font-mono uppercase focus:outline-none focus:border-[#E53935] focus:ring-2 focus:ring-[#E53935]/15"
                     required
                   />
                 </div>
 
                 <div className="space-y-1 sm:col-span-2">
-                  <label className="text-xs font-semibold text-slate-700">Known Allergies</label>
+                  <label className="text-xs font-semibold text-[#2B2020]">Known Allergies</label>
                   <input
                     type="text"
                     value={allergies}
                     onChange={(e) => setAllergies(e.target.value)}
-                    className="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900"
+                    className="w-full text-xs px-3.5 py-2.5 bg-white/90 border border-red-200 rounded-xl text-[#2B2020] focus:outline-none focus:border-[#E53935] focus:ring-2 focus:ring-[#E53935]/15"
                   />
                 </div>
 
                 <div className="space-y-1 sm:col-span-2">
-                  <label className="text-xs font-semibold text-slate-700">Important Medical Information</label>
+                  <label className="text-xs font-semibold text-[#2B2020]">Important Medical Information</label>
                   <textarea
                     rows={3}
                     value={medicalInfo}
                     onChange={(e) => setMedicalInfo(e.target.value)}
-                    className="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900"
+                    className="w-full text-xs px-3.5 py-2.5 bg-white/90 border border-red-200 rounded-xl text-[#2B2020] focus:outline-none focus:border-[#E53935] focus:ring-2 focus:ring-[#E53935]/15"
                   />
                 </div>
 
                 <div className="space-y-1 sm:col-span-2">
-                  <label className="text-xs font-semibold text-slate-700">Residential Address</label>
+                  <label className="text-xs font-semibold text-[#2B2020]">Residential Address</label>
                   <input
                     type="text"
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
-                    className="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-900"
+                    className="w-full text-xs px-3.5 py-2.5 bg-white/90 border border-red-200 rounded-xl text-[#2B2020] focus:outline-none focus:border-[#E53935] focus:ring-2 focus:ring-[#E53935]/15"
                   />
                 </div>
               </div>
 
               {/* Contacts */}
-              <div className="space-y-3 pt-4 border-t border-slate-100">
-                <h3 className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
-                  <Heart className="w-4 h-4 text-emergency-600" />
+              <div className="space-y-3 pt-4 border-t border-red-100">
+                <h3 className="text-xs font-bold text-[#2B2020] flex items-center gap-1.5">
+                  <Heart className="w-4 h-4 text-[#E53935]" />
                   <span>Emergency Contacts</span>
                 </h3>
 
                 {emergencyContacts.map((contact, idx) => (
-                  <div key={contact.id || idx} className="p-3 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
-                    <span className="text-[11px] font-bold text-slate-700 uppercase">
+                  <div key={contact.id || idx} className="p-3.5 rounded-2xl bg-white/80 border border-red-200 space-y-2 shadow-sm">
+                    <span className="text-[11px] font-bold text-[#2B2020] uppercase">
                       Contact {idx + 1} {contact.isPrimary && '(Primary SOS)'}
                     </span>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
@@ -662,7 +678,7 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
                           copy[idx].name = e.target.value;
                           setEmergencyContacts(copy);
                         }}
-                        className="text-xs px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-900"
+                        className="text-xs px-3 py-2 bg-white border border-red-200 rounded-xl text-[#2B2020] focus:outline-none focus:border-[#E53935]"
                       />
                       <input
                         type="text"
@@ -673,7 +689,7 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
                           copy[idx].relationship = e.target.value;
                           setEmergencyContacts(copy);
                         }}
-                        className="text-xs px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-900"
+                        className="text-xs px-3 py-2 bg-white border border-red-200 rounded-xl text-[#2B2020] focus:outline-none focus:border-[#E53935]"
                       />
                       <input
                         type="text"
@@ -684,18 +700,18 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
                           copy[idx].phone = e.target.value;
                           setEmergencyContacts(copy);
                         }}
-                        className="text-xs px-3 py-2 bg-white border border-slate-300 rounded-lg text-slate-900 font-mono"
+                        className="text-xs px-3 py-2 bg-white border border-red-200 rounded-xl text-[#2B2020] font-mono focus:outline-none focus:border-[#E53935]"
                       />
                     </div>
                   </div>
                 ))}
               </div>
 
-              <div className="flex justify-end pt-4 border-t border-slate-100">
+              <div className="flex justify-end pt-4 border-t border-red-100">
                 <button
                   type="submit"
                   disabled={isSaving}
-                  className="px-6 py-3 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs shadow-sm transition-all flex items-center gap-2"
+                  className="btn-rose-primary px-6 py-3 rounded-xl font-bold text-xs flex items-center gap-2"
                 >
                   <Save className="w-4 h-4" />
                   <span>{isSaving ? 'Saving...' : 'Save & Update Profile'}</span>
@@ -706,20 +722,22 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
 
           {/* TAB 3: QR & STICKERS */}
           {activeTab === 'qr' && (
-            <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-6 shadow-card">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+            <div className="glass-card-rose-solid rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-red-100 pb-4">
                 <div>
-                  <h2 className="text-xl font-bold text-slate-950 flex items-center gap-2">
-                    <QrCode className="w-5 h-5 text-brand-600" />
+                  <h2 className="text-xl font-bold text-[#2B2020] flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg bg-[#FFEFEF] flex items-center justify-center text-[#E53935]">
+                      <QrCode className="w-4 h-4" />
+                    </div>
                     My ResQTag Sticker
                   </h2>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-[#806F6F] mt-1">
                     Your unique emergency identifier connected to this profile.
                   </p>
                 </div>
                 <button
                   onClick={() => onNavigate('sticker')}
-                  className="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold shadow-sm flex items-center gap-1.5 transition-all"
+                  className="btn-rose-primary px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-1.5"
                 >
                   <Printer className="w-4 h-4" />
                   <span>Print Weatherproof Sticker</span>
@@ -728,42 +746,42 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                 {/* Physical Sticker Card Preview */}
-                <div className="bg-white text-slate-900 rounded-2xl p-6 border-2 border-slate-900 shadow-sticker max-w-sm mx-auto text-center space-y-3">
-                  <div className="bg-emergency-600 text-white py-1 px-3 rounded text-xs font-black uppercase tracking-wider">
+                <div className="bg-white text-slate-900 rounded-3xl p-6 border-2 border-red-300 shadow-xl max-w-sm mx-auto text-center space-y-3.5">
+                  <div className="bg-gradient-to-r from-[#E53935] to-[#C62828] text-white py-1.5 px-3 rounded-xl text-xs font-black uppercase tracking-wider shadow-sm">
                     SCAN IN CASE OF EMERGENCY
                   </div>
 
-                  <div className="p-2 bg-slate-50 border border-slate-200 rounded-xl inline-block shadow-inner">
+                  <div className="p-3 bg-red-50/50 border border-red-100 rounded-2xl inline-block shadow-inner">
                     <QRCodeSVG value={scanUrl} size={150} level="H" />
                   </div>
 
-                  <div className="space-y-0.5">
-                    <div className="text-[10px] text-slate-500 font-bold uppercase">Backup Short Code</div>
-                    <div className="text-2xl font-black font-mono tracking-widest text-slate-900 bg-slate-100 py-1 px-3 rounded-lg border border-slate-300 inline-block">
+                  <div className="space-y-1">
+                    <div className="text-[10px] text-[#806F6F] font-bold uppercase">Backup Short Code</div>
+                    <div className="text-2xl font-black font-mono tracking-widest text-[#E53935] bg-[#FFEFEF] py-1.5 px-4 rounded-xl border border-red-200 inline-block shadow-sm">
                       {current.shortCode}
                     </div>
                   </div>
 
-                  <div className="flex justify-between items-center text-[10px] text-slate-700 font-mono font-bold pt-1 border-t border-slate-200">
+                  <div className="flex justify-between items-center text-[10px] text-slate-700 font-mono font-bold pt-2 border-t border-red-100">
                     <span>VEHICLE: {current.vehicleNumber}</span>
-                    <span className="text-emergency-600">BLOOD: {current.bloodGroup}</span>
+                    <span className="text-[#E53935] font-black">BLOOD: {current.bloodGroup}</span>
                   </div>
                 </div>
 
-                <div className="space-y-4 text-xs text-slate-600">
-                  <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
-                    <h4 className="font-bold text-slate-900 flex items-center gap-2">
-                      <Sparkles className="w-4 h-4 text-brand-600" />
+                <div className="space-y-4 text-xs text-[#806F6F]">
+                  <div className="p-4 rounded-2xl bg-white/80 border border-red-100 space-y-2 shadow-sm">
+                    <h4 className="font-bold text-[#2B2020] flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 text-[#E53935]" />
                       Dynamic Cloud Resolution
                     </h4>
                     <p className="leading-relaxed">
-                      Because the QR points to your permanent Tag ID (<code className="font-mono text-slate-900 font-bold">{current.shortCode}</code>), you can update your phone numbers or medical info at any time without needing to replace printed decals.
+                      Because the QR points to your permanent Tag ID (<code className="font-mono text-[#E53935] font-bold">{current.shortCode}</code>), you can update your phone numbers or medical info at any time without needing to replace printed decals.
                     </p>
                   </div>
 
-                  <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
-                    <h4 className="font-bold text-slate-900 flex items-center gap-2">
-                      <Smartphone className="w-4 h-4 text-safe-600" />
+                  <div className="p-4 rounded-2xl bg-white/80 border border-red-100 space-y-2 shadow-sm">
+                    <h4 className="font-bold text-[#2B2020] flex items-center gap-2">
+                      <Smartphone className="w-4 h-4 text-emerald-600" />
                       Zero App Required
                     </h4>
                     <p className="leading-relaxed">
@@ -777,27 +795,29 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
 
           {/* TAB 4: SCAN HISTORY */}
           {activeTab === 'history' && (
-            <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-6 shadow-card">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+            <div className="glass-card-rose-solid rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl">
+              <div className="flex items-center justify-between border-b border-red-100 pb-4">
                 <div>
-                  <h2 className="text-xl font-bold text-slate-950 flex items-center gap-2">
-                    <History className="w-5 h-5 text-brand-600" />
+                  <h2 className="text-xl font-bold text-[#2B2020] flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg bg-[#FFEFEF] flex items-center justify-center text-[#E53935]">
+                      <History className="w-4 h-4" />
+                    </div>
                     Scan History Log
                   </h2>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-[#806F6F] mt-1">
                     Audit log of every time your ResQTag was scanned.
                   </p>
                 </div>
-                <span className="px-2.5 py-1 rounded bg-slate-100 text-slate-700 text-xs font-mono font-bold border border-slate-200">
+                <span className="px-3 py-1 rounded-xl bg-[#FFEFEF] text-[#E53935] text-xs font-mono font-black border border-red-200">
                   {scans.length} Events
                 </span>
               </div>
 
               {isLoadingScans ? (
-                <div className="py-12 text-center text-xs text-slate-400">Loading scan logs...</div>
+                <div className="py-12 text-center text-xs text-[#806F6F]">Loading scan logs...</div>
               ) : scans.length === 0 ? (
-                <div className="py-12 text-center text-xs text-slate-400 space-y-2">
-                  <Clock className="w-8 h-8 mx-auto text-slate-400" />
+                <div className="py-12 text-center text-xs text-[#806F6F] space-y-2">
+                  <Clock className="w-8 h-8 mx-auto text-[#806F6F]" />
                   <p>No scan events logged yet.</p>
                 </div>
               ) : (
@@ -805,37 +825,37 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
                   {scans.map((scan) => (
                     <div
                       key={scan.id}
-                      className="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs"
+                      className="p-4 rounded-2xl bg-white/80 border border-red-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs shadow-sm hover:border-red-300 transition-colors"
                     >
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">
-                          <span className="font-bold text-slate-900 font-mono">
+                          <span className="font-bold text-[#2B2020] font-mono">
                             {new Date(scan.timestamp).toLocaleDateString()} at {new Date(scan.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                           </span>
                           <span
                             className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                               scan.locationStatus === 'Location shared'
-                                ? 'bg-safe-50 text-safe-700 border border-safe-200'
-                                : 'bg-slate-200 text-slate-600'
+                                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                : 'bg-slate-100 text-[#806F6F]'
                             }`}
                           >
                             {scan.locationStatus}
                           </span>
                         </div>
 
-                        <div className="flex items-center gap-3 text-slate-600 font-mono text-[11px]">
-                          <span>Vehicle: <strong>{scan.vehicleNumber || current.vehicleNumber}</strong></span>
+                        <div className="flex items-center gap-3 text-[#806F6F] font-mono text-[11px]">
+                          <span>Vehicle: <strong className="text-[#2B2020]">{scan.vehicleNumber || current.vehicleNumber}</strong></span>
                           <span>•</span>
                           <span>Device: {scan.scannerDevice}</span>
                         </div>
 
-                        <div className="text-[11px] text-slate-500">
+                        <div className="text-[11px] text-[#806F6F]">
                           Location: {scan.approxLocation || 'Location not shared'}
                         </div>
                       </div>
 
                       <div className="text-right">
-                        <span className="text-[10px] text-safe-700 bg-safe-50 px-2.5 py-1 rounded font-semibold border border-safe-200">
+                        <span className="text-[10px] text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-xl font-bold border border-emerald-200">
                           ✓ Contacts Notified
                         </span>
                       </div>
@@ -848,32 +868,34 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
 
           {/* TAB 5: NOTIFICATIONS & ALERTS */}
           {activeTab === 'notifications' && (
-            <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-6 shadow-card">
-              <div className="border-b border-slate-100 pb-4">
-                <h2 className="text-xl font-bold text-slate-950 flex items-center gap-2">
-                  <Bell className="w-5 h-5 text-emergency-600" />
+            <div className="glass-card-rose-solid rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl">
+              <div className="border-b border-red-100 pb-4">
+                <h2 className="text-xl font-bold text-[#2B2020] flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-[#FFEFEF] flex items-center justify-center text-[#E53935]">
+                    <Bell className="w-4 h-4" />
+                  </div>
                   Notifications & Incident Alerts
                 </h2>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-[#806F6F] mt-1">
                   Real-time alerts sent to your emergency contacts.
                 </p>
               </div>
 
               {alerts.length === 0 ? (
-                <div className="py-12 text-center text-xs text-slate-400">
+                <div className="py-12 text-center text-xs text-[#806F6F]">
                   No emergency alerts recorded.
                 </div>
               ) : (
                 <div className="space-y-3 text-xs">
                   {alerts.map((a) => (
-                    <div key={a.id} className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                    <div key={a.id} className="p-4 rounded-2xl bg-[#FFEFEF] border border-red-200 space-y-2 shadow-sm">
                       <div className="flex items-center justify-between">
-                        <span className="font-bold text-slate-900">
+                        <span className="font-bold text-[#C62828]">
                           {a.alertType === 'manual_sos' ? '🆘 Emergency SOS Alert' : '🚨 Missed Safety Check-in Alert'}
                         </span>
-                        <span className="font-mono text-[10px] text-slate-500">{new Date(a.timestamp).toLocaleTimeString()}</span>
+                        <span className="font-mono text-[10px] text-[#806F6F]">{new Date(a.timestamp).toLocaleTimeString()}</span>
                       </div>
-                      <p className="text-slate-600">{a.notes || `Emergency alert triggered for ${a.userName} on journey (${a.journeyType})`}</p>
+                      <p className="text-[#806F6F]">{a.notes || `Emergency alert triggered for ${a.userName} on journey (${a.journeyType})`}</p>
                     </div>
                   ))}
                 </div>
@@ -883,19 +905,21 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
 
           {/* TAB 6: SETTINGS & HACKATHON RESET */}
           {activeTab === 'settings' && (
-            <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 space-y-6 shadow-card">
-              <div className="border-b border-slate-100 pb-4">
-                <h2 className="text-xl font-bold text-slate-950 flex items-center gap-2">
-                  <Settings className="w-5 h-5 text-slate-700" />
+            <div className="glass-card-rose-solid rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl">
+              <div className="border-b border-red-100 pb-4">
+                <h2 className="text-xl font-bold text-[#2B2020] flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-[#FFEFEF] flex items-center justify-center text-[#E53935]">
+                    <Settings className="w-4 h-4" />
+                  </div>
                   Account & Hackathon Demo Settings
                 </h2>
               </div>
 
               <div className="space-y-4 text-xs">
-                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="p-4 rounded-2xl bg-white/80 border border-red-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
                   <div>
-                    <h4 className="font-bold text-slate-900">Reset Fictional Demo Data</h4>
-                    <p className="text-slate-500 text-[11px] mt-0.5">
+                    <h4 className="font-bold text-[#2B2020]">Reset Fictional Demo Data</h4>
+                    <p className="text-[#806F6F] text-[11px] mt-0.5">
                       Restores Rahul Kumar (KA-01-AB-1234) for fresh hackathon judging.
                     </p>
                   </div>
@@ -906,7 +930,7 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
                         alert('Demo data successfully reset!');
                       }
                     }}
-                    className="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-sm transition-colors"
+                    className="btn-rose-primary px-4 py-2 rounded-xl font-bold text-xs"
                   >
                     Reset Demo
                   </button>

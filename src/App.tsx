@@ -13,6 +13,7 @@ import { SafeJourneyCheckinModal } from './components/SafeJourneyCheckinModal';
 import { SafeJourneyAlertModal } from './components/SafeJourneyAlertModal';
 import { TrustedContactAlertModal } from './components/TrustedContactAlertModal';
 import { AccidentSimulationModal } from './components/AccidentSimulationModal';
+import { GlobalRoseBackground } from './components/GlobalRoseBackground';
 
 const AppContent: React.FC = () => {
   const { isCheckinPromptOpen, setCheckinPromptOpen } = useAuth();
@@ -81,7 +82,10 @@ const AppContent: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans">
+    <div className="min-h-screen bg-[#FFF7F7] text-[#2B2020] flex flex-col font-sans relative overflow-x-hidden selection:bg-rose-200 selection:text-[#C62828]">
+      {/* Universal Animated Light Red Background */}
+      <GlobalRoseBackground />
+
       {/* 1. Top Hackathon Quick Banner */}
       <DemoControlBanner
         onNavigate={handleNavigate}
@@ -96,7 +100,7 @@ const AppContent: React.FC = () => {
       />
 
       {/* 3. Main Content View */}
-      <main className="flex-1">
+      <main className="flex-1 relative z-10">
         {currentView === 'landing' && (
           <LandingPage
             onNavigate={handleNavigate}
@@ -139,16 +143,16 @@ const AppContent: React.FC = () => {
         )}
       </main>
 
-      {/* 4. Footer */}
-      <footer className="border-t border-slate-200 bg-white py-8 px-4 text-center text-xs text-slate-500 space-y-2 no-print">
-        <div className="flex flex-wrap items-center justify-center gap-2 font-mono font-bold text-slate-700">
+      {/* 4. Footer with Glass Effect */}
+      <footer className="relative z-10 border-t border-red-100/80 bg-white/60 backdrop-blur-md py-8 px-4 text-center text-xs text-[#806F6F] space-y-2 no-print">
+        <div className="flex flex-wrap items-center justify-center gap-2 font-mono font-bold text-[#2B2020]">
           <span>RESQTAG</span>
           <span>•</span>
-          <span className="text-emergency-600">EMERGENCY QR</span>
+          <span className="text-[#E53935]">EMERGENCY QR</span>
           <span>+</span>
-          <span className="text-safe-600">SAFEJOURNEY PROACTIVE MONITORING</span>
+          <span className="text-[#16A34A]">SAFEJOURNEY PROACTIVE MONITORING</span>
         </div>
-        <p className="text-[11px] text-slate-400">
+        <p className="text-[11px] text-[#806F6F]">
           “When the victim cannot speak, ResQTag speaks for them.” • Built for Hackathon Demo
         </p>
       </footer>

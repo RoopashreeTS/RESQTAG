@@ -122,48 +122,48 @@ export const SafeJourneyActiveDashboard: React.FC<SafeJourneyActiveDashboardProp
 
   const renderDestinationIcon = () => {
     switch (journey.destinationType) {
-      case 'Forest / Trekking Area': return <Trees className="w-5 h-5 text-safe-700" />;
-      case 'Hill / Mountain Area': return <Mountain className="w-5 h-5 text-brand-600" />;
+      case 'Forest / Trekking Area': return <Trees className="w-5 h-5 text-emerald-600" />;
+      case 'Hill / Mountain Area': return <Mountain className="w-5 h-5 text-[#E53935]" />;
       case 'Camping Area': return <Tent className="w-5 h-5 text-amber-600" />;
-      case 'Remote / Isolated Area': return <Compass className="w-5 h-5 text-emergency-600" />;
+      case 'Remote / Isolated Area': return <Compass className="w-5 h-5 text-[#C62828]" />;
       case 'Long-Distance Travel': return <Car className="w-5 h-5 text-blue-600" />;
       default: return <MapPin className="w-5 h-5 text-purple-600" />;
     }
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 space-y-6 pb-24 text-slate-900">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 space-y-6 pb-24 text-[#2B2020] relative z-10">
       
       {/* Toast */}
       {successToast && (
-        <div className="p-3.5 rounded-xl bg-safe-50 border border-safe-200 text-safe-800 text-xs font-bold flex items-center gap-2 shadow-sm animate-in fade-in">
-          <CheckCircle2 className="w-4 h-4 text-safe-600" />
+        <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold flex items-center gap-2 shadow-sm animate-in fade-in">
+          <CheckCircle2 className="w-4 h-4 text-emerald-600" />
           <span>{successToast}</span>
         </div>
       )}
 
       {/* 1. HEADER SECTION */}
-      <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-card space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-6">
+      <div className="glass-card-rose-solid rounded-3xl p-6 sm:p-8 shadow-xl space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-red-100 pb-6">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
               <span className="flex h-2.5 w-2.5 relative">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-safe-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-safe-600"></span>
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-600"></span>
               </span>
-              <span className="text-xs font-bold uppercase tracking-wider text-safe-700 font-mono">
+              <span className="text-xs font-bold uppercase tracking-wider text-emerald-700 font-mono">
                 MONITORING ACTIVE
               </span>
               {journey.isDemoMode && (
-                <span className="px-2 py-0.2 rounded bg-amber-50 text-amber-700 text-[10px] font-bold border border-amber-200">
+                <span className="px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-800 text-[10px] font-bold border border-amber-200">
                   DEMO MODE (20s)
                 </span>
               )}
             </div>
-            <h1 className="text-2xl sm:text-3xl font-black text-slate-950">
+            <h1 className="text-2xl sm:text-3xl font-black text-[#2B2020]">
               ResQTag SafeJourney
             </h1>
-            <p className="text-xs sm:text-sm text-slate-600">
+            <p className="text-xs sm:text-sm text-[#806F6F]">
               Stay connected. Check in. Get help when you need it.
             </p>
           </div>
@@ -172,9 +172,9 @@ export const SafeJourneyActiveDashboard: React.FC<SafeJourneyActiveDashboardProp
             <button
               type="button"
               onClick={() => setShowEndConfirm(true)}
-              className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold border border-slate-300 transition-colors flex items-center gap-1.5"
+              className="px-4 py-2.5 rounded-xl bg-white hover:bg-red-50 text-[#806F6F] hover:text-[#E53935] text-xs font-bold border border-red-200 transition-all hover:-translate-y-0.5 flex items-center gap-1.5 shadow-sm"
             >
-              <StopCircle className="w-4 h-4 text-slate-500" />
+              <StopCircle className="w-4 h-4 text-[#E53935]" />
               <span>🛑 End Journey</span>
             </button>
           </div>
@@ -184,49 +184,49 @@ export const SafeJourneyActiveDashboard: React.FC<SafeJourneyActiveDashboardProp
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           
           {/* Card 1: Journey Type */}
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-1">
-            <span className="text-[10px] uppercase font-bold text-slate-500 block">JOURNEY TYPE</span>
+          <div className="p-4 rounded-2xl bg-white/80 border border-red-100 space-y-1 shadow-sm">
+            <span className="text-[10px] uppercase font-bold text-[#806F6F] block">JOURNEY TYPE</span>
             <div className="flex items-center gap-2 pt-0.5">
               {renderDestinationIcon()}
-              <span className="text-xs font-bold text-slate-900 truncate">
+              <span className="text-xs font-bold text-[#2B2020] truncate">
                 {journey.destinationType}
               </span>
             </div>
           </div>
 
           {/* Card 2: Travelling Alone */}
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-1">
-            <span className="text-[10px] uppercase font-bold text-slate-500 block">TRAVELLING ALONE</span>
+          <div className="p-4 rounded-2xl bg-white/80 border border-red-100 space-y-1 shadow-sm">
+            <span className="text-[10px] uppercase font-bold text-[#806F6F] block">TRAVELLING ALONE</span>
             <div className="flex items-center gap-2 pt-0.5">
               {journey.isSolo ? (
                 <>
-                  <User className="w-4 h-4 text-brand-600" />
-                  <span className="text-xs font-bold text-slate-900">Solo Traveler</span>
+                  <User className="w-4 h-4 text-[#E53935]" />
+                  <span className="text-xs font-bold text-[#2B2020]">Solo Traveler</span>
                 </>
               ) : (
                 <>
-                  <Users className="w-4 h-4 text-slate-600" />
-                  <span className="text-xs font-bold text-slate-900">Group Trip</span>
+                  <Users className="w-4 h-4 text-[#806F6F]" />
+                  <span className="text-xs font-bold text-[#2B2020]">Group Trip</span>
                 </>
               )}
             </div>
           </div>
 
           {/* Card 3: Journey Status */}
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-1">
-            <span className="text-[10px] uppercase font-bold text-slate-500 block">JOURNEY STATUS</span>
+          <div className="p-4 rounded-2xl bg-white/80 border border-red-100 space-y-1 shadow-sm">
+            <span className="text-[10px] uppercase font-bold text-[#806F6F] block">JOURNEY STATUS</span>
             <div className="flex items-center gap-1.5 pt-0.5">
-              <span className="w-2 h-2 rounded-full bg-safe-600"></span>
-              <span className="text-xs font-bold text-safe-700 uppercase">
+              <span className="w-2 h-2 rounded-full bg-emerald-600"></span>
+              <span className="text-xs font-bold text-emerald-700 uppercase">
                 {journey.status === 'active' ? 'Active' : journey.status}
               </span>
             </div>
           </div>
 
           {/* Card 4: Last Check-in */}
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-1">
-            <span className="text-[10px] uppercase font-bold text-slate-500 block">LAST CHECK-IN</span>
-            <div className="text-xs font-mono font-bold text-safe-700 pt-0.5">
+          <div className="p-4 rounded-2xl bg-white/80 border border-red-100 space-y-1 shadow-sm">
+            <span className="text-[10px] uppercase font-bold text-[#806F6F] block">LAST CHECK-IN</span>
+            <div className="text-xs font-mono font-bold text-emerald-700 pt-0.5">
               {journey.lastCheckinTime
                 ? new Date(journey.lastCheckinTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
                 : 'Just Started'}
@@ -234,18 +234,18 @@ export const SafeJourneyActiveDashboard: React.FC<SafeJourneyActiveDashboardProp
           </div>
 
           {/* Card 5: Next Safety Check (Live Countdown) */}
-          <div className="p-4 rounded-2xl bg-brand-50 border border-brand-200 space-y-1">
-            <span className="text-[10px] uppercase font-bold text-brand-800 block">NEXT SAFETY CHECK</span>
-            <div className="text-sm font-black font-mono text-brand-700 flex items-center gap-1.5 pt-0.5">
-              <Clock className="w-4 h-4 text-brand-600" />
+          <div className="p-4 rounded-2xl bg-[#FFEFEF] border border-red-200 space-y-1 shadow-sm">
+            <span className="text-[10px] uppercase font-bold text-[#C62828] block">NEXT SAFETY CHECK</span>
+            <div className="text-sm font-black font-mono text-[#E53935] flex items-center gap-1.5 pt-0.5">
+              <Clock className="w-4 h-4 text-[#E53935]" />
               <span>{formatCountdown(secondsUntilNextCheck)}</span>
             </div>
           </div>
 
           {/* Card 6: Expected Return */}
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-1">
-            <span className="text-[10px] uppercase font-bold text-slate-500 block">EXPECTED RETURN</span>
-            <div className="text-xs font-mono font-bold text-slate-900 pt-0.5">
+          <div className="p-4 rounded-2xl bg-white/80 border border-red-100 space-y-1 shadow-sm">
+            <span className="text-[10px] uppercase font-bold text-[#806F6F] block">EXPECTED RETURN</span>
+            <div className="text-xs font-mono font-bold text-[#2B2020] pt-0.5">
               {new Date(journey.expectedEndTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
             </div>
           </div>
@@ -259,30 +259,30 @@ export const SafeJourneyActiveDashboard: React.FC<SafeJourneyActiveDashboardProp
               type="button"
               onClick={handleManualCheckin}
               disabled={isProcessing}
-              className="py-4 px-6 rounded-2xl font-bold text-sm bg-safe-600 hover:bg-safe-500 text-white shadow-glow-green flex items-center justify-center gap-2 transition-all duration-250 hover:-translate-y-0.5 active:scale-[0.97]"
+              className="btn-rose-safe py-4 px-6 rounded-2xl font-bold text-sm flex items-center justify-center gap-2"
             >
               <CheckCircle2 className="w-5 h-5 text-white" />
               <span>🟢 I&apos;M SAFE (Check-in Now)</span>
             </button>
 
-            {/* 🆘 I NEED HELP (Visually prominent but professional) */}
+            {/* 🆘 I NEED HELP */}
             <button
               type="button"
               onClick={handleManualSos}
               disabled={isProcessing}
-              className="py-4 px-6 rounded-2xl font-bold text-sm bg-emergency-600 hover:bg-emergency-500 text-white shadow-glow-red animate-pulse-emergency flex items-center justify-center gap-2 transition-all duration-250 hover:-translate-y-0.5 active:scale-[0.97]"
+              className="btn-rose-sos py-4 px-6 rounded-2xl font-bold text-sm flex items-center justify-center gap-2"
             >
               <ShieldAlert className="w-5 h-5 text-white" />
               <span>🆘 I NEED HELP (Emergency SOS)</span>
             </button>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-2 pt-1 text-[11px] text-slate-500">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-2 pt-1 text-[11px] text-[#806F6F]">
             <p>Next safety check prompt will appear automatically at the scheduled time.</p>
             <button
               type="button"
               onClick={onOpenCheckinPrompt}
-              className="text-brand-600 hover:underline font-semibold flex items-center gap-1"
+              className="text-[#E53935] hover:underline font-bold flex items-center gap-1"
             >
               <Sparkles className="w-3.5 h-3.5" />
               <span>Test Safety Check Prompt</span>
@@ -294,55 +294,57 @@ export const SafeJourneyActiveDashboard: React.FC<SafeJourneyActiveDashboardProp
       {/* 4. LOCATION & EMERGENCY CONTACTS ROW */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
         {/* Location Status */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-2 shadow-sm">
-          <span className="text-[10px] uppercase font-bold text-slate-500 flex items-center gap-1">
-            <Navigation className="w-3.5 h-3.5 text-brand-600" />
+        <div className="glass-card-rose rounded-3xl p-5 space-y-2 shadow-md">
+          <span className="text-[10px] uppercase font-bold text-[#806F6F] flex items-center gap-1">
+            <Navigation className="w-3.5 h-3.5 text-[#E53935]" />
             Location Consent Status
           </span>
-          <p className="text-slate-800 font-medium">
+          <p className="text-[#2B2020] font-semibold">
             {journey.lastLocation?.text || journey.lastLocation?.status || 'Location unavailable — permission was not granted.'}
           </p>
-          <p className="text-[11px] text-slate-500">
+          <p className="text-[11px] text-[#806F6F]">
             🔒 Location is never silently tracked. Only permitted coordinates are stored.
           </p>
         </div>
 
         {/* Notified Trusted Contacts */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-2 shadow-sm">
-          <span className="text-[10px] uppercase font-bold text-slate-500 flex items-center gap-1">
-            <Heart className="w-3.5 h-3.5 text-emergency-600" />
+        <div className="glass-card-rose rounded-3xl p-5 space-y-2 shadow-md">
+          <span className="text-[10px] uppercase font-bold text-[#806F6F] flex items-center gap-1">
+            <Heart className="w-3.5 h-3.5 text-[#E53935]" />
             Notified Trusted Contacts
           </span>
           <div className="flex flex-wrap gap-1.5">
             {journey.emergencyContacts.map((c, idx) => (
-              <span key={idx} className="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-800 border border-slate-200 font-mono text-[11px]">
+              <span key={idx} className="px-2.5 py-1 rounded-xl bg-white border border-red-200 text-[#2B2020] font-mono text-[11px] font-medium shadow-sm">
                 {c.name} ({c.relationship})
               </span>
             ))}
           </div>
-          <p className="text-[11px] text-slate-500">
+          <p className="text-[11px] text-[#806F6F]">
             Contacts receive simulated SMS alerts if a scheduled check is missed for 10 minutes.
           </p>
         </div>
       </div>
 
       {/* 5. CHECK-IN LOG TABLE */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-4 shadow-sm">
-        <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+      <div className="glass-card-rose-solid rounded-3xl p-6 space-y-4 shadow-xl">
+        <div className="flex items-center justify-between border-b border-red-100 pb-3">
           <div className="flex items-center gap-2">
-            <ShieldCheck className="w-5 h-5 text-safe-600" />
-            <h3 className="text-sm font-bold text-slate-900">Active Journey Check-in Log</h3>
+            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+              <ShieldCheck className="w-4 h-4" />
+            </div>
+            <h3 className="text-sm font-bold text-[#2B2020]">Active Journey Check-in Log</h3>
           </div>
           <div className="flex items-center gap-3">
             <button
               type="button"
               onClick={onOpenHistory}
-              className="text-xs text-brand-600 hover:underline flex items-center gap-1 font-semibold"
+              className="text-xs text-[#E53935] hover:underline flex items-center gap-1 font-bold"
             >
               <History className="w-3.5 h-3.5" />
               <span>Past Journeys</span>
             </button>
-            <span className="text-xs font-mono text-slate-500">
+            <span className="text-xs font-mono text-[#806F6F]">
               {checkins.length} Recorded
             </span>
           </div>
@@ -350,21 +352,21 @@ export const SafeJourneyActiveDashboard: React.FC<SafeJourneyActiveDashboardProp
 
         <div className="space-y-2">
           {checkins.length === 0 ? (
-            <p className="text-xs text-slate-400 text-center py-4">No check-ins recorded yet.</p>
+            <p className="text-xs text-[#806F6F] text-center py-4">No check-ins recorded yet.</p>
           ) : (
             checkins.map((chk, i) => (
               <div
                 key={chk.id || i}
-                className="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between text-xs"
+                className="p-3 rounded-2xl bg-white/80 border border-red-100 flex items-center justify-between text-xs shadow-sm"
               >
                 <div className="flex items-center gap-3">
-                  <span className="w-2 h-2 rounded-full bg-safe-600" />
-                  <span className="font-mono text-slate-900 font-medium">
+                  <span className="w-2 h-2 rounded-full bg-emerald-600" />
+                  <span className="font-mono text-[#2B2020] font-bold">
                     {new Date(chk.timestamp).toLocaleTimeString()}
                   </span>
-                  <span className="text-slate-600">{chk.notes || 'Marked Safe'}</span>
+                  <span className="text-[#806F6F]">{chk.notes || 'Marked Safe'}</span>
                 </div>
-                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-safe-100 text-safe-800">
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-200">
                   ✓ SAFE
                 </span>
               </div>
@@ -375,29 +377,29 @@ export const SafeJourneyActiveDashboard: React.FC<SafeJourneyActiveDashboardProp
 
       {/* END JOURNEY CONFIRMATION MODAL */}
       {showEndConfirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm animate-in fade-in">
-          <div className="bg-white border border-slate-200 rounded-3xl max-w-sm w-full p-6 space-y-4 text-center shadow-2xl">
-            <div className="w-12 h-12 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center mx-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#2B2020]/75 backdrop-blur-sm animate-in fade-in">
+          <div className="glass-card-rose-solid rounded-3xl max-w-sm w-full p-6 space-y-4 text-center shadow-2xl">
+            <div className="w-12 h-12 rounded-2xl bg-[#FFEFEF] text-[#E53935] flex items-center justify-center mx-auto shadow-sm">
               <StopCircle className="w-6 h-6" />
             </div>
-            <h3 className="text-lg font-bold text-slate-900">
+            <h3 className="text-lg font-bold text-[#2B2020]">
               End this SafeJourney?
             </h3>
-            <p className="text-xs text-slate-600">
+            <p className="text-xs text-[#806F6F]">
               Future scheduled safety checks and missed-check alerts will stop immediately.
             </p>
             <div className="flex gap-2 pt-2">
               <button
                 type="button"
                 onClick={() => setShowEndConfirm(false)}
-                className="flex-1 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold"
+                className="flex-1 py-2.5 rounded-xl bg-white hover:bg-slate-100 text-[#806F6F] text-xs font-semibold border border-slate-200 transition-colors"
               >
                 Continue Journey
               </button>
               <button
                 type="button"
                 onClick={handleConfirmEndJourney}
-                className="flex-1 py-2.5 rounded-xl bg-emergency-600 hover:bg-emergency-700 text-white text-xs font-bold shadow-sm"
+                className="flex-1 btn-rose-primary py-2.5 rounded-xl text-xs font-bold"
               >
                 End Journey
               </button>

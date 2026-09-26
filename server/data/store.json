@@ -68,6 +68,115 @@
       "notifiedContacts": true
     }
   ],
+  "safeJourneys": [
+    {
+      "id": "journey_demo_prev1",
+      "userId": "usr_rahul_kumar_demo",
+      "userName": "Rahul Kumar",
+      "userPhone": "+91 98450 11223",
+      "tagId": "RQT-8829A4",
+      "destinationType": "Forest / Trekking Area",
+      "customDestination": "Savandurga Trek, Karnataka",
+      "isSolo": true,
+      "startTime": "2026-09-21T06:00:00.000Z",
+      "expectedEndTime": "2026-09-21T12:00:00.000Z",
+      "intervalMinutes": 60,
+      "isDemoMode": false,
+      "status": "completed",
+      "lastCheckinTime": "2026-09-21T11:00:00.000Z",
+      "nextCheckinTime": "2026-09-21T12:00:00.000Z",
+      "lastLocation": {
+        "status": "Location shared",
+        "lat": 12.9186,
+        "lng": 77.2929,
+        "text": "Savandurga Base Camp (Coordinates shared)"
+      },
+      "emergencyContacts": [
+        {
+          "id": "c1",
+          "name": "Ramesh Kumar",
+          "relationship": "Father",
+          "phone": "+91 98765 43210",
+          "isPrimary": true
+        },
+        {
+          "id": "c2",
+          "name": "Priya Sharma",
+          "relationship": "Spouse",
+          "phone": "+91 98765 12345",
+          "isPrimary": false
+        }
+      ],
+      "createdAt": "2026-09-21T06:00:00.000Z",
+      "endedAt": "2026-09-21T11:45:00.000Z",
+      "totalCheckins": 5,
+      "missedCheckins": 0,
+      "alertsCount": 0
+    }
+  ],
+  "journeyCheckins": [
+    {
+      "id": "chk_1",
+      "journeyId": "journey_demo_prev1",
+      "timestamp": "2026-09-21T07:00:00.000Z",
+      "status": "safe",
+      "location": {
+        "status": "Location shared",
+        "lat": 12.9186,
+        "lng": 77.2929,
+        "text": "Savandurga Foothills"
+      }
+    },
+    {
+      "id": "chk_2",
+      "journeyId": "journey_demo_prev1",
+      "timestamp": "2026-09-21T08:00:00.000Z",
+      "status": "safe",
+      "location": {
+        "status": "Location shared",
+        "lat": 12.9195,
+        "lng": 77.294,
+        "text": "Mid-point Fort Ruins"
+      }
+    },
+    {
+      "id": "chk_3",
+      "journeyId": "journey_demo_prev1",
+      "timestamp": "2026-09-21T09:00:00.000Z",
+      "status": "safe",
+      "location": {
+        "status": "Location shared",
+        "lat": 12.921,
+        "lng": 77.2965,
+        "text": "Summit Point"
+      }
+    },
+    {
+      "id": "chk_4",
+      "journeyId": "journey_demo_prev1",
+      "timestamp": "2026-09-21T10:00:00.000Z",
+      "status": "safe",
+      "location": {
+        "status": "Location shared",
+        "lat": 12.9205,
+        "lng": 77.295,
+        "text": "Descent Trail"
+      }
+    },
+    {
+      "id": "chk_5",
+      "journeyId": "journey_demo_prev1",
+      "timestamp": "2026-09-21T11:00:00.000Z",
+      "status": "safe",
+      "location": {
+        "status": "Location shared",
+        "lat": 12.9186,
+        "lng": 77.2929,
+        "text": "Returned safely to base"
+      }
+    }
+  ],
+  "journeyAlerts": [],
   "otpStore": {
     "+91 98450 11223": {
       "otp": "123456",
@@ -78,7 +187,7 @@
   "sessions": {
     "demo-token-rahul": {
       "userId": "usr_rahul_kumar_demo",
-      "expiresAt": 1790487844311
+      "expiresAt": 1792997960534
     }
   }
 }

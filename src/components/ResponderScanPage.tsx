@@ -125,29 +125,29 @@ export const ResponderScanPage: React.FC<ResponderScanPageProps> = ({ onScanComp
   };
 
   return (
-    <div className="max-w-xl mx-auto px-4 sm:px-6 py-8 space-y-6 text-slate-900">
+    <div className="max-w-xl mx-auto px-4 sm:px-6 py-8 space-y-6 text-[#2B2020] relative z-10">
       {/* Top Emergency Badge */}
       <div className="text-center space-y-2">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emergency-50 text-emergency-700 border border-emergency-200 text-xs font-bold">
-          <ShieldAlert className="w-3.5 h-3.5 text-emergency-600" />
+        <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-[#FFEFEF] text-[#E53935] border border-red-200 text-xs font-bold shadow-sm">
+          <ShieldAlert className="w-3.5 h-3.5 text-[#E53935]" />
           <span>PUBLIC RESPONDER PORTAL</span>
         </div>
-        <h1 className="text-2xl sm:text-3xl font-black text-slate-950">
+        <h1 className="text-2xl sm:text-3xl font-black text-[#2B2020]">
           Scan ResQTag Identifier
         </h1>
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-[#806F6F]">
           Zero login or app install needed. Retrieve critical medical data in milliseconds.
         </p>
       </div>
 
       {/* Tabs: Camera vs Short Code */}
-      <div className="flex bg-slate-100 p-1.5 rounded-2xl border border-slate-200">
+      <div className="flex bg-[#FFE5E5]/60 p-1.5 rounded-2xl border border-red-200 shadow-inner">
         <button
           onClick={() => setActiveTab('camera')}
-          className={`flex-1 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
+          className={`flex-1 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
             activeTab === 'camera'
-              ? 'bg-white text-slate-900 shadow-sm'
-              : 'text-slate-600 hover:text-slate-900'
+              ? 'bg-gradient-to-r from-[#E53935] to-[#FF6B6B] text-white shadow-rose-btn'
+              : 'text-[#806F6F] hover:text-[#2B2020]'
           }`}
         >
           <Camera className="w-4 h-4" />
@@ -156,10 +156,10 @@ export const ResponderScanPage: React.FC<ResponderScanPageProps> = ({ onScanComp
 
         <button
           onClick={() => setActiveTab('code')}
-          className={`flex-1 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
+          className={`flex-1 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
             activeTab === 'code'
-              ? 'bg-white text-slate-900 shadow-sm'
-              : 'text-slate-600 hover:text-slate-900'
+              ? 'bg-gradient-to-r from-[#E53935] to-[#FF6B6B] text-white shadow-rose-btn'
+              : 'text-[#806F6F] hover:text-[#2B2020]'
           }`}
         >
           <Search className="w-4 h-4" />
@@ -168,10 +168,10 @@ export const ResponderScanPage: React.FC<ResponderScanPageProps> = ({ onScanComp
 
         <button
           onClick={() => setActiveTab('upload')}
-          className={`flex-1 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
+          className={`flex-1 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
             activeTab === 'upload'
-              ? 'bg-white text-slate-900 shadow-sm'
-              : 'text-slate-600 hover:text-slate-900'
+              ? 'bg-gradient-to-r from-[#E53935] to-[#FF6B6B] text-white shadow-rose-btn'
+              : 'text-[#806F6F] hover:text-[#2B2020]'
           }`}
         >
           <Upload className="w-4 h-4" />
@@ -180,12 +180,12 @@ export const ResponderScanPage: React.FC<ResponderScanPageProps> = ({ onScanComp
       </div>
 
       {/* MAIN SCAN CONTAINER */}
-      <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-card space-y-5">
+      <div className="glass-card-rose-solid rounded-3xl p-6 sm:p-8 shadow-xl space-y-5">
         {/* CAMERA VIEW TAB */}
         {activeTab === 'camera' && (
           <div className="space-y-4 text-center">
             {/* Camera Viewfinder Box */}
-            <div className="relative rounded-2xl overflow-hidden bg-slate-950 aspect-square max-w-sm mx-auto border-2 border-slate-300 shadow-inner flex items-center justify-center">
+            <div className="relative rounded-2xl overflow-hidden bg-slate-950 aspect-square max-w-sm mx-auto border-2 border-red-300 shadow-inner flex items-center justify-center">
               <div id="qr-reader-container" className="w-full h-full" />
               
               {!isScanningCamera && !cameraError && (
@@ -196,12 +196,12 @@ export const ResponderScanPage: React.FC<ResponderScanPageProps> = ({ onScanComp
               )}
 
               {cameraError && (
-                <div className="p-5 text-xs text-rose-800 space-y-3 bg-white/95 m-4 rounded-xl border border-rose-300">
-                  <AlertCircle className="w-8 h-8 mx-auto text-emergency-600" />
-                  <p>{cameraError}</p>
+                <div className="p-5 text-xs text-[#C62828] space-y-3 bg-white/95 m-4 rounded-2xl border border-red-200 shadow-lg">
+                  <AlertCircle className="w-8 h-8 mx-auto text-[#E53935]" />
+                  <p className="font-semibold">{cameraError}</p>
                   <button
                     onClick={() => setActiveTab('code')}
-                    className="px-4 py-2 rounded-lg bg-slate-900 text-white font-bold text-xs shadow-sm"
+                    className="btn-rose-primary px-4 py-2 rounded-xl font-bold text-xs"
                   >
                     Switch to Short Code Entry
                   </button>
@@ -210,7 +210,7 @@ export const ResponderScanPage: React.FC<ResponderScanPageProps> = ({ onScanComp
             </div>
 
             {scanStatusMessage && (
-              <p className="text-xs text-brand-600 font-semibold">
+              <p className="text-xs text-[#E53935] font-semibold">
                 {scanStatusMessage}
               </p>
             )}
@@ -218,7 +218,7 @@ export const ResponderScanPage: React.FC<ResponderScanPageProps> = ({ onScanComp
             {isScanningCamera && (
               <button
                 onClick={stopScanner}
-                className="text-xs text-slate-500 hover:text-rose-600 flex items-center gap-1 mx-auto"
+                className="text-xs text-[#806F6F] hover:text-[#E53935] flex items-center gap-1 mx-auto transition-colors font-medium"
               >
                 <StopCircle className="w-3.5 h-3.5" />
                 <span>Pause Scanner</span>
@@ -231,7 +231,7 @@ export const ResponderScanPage: React.FC<ResponderScanPageProps> = ({ onScanComp
         {activeTab === 'code' && (
           <form onSubmit={handleManualSubmit} className="space-y-4">
             <div className="space-y-2">
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+              <label className="block text-xs font-bold text-[#2B2020] uppercase tracking-wider text-center">
                 6-Character Backup Short Code or Tag ID
               </label>
               <div className="relative">
@@ -240,11 +240,11 @@ export const ResponderScanPage: React.FC<ResponderScanPageProps> = ({ onScanComp
                   placeholder="e.g. RQ7K29 or RQT-8829A4"
                   value={shortCodeInput}
                   onChange={(e) => setShortCodeInput(e.target.value.toUpperCase())}
-                  className="w-full text-center text-xl font-mono uppercase tracking-widest py-3.5 px-4 bg-slate-50 border-2 border-slate-300 rounded-2xl text-slate-950 focus:outline-none focus:border-brand-600 focus:bg-white transition-colors"
+                  className="w-full text-center text-2xl font-mono uppercase tracking-widest py-3.5 px-4 bg-white/90 border-2 border-red-200 rounded-2xl text-[#2B2020] focus:outline-none focus:border-[#E53935] focus:ring-4 focus:ring-[#E53935]/15 transition-all shadow-inner"
                   autoFocus
                 />
               </div>
-              <p className="text-[11px] text-slate-500 text-center">
+              <p className="text-[11px] text-[#806F6F] text-center">
                 Printed directly below the QR code on every physical sticker.
               </p>
             </div>
@@ -252,7 +252,7 @@ export const ResponderScanPage: React.FC<ResponderScanPageProps> = ({ onScanComp
             <button
               type="submit"
               disabled={!shortCodeInput.trim()}
-              className="w-full py-3.5 rounded-xl font-bold text-sm bg-brand-600 hover:bg-brand-700 text-white shadow-sm disabled:opacity-50 transition-all flex items-center justify-center gap-2"
+              className="w-full btn-rose-primary py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2"
             >
               <Search className="w-4 h-4" />
               <span>Retrieve Emergency Profile</span>
@@ -266,12 +266,12 @@ export const ResponderScanPage: React.FC<ResponderScanPageProps> = ({ onScanComp
           <div className="space-y-4 text-center">
             <div
               onClick={() => fileInputRef.current?.click()}
-              className="border-2 border-dashed border-slate-300 hover:border-brand-500 rounded-2xl p-8 cursor-pointer bg-slate-50 hover:bg-slate-100 transition-colors space-y-3"
+              className="border-2 border-dashed border-red-200 hover:border-[#E53935] rounded-3xl p-8 cursor-pointer bg-white/60 hover:bg-[#FFEFEF]/40 transition-all space-y-3"
             >
-              <Upload className="w-10 h-10 mx-auto text-slate-400" />
+              <Upload className="w-10 h-10 mx-auto text-[#E53935]" />
               <div>
-                <p className="text-sm font-bold text-slate-900">Upload QR Code Photo</p>
-                <p className="text-xs text-slate-500">Select an image from your device</p>
+                <p className="text-sm font-bold text-[#2B2020]">Upload QR Code Photo</p>
+                <p className="text-xs text-[#806F6F]">Select an image from your device</p>
               </div>
             </div>
 
@@ -288,10 +288,10 @@ export const ResponderScanPage: React.FC<ResponderScanPageProps> = ({ onScanComp
         )}
 
         {/* HACKATHON QUICK-TEST BUTTONS */}
-        <div className="pt-4 border-t border-slate-100 space-y-2.5">
-          <div className="flex items-center justify-between text-[11px] text-slate-500">
-            <span className="font-semibold flex items-center gap-1 text-slate-700">
-              <Sparkles className="w-3 h-3 text-amber-500" />
+        <div className="pt-4 border-t border-red-100 space-y-2.5">
+          <div className="flex items-center justify-between text-[11px] text-[#806F6F]">
+            <span className="font-semibold flex items-center gap-1 text-[#2B2020]">
+              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
               Hackathon Quick Test:
             </span>
           </div>
@@ -300,25 +300,25 @@ export const ResponderScanPage: React.FC<ResponderScanPageProps> = ({ onScanComp
             <button
               type="button"
               onClick={() => onScanComplete('RQ7K29')}
-              className="p-3 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-800 border border-slate-200 text-xs font-semibold flex items-center justify-between transition-colors text-left"
+              className="p-3 rounded-2xl bg-white/80 hover:bg-red-50 text-[#2B2020] border border-red-200 text-xs font-semibold flex items-center justify-between transition-all hover:-translate-y-0.5 text-left shadow-sm"
             >
               <div>
-                <span className="font-mono font-bold text-brand-700 block">RQ7K29</span>
-                <span className="text-[10px] text-slate-500">Rahul Kumar (KA-01-AB-1234)</span>
+                <span className="font-mono font-bold text-[#E53935] block">RQ7K29</span>
+                <span className="text-[10px] text-[#806F6F]">Rahul Kumar (KA-01-AB-1234)</span>
               </div>
-              <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
+              <ArrowRight className="w-3.5 h-3.5 text-[#E53935]" />
             </button>
 
             <button
               type="button"
               onClick={() => onScanComplete('RQT-8829A4')}
-              className="p-3 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-800 border border-slate-200 text-xs font-semibold flex items-center justify-between transition-colors text-left"
+              className="p-3 rounded-2xl bg-white/80 hover:bg-red-50 text-[#2B2020] border border-red-200 text-xs font-semibold flex items-center justify-between transition-all hover:-translate-y-0.5 text-left shadow-sm"
             >
               <div>
-                <span className="font-mono font-bold text-slate-900 block">RQT-8829A4</span>
-                <span className="text-[10px] text-slate-500">Direct Tag ID Lookup</span>
+                <span className="font-mono font-bold text-[#2B2020] block">RQT-8829A4</span>
+                <span className="text-[10px] text-[#806F6F]">Direct Tag ID Lookup</span>
               </div>
-              <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
+              <ArrowRight className="w-3.5 h-3.5 text-[#806F6F]" />
             </button>
           </div>
         </div>
