@@ -1,0 +1,84 @@
+{
+  "profiles": [
+    {
+      "id": "usr_rahul_kumar_demo",
+      "tagId": "RQT-8829A4",
+      "shortCode": "RQ7K29",
+      "phone": "+91 98450 11223",
+      "fullName": "Rahul Kumar",
+      "photoUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80",
+      "age": 24,
+      "bloodGroup": "O+",
+      "address": "#402, Sunshine Residency, Indiranagar 100ft Road, Bengaluru, Karnataka - 560038",
+      "vehicleNumber": "KA-01-AB-1234",
+      "allergies": "Penicillin, Peanuts (Severe anaphylaxis risk)",
+      "medicalInfo": "Asthmatic (Carries blue Salbutamol inhaler in backpack pocket). No cardiac history. Diabetic Type 2 (Diet controlled).",
+      "emergencyContacts": [
+        {
+          "id": "c1",
+          "name": "Ramesh Kumar",
+          "relationship": "Father",
+          "phone": "+91 98765 43210",
+          "isPrimary": true
+        },
+        {
+          "id": "c2",
+          "name": "Priya Sharma",
+          "relationship": "Spouse",
+          "phone": "+91 98765 12345",
+          "isPrimary": false
+        },
+        {
+          "id": "c3",
+          "name": "Dr. Arvind Swamy",
+          "relationship": "Family Physician",
+          "phone": "+91 98765 67890",
+          "isPrimary": false
+        }
+      ],
+      "createdAt": "2026-09-01T10:00:00.000Z",
+      "updatedAt": "2026-09-24T14:30:00.000Z"
+    }
+  ],
+  "scanEvents": [
+    {
+      "id": "scan_1",
+      "tagId": "RQT-8829A4",
+      "shortCode": "RQ7K29",
+      "timestamp": "2026-09-24T18:42:00.000Z",
+      "vehicleNumber": "KA-01-AB-1234",
+      "scannerDevice": "Mobile Browser (Safari / iOS)",
+      "locationStatus": "Location shared",
+      "latitude": 12.9716,
+      "longitude": 77.5946,
+      "approxLocation": "MG Road Junction, Bengaluru, Karnataka",
+      "notifiedContacts": true
+    },
+    {
+      "id": "scan_2",
+      "tagId": "RQT-8829A4",
+      "shortCode": "RQ7K29",
+      "timestamp": "2026-09-20T09:15:00.000Z",
+      "vehicleNumber": "KA-01-AB-1234",
+      "scannerDevice": "Mobile Browser (Chrome / Android)",
+      "locationStatus": "Location not shared",
+      "latitude": null,
+      "longitude": null,
+      "approxLocation": "Location not shared",
+      "notifiedContacts": true
+    }
+  ],
+  "otpStore": {
+    "+91 98450 11223": {
+      "otp": "123456",
+      "expiresAt": 1790487844311,
+      "verified": true
+    }
+  },
+  "sessions": {
+    "demo-token-rahul": {
+      "userId": "usr_rahul_kumar_demo",
+      "expiresAt": 1790487844311
+    }
+  }
+}
