@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import heroAccidentImg from '../assets/hero-accident.jpg';
 
 interface Particle {
   x: number;
@@ -160,7 +161,7 @@ export const HeroAccidentBackground: React.FC = () => {
         }}
       >
         <img
-          src="/hero-accident.jpg"
+          src={heroAccidentImg}
           alt="ResQTag Emergency Accident Response Background"
           className="w-full h-full object-cover object-[70%_center] sm:object-center animate-ken-burns"
           loading="eager"
