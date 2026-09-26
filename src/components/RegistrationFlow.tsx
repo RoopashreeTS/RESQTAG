@@ -18,19 +18,13 @@ import {
 import confetti from 'canvas-confetti';
 import { api } from '../services/api';
 import type { BloodGroup, EmergencyContact, UserProfile } from '../types';
+import { ProfilePhotoUploader } from './ProfilePhotoUploader';
 
 interface RegistrationFlowProps {
   onNavigate: (view: string, param?: string) => void;
 }
 
 const BLOOD_GROUPS: BloodGroup[] = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
-
-const AVATAR_PRESETS = [
-  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=400&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&auto=format&fit=crop&q=80',
-];
 
 export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({ onNavigate }) => {
   // Wizard Steps: 1: Profile Info, 2: Emergency Contacts, 3: OTP Verification, 4: Created Success
@@ -45,7 +39,7 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({ onNavigate }
   const [vehicleNumber, setVehicleNumber] = useState('');
   const [allergies, setAllergies] = useState('');
   const [medicalInfo, setMedicalInfo] = useState('');
-  const [photoUrl, setPhotoUrl] = useState(AVATAR_PRESETS[0]);
+  const [photoUrl, setPhotoUrl] = useState<string | undefined>(undefined);
 
   // Emergency Contacts
   const [contact1, setContact1] = useState<EmergencyContact>({
@@ -244,42 +238,11 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({ onNavigate }
               </button>
             </div>
 
-            {/* Profile Avatar Selection */}
-            <div className="space-y-2">
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
-                Profile Photo (Helps Responders Visually Identify Victim)
-              </label>
-              <div className="flex items-center gap-4">
-                <img
-                  src={photoUrl}
-                  alt="Profile Preview"
-                  className="w-16 h-16 rounded-2xl object-cover border-2 border-slate-200 shadow-sm"
-                />
-                <div className="space-y-1">
-                  <div className="flex gap-2">
-                    {AVATAR_PRESETS.map((preset, idx) => (
-                      <img
-                        key={idx}
-                        src={preset}
-                        alt={`Preset ${idx + 1}`}
-                        onClick={() => setPhotoUrl(preset)}
-                        className={`w-9 h-9 rounded-xl object-cover cursor-pointer border-2 transition-all ${
-                          photoUrl === preset ? 'border-brand-600 scale-105 shadow-sm' : 'border-slate-200 opacity-60 hover:opacity-100'
-                        }`}
-                      />
-                    ))}
-                  </div>
-                  <span className="text-[11px] text-slate-500">Select avatar or enter custom photo URL below</span>
-                </div>
-              </div>
-              <input
-                type="text"
-                placeholder="Or paste direct image URL (https://...)"
-                value={photoUrl}
-                onChange={e => setPhotoUrl(e.target.value)}
-                className="w-full text-xs px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-brand-600"
-              />
-            </div>
+            {/* Profile Photo Upload */}
+            <ProfilePhotoUploader
+              photoUrl={photoUrl}
+              onPhotoChange={setPhotoUrl}
+            />
 
             {/* Form fields */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

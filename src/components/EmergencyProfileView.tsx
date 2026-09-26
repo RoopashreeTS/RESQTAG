@@ -10,7 +10,8 @@ import {
   Ambulance, 
   PhoneCall, 
   Navigation,
-  BellRing
+  BellRing,
+  User
 } from 'lucide-react';
 import type { PublicEmergencyProfile } from '../types';
 import { api } from '../services/api';
@@ -292,15 +293,19 @@ export const EmergencyProfileView: React.FC<EmergencyProfileViewProps> = ({ iden
       <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-card space-y-6">
         {/* Header with Photo, Details, and Blood Group */}
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 text-center sm:text-left border-b border-slate-100 pb-6">
-          <div className="relative">
-            <img
-              src={
-                profile.photoUrl ||
-                'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80'
-              }
-              alt={profile.fullName}
-              className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl object-cover border-2 border-slate-200 shadow-sm"
-            />
+          <div className="relative shrink-0">
+            {profile.photoUrl ? (
+              <img
+                src={profile.photoUrl}
+                alt={profile.fullName}
+                className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl object-cover border-2 border-slate-200 shadow-md bg-white"
+              />
+            ) : (
+              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-slate-100 border-2 border-slate-200 flex flex-col items-center justify-center text-slate-400 shadow-sm">
+                <User className="w-10 h-10 text-slate-400" />
+                <span className="text-[10px] uppercase font-bold text-slate-500 mt-1">Photo</span>
+              </div>
+            )}
             <span className="absolute -bottom-2 -right-2 p-1.5 rounded-full bg-safe-600 text-white shadow">
               <ShieldCheck className="w-4 h-4" />
             </span>

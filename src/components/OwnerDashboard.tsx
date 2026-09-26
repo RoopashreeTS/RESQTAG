@@ -22,6 +22,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import { useAuth } from '../context/AuthContext';
 import { api, INITIAL_DEMO_DATA } from '../services/api';
 import type { ScanEvent, BloodGroup, EmergencyContact, JourneyAlert } from '../types';
+import { ProfilePhotoUploader } from './ProfilePhotoUploader';
 
 interface OwnerDashboardProps {
   onNavigate: (view: string, param?: string) => void;
@@ -160,14 +161,17 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
       {/* Top Welcome Header */}
       <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-card flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
-          <img
-            src={
-              current.photoUrl ||
-              'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80'
-            }
-            alt={current.fullName}
-            className="w-16 h-16 rounded-2xl object-cover border-2 border-slate-200 shadow-sm"
-          />
+          {current.photoUrl ? (
+            <img
+              src={current.photoUrl}
+              alt={current.fullName}
+              className="w-16 h-16 rounded-2xl object-cover border-2 border-slate-200 shadow-sm bg-white shrink-0"
+            />
+          ) : (
+            <div className="w-16 h-16 rounded-2xl bg-slate-100 border-2 border-slate-200 flex items-center justify-center text-slate-400 shrink-0">
+              <User className="w-8 h-8 text-slate-400" />
+            </div>
+          )}
           <div>
             <div className="flex items-center gap-2">
               <h1 className="text-xl sm:text-2xl font-black text-slate-950">{current.fullName}</h1>
@@ -543,6 +547,14 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
                   <span>{errorMessage}</span>
                 </div>
               )}
+
+              {/* Profile Photo Uploader */}
+              <div className="border-b border-slate-100 pb-6">
+                <ProfilePhotoUploader
+                  photoUrl={photoUrl || undefined}
+                  onPhotoChange={(newUrl) => setPhotoUrl(newUrl || '')}
+                />
+              </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
