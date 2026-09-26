@@ -6,7 +6,6 @@ import {
   MapPin, 
   Car, 
   AlertTriangle, 
-  FileText, 
   ShieldCheck, 
   ArrowRight, 
   ArrowLeft, 
@@ -36,8 +35,6 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({ onNavigate }
   const [phone, setPhone] = useState('+91 98450 ');
   const [address, setAddress] = useState('');
   const [vehicleNumber, setVehicleNumber] = useState('');
-  const [allergies, setAllergies] = useState('');
-  const [medicalInfo, setMedicalInfo] = useState('');
   const [photoUrl, setPhotoUrl] = useState<string | undefined>(undefined);
 
   // Emergency Contacts
@@ -142,8 +139,8 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({ onNavigate }
         bloodGroup,
         address,
         vehicleNumber: vehicleNumber.toUpperCase().trim(),
-        allergies: allergies || 'None reported',
-        medicalInfo: medicalInfo || 'No major medical conditions reported',
+        allergies: '',
+        medicalInfo: '',
         emergencyContacts: contacts,
         photoUrl,
       });
@@ -324,36 +321,6 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({ onNavigate }
                 <p className="text-[11px] text-[#806F6F]">
                   Affixing the ResQTag on your helmet or vehicle connects this identifier.
                 </p>
-              </div>
-
-              {/* Allergies */}
-              <div className="space-y-1 sm:col-span-2">
-                <label className="text-xs font-semibold text-[#2B2020] flex items-center gap-1">
-                  <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
-                  Known Allergies (Medications / Food / Environmental)
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. Penicillin, Peanuts, Sulfa drugs (or 'None')"
-                  value={allergies}
-                  onChange={e => setAllergies(e.target.value)}
-                  className="w-full text-xs px-3.5 py-2.5 bg-white/90 border border-red-200 rounded-xl text-[#2B2020] focus:outline-none focus:border-[#E53935] focus:ring-2 focus:ring-[#E53935]/15 transition-all"
-                />
-              </div>
-
-              {/* Medical Information */}
-              <div className="space-y-1 sm:col-span-2">
-                <label className="text-xs font-semibold text-[#2B2020] flex items-center gap-1">
-                  <FileText className="w-3.5 h-3.5 text-[#E53935]" />
-                  Important Medical Info & Emergency Notes
-                </label>
-                <textarea
-                  rows={2}
-                  placeholder="e.g. Asthmatic (carries blue inhaler in bag), Diabetic Type 2"
-                  value={medicalInfo}
-                  onChange={e => setMedicalInfo(e.target.value)}
-                  className="w-full text-xs px-3.5 py-2.5 bg-white/90 border border-red-200 rounded-xl text-[#2B2020] focus:outline-none focus:border-[#E53935] focus:ring-2 focus:ring-[#E53935]/15 transition-all"
-                />
               </div>
 
               {/* Address */}

@@ -625,26 +625,6 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate }) =>
                 </div>
 
                 <div className="space-y-1 sm:col-span-2">
-                  <label className="text-xs font-semibold text-[#2B2020]">Known Allergies</label>
-                  <input
-                    type="text"
-                    value={allergies}
-                    onChange={(e) => setAllergies(e.target.value)}
-                    className="w-full text-xs px-3.5 py-2.5 bg-white/90 border border-red-200 rounded-xl text-[#2B2020] focus:outline-none focus:border-[#E53935] focus:ring-2 focus:ring-[#E53935]/15"
-                  />
-                </div>
-
-                <div className="space-y-1 sm:col-span-2">
-                  <label className="text-xs font-semibold text-[#2B2020]">Important Medical Information</label>
-                  <textarea
-                    rows={3}
-                    value={medicalInfo}
-                    onChange={(e) => setMedicalInfo(e.target.value)}
-                    className="w-full text-xs px-3.5 py-2.5 bg-white/90 border border-red-200 rounded-xl text-[#2B2020] focus:outline-none focus:border-[#E53935] focus:ring-2 focus:ring-[#E53935]/15"
-                  />
-                </div>
-
-                <div className="space-y-1 sm:col-span-2">
                   <label className="text-xs font-semibold text-[#2B2020]">Residential Address</label>
                   <input
                     type="text"
