@@ -11,7 +11,6 @@ import {
   ShieldAlert, 
   CheckCircle2, 
   StopCircle, 
-  Sparkles, 
   Heart,
   Navigation,
   History,
@@ -24,13 +23,12 @@ import { api } from '../services/api';
 
 interface SafeJourneyActiveDashboardProps {
   journey: SafeJourney;
-  onOpenCheckinPrompt: () => void;
+  onOpenCheckinPrompt?: () => void;
   onOpenHistory: () => void;
 }
 
 export const SafeJourneyActiveDashboard: React.FC<SafeJourneyActiveDashboardProps> = ({
   journey,
-  onOpenCheckinPrompt,
   onOpenHistory,
 }) => {
   const { 
@@ -154,11 +152,6 @@ export const SafeJourneyActiveDashboard: React.FC<SafeJourneyActiveDashboardProp
               <span className="text-xs font-bold uppercase tracking-wider text-emerald-700 font-mono">
                 MONITORING ACTIVE
               </span>
-              {journey.isDemoMode && (
-                <span className="px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-800 text-[10px] font-bold border border-amber-200">
-                  DEMO MODE (20s)
-                </span>
-              )}
             </div>
             <h1 className="text-2xl sm:text-3xl font-black text-[#2B2020]">
               ResQTag SafeJourney
@@ -277,16 +270,8 @@ export const SafeJourneyActiveDashboard: React.FC<SafeJourneyActiveDashboardProp
             </button>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-2 pt-1 text-[11px] text-[#806F6F]">
+          <div className="pt-1 text-[11px] text-[#806F6F]">
             <p>Next safety check prompt will appear automatically at the scheduled time.</p>
-            <button
-              type="button"
-              onClick={onOpenCheckinPrompt}
-              className="text-[#E53935] hover:underline font-bold flex items-center gap-1"
-            >
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Test Safety Check Prompt</span>
-            </button>
           </div>
         </div>
       </div>

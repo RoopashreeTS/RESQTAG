@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { Navbar } from './components/Navbar';
-import { DemoControlBanner } from './components/DemoControlBanner';
 import { LandingPage } from './components/LandingPage';
 import { RegistrationFlow } from './components/RegistrationFlow';
 import { ResponderScanPage } from './components/ResponderScanPage';
@@ -12,7 +11,6 @@ import { SafeJourneyView } from './components/SafeJourneyView';
 import { SafeJourneyCheckinModal } from './components/SafeJourneyCheckinModal';
 import { SafeJourneyAlertModal } from './components/SafeJourneyAlertModal';
 import { TrustedContactAlertModal } from './components/TrustedContactAlertModal';
-import { AccidentSimulationModal } from './components/AccidentSimulationModal';
 import { GlobalRoseBackground } from './components/GlobalRoseBackground';
 
 const AppContent: React.FC = () => {
@@ -21,7 +19,6 @@ const AppContent: React.FC = () => {
   // Navigation state
   const [currentView, setCurrentView] = useState<string>('landing');
   const [currentParam, setCurrentParam] = useState<string | undefined>(undefined);
-  const [isSimulatorOpen, setIsSimulatorOpen] = useState(false);
 
   // Sync with browser hash routing
   useEffect(() => {
@@ -86,25 +83,17 @@ const AppContent: React.FC = () => {
       {/* Universal Animated Light Red Background */}
       <GlobalRoseBackground />
 
-      {/* 1. Top Hackathon Quick Banner */}
-      <DemoControlBanner
-        onNavigate={handleNavigate}
-        onOpenSimulator={() => setIsSimulatorOpen(true)}
-      />
-
-      {/* 2. Top Navigation Bar */}
+      {/* Top Navigation Bar */}
       <Navbar
         currentView={currentView}
         onNavigate={handleNavigate}
-        onOpenSimulator={() => setIsSimulatorOpen(true)}
       />
 
-      {/* 3. Main Content View */}
+      {/* Main Content View */}
       <main className="flex-1 relative z-10">
         {currentView === 'landing' && (
           <LandingPage
             onNavigate={handleNavigate}
-            onOpenSimulator={() => setIsSimulatorOpen(true)}
           />
         )}
 
@@ -134,7 +123,6 @@ const AppContent: React.FC = () => {
         {currentView === 'dashboard' && (
           <OwnerDashboard
             onNavigate={handleNavigate}
-            onOpenSimulator={() => setIsSimulatorOpen(true)}
           />
         )}
 
@@ -143,7 +131,7 @@ const AppContent: React.FC = () => {
         )}
       </main>
 
-      {/* 4. Footer with Glass Effect */}
+      {/* Footer with Glass Effect */}
       <footer className="relative z-10 border-t border-red-100/80 bg-white/60 backdrop-blur-md py-8 px-4 text-center text-xs text-[#806F6F] space-y-2 no-print">
         <div className="flex flex-wrap items-center justify-center gap-2 font-mono font-bold text-[#2B2020]">
           <span>RESQTAG</span>
@@ -153,28 +141,21 @@ const AppContent: React.FC = () => {
           <span className="text-[#16A34A]">SAFEJOURNEY PROACTIVE MONITORING</span>
         </div>
         <p className="text-[11px] text-[#806F6F]">
-          “When the victim cannot speak, ResQTag speaks for them.” • Built for Hackathon Demo
+          “When the victim cannot speak, ResQTag speaks for them.”
         </p>
       </footer>
 
-      {/* 5. SafeJourney Scheduled Check-in Prompt Modal */}
+      {/* SafeJourney Scheduled Check-in Prompt Modal */}
       <SafeJourneyCheckinModal
         isOpen={isCheckinPromptOpen}
         onClose={() => setCheckinPromptOpen(false)}
       />
 
-      {/* 6. SafeJourney Emergency Contact Alert Modal */}
+      {/* SafeJourney Emergency Contact Alert Modal */}
       <SafeJourneyAlertModal />
 
-      {/* 7. Live Simulated Contact Notification Popups */}
+      {/* Live Contact Notification Popups */}
       <TrustedContactAlertModal />
-
-      {/* 8. Accident Simulation Modal */}
-      <AccidentSimulationModal
-        isOpen={isSimulatorOpen}
-        onClose={() => setIsSimulatorOpen(false)}
-        onLaunchScan={(id) => handleNavigate('emergency-profile', id)}
-      />
     </div>
   );
 };

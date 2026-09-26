@@ -11,7 +11,6 @@ import {
   Clock, 
   ShieldCheck, 
   Navigation, 
-  Sparkles, 
   ArrowRight, 
   ArrowLeft, 
   AlertTriangle,
@@ -53,8 +52,8 @@ export const SafeJourneySetupWizard: React.FC<SafeJourneySetupWizardProps> = ({ 
     return d.toTimeString().substring(0, 5);
   });
   const [intervalMinutes, setIntervalMinutes] = useState<number>(60);
-  const [isDemoMode, setIsDemoMode] = useState<boolean>(true);
-  const [demoIntervalSeconds, setDemoIntervalSeconds] = useState<number>(20);
+  const [isDemoMode] = useState<boolean>(false);
+  const [demoIntervalSeconds] = useState<number>(20);
   
   // Location consent state
   const [locationConsent, setLocationConsent] = useState<boolean>(true);
@@ -388,46 +387,6 @@ export const SafeJourneySetupWizard: React.FC<SafeJourneySetupWizardProps> = ({ 
               </div>
             </div>
 
-            {/* HACKATHON DEMO MODE HELPER */}
-            <div className="p-4 rounded-2xl bg-[#FFEFEF] border border-red-200 space-y-3 shadow-sm">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-[#C62828] flex items-center gap-1.5">
-                  <Sparkles className="w-4 h-4 text-[#E53935]" />
-                  HACKATHON DEMO MODE (Fast Interval)
-                </span>
-                <label className="relative inline-flex items-center cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={isDemoMode}
-                    onChange={(e) => setIsDemoMode(e.target.checked)}
-                    className="sr-only peer"
-                  />
-                  <div className="w-9 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#E53935]"></div>
-                </label>
-              </div>
-
-              {isDemoMode && (
-                <div className="space-y-2 pt-1">
-                  <div className="flex items-center gap-2 text-xs text-[#2B2020]">
-                    <span>Demo Interval:</span>
-                    <select
-                      value={demoIntervalSeconds}
-                      onChange={(e) => setDemoIntervalSeconds(Number(e.target.value))}
-                      className="bg-white text-[#E53935] font-mono font-bold text-xs px-2.5 py-1 rounded-lg border border-red-200"
-                    >
-                      <option value={15}>15 Seconds (Rapid Demo)</option>
-                      <option value={20}>20 Seconds (Recommended)</option>
-                      <option value={30}>30 Seconds</option>
-                      <option value={60}>1 Minute</option>
-                    </select>
-                  </div>
-                  <p className="text-[11px] text-[#806F6F] leading-tight">
-                    * Accelerated interval for judge evaluation so you do not need to wait an entire hour.
-                  </p>
-                </div>
-              )}
-            </div>
-
             {/* CONSENT-BASED LOCATION PROMPT */}
             <div className="p-4 rounded-2xl bg-white/80 border border-red-100 space-y-3 shadow-sm">
               <div className="flex items-center justify-between">
@@ -530,7 +489,7 @@ export const SafeJourneySetupWizard: React.FC<SafeJourneySetupWizardProps> = ({ 
               <div className="flex justify-between items-center border-b border-red-100 pb-2">
                 <span className="text-[#806F6F]">Safety Check Interval:</span>
                 <strong className="text-[#E53935]">
-                  {isDemoMode ? `Every ${demoIntervalSeconds}s (Demo Mode)` : `Every ${intervalMinutes} mins`}
+                  {intervalMinutes === 60 ? 'Every 1 Hour' : intervalMinutes >= 60 ? `Every ${intervalMinutes / 60} Hours` : `Every ${intervalMinutes} Mins`}
                 </strong>
               </div>
 

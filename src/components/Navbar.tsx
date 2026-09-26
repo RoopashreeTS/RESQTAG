@@ -1,15 +1,14 @@
 import React from 'react';
-import { Shield, QrCode, UserPlus, LayoutDashboard, LogOut, Trees, Activity } from 'lucide-react';
+import { Shield, QrCode, UserPlus, LayoutDashboard, LogOut, Trees } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 interface NavbarProps {
   currentView: string;
   onNavigate: (view: string, param?: string) => void;
-  onOpenSimulator: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate, onOpenSimulator }) => {
-  const { isAuthenticated, profile, logout, quickDemoLogin, activeJourney } = useAuth();
+export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate }) => {
+  const { isAuthenticated, profile, logout, activeJourney } = useAuth();
 
   return (
     <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-red-100 shadow-sm no-print">
@@ -82,14 +81,6 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate, onOpenS
               <QrCode className="w-4 h-4 text-[#E53935]" />
               <span>Scan Tag</span>
             </button>
-
-            <button
-              onClick={onOpenSimulator}
-              className="px-3.5 py-1.5 rounded-xl text-[#806F6F] hover:text-[#C62828] hover:bg-rose-50 transition-all flex items-center gap-1.5"
-            >
-              <Activity className="w-4 h-4 text-[#E53935]" />
-              <span>Incident Simulator</span>
-            </button>
           </nav>
 
           {/* Right Action Buttons */}
@@ -139,14 +130,8 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate, onOpenS
             ) : (
               <div className="flex items-center gap-2">
                 <button
-                  onClick={() => quickDemoLogin().then(() => onNavigate('dashboard'))}
-                  className="hidden sm:inline-flex items-center gap-1 px-3.5 py-1.5 rounded-xl text-xs font-semibold btn-rose-outline transition-all"
-                >
-                  ⚡ Demo Login
-                </button>
-                <button
                   onClick={() => onNavigate('register')}
-                  className="flex items-center gap-1.5 px-4 py-1.5 rounded-xl text-xs font-bold btn-rose-primary shadow-sm"
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold btn-rose-primary shadow-sm"
                 >
                   <UserPlus className="w-3.5 h-3.5" />
                   <span>Register</span>

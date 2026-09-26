@@ -6,33 +6,29 @@ import {
   Lock, 
   CheckCircle2, 
   ArrowRight, 
-  Zap, 
   MapPin, 
-  PhoneCall, 
   Trees, 
   KeyRound, 
   HeartHandshake, 
-  Activity, 
   Ambulance, 
   ShieldCheck, 
   Smartphone, 
   EyeOff,
   Sparkles,
   Compass,
-  AlertOctagon
+  AlertOctagon,
+  Clock,
+  PhoneCall
 } from 'lucide-react';
-import { QRCodeSVG } from 'qrcode.react';
 import { useAuth } from '../context/AuthContext';
 import { HeroAccidentBackground } from './HeroAccidentBackground';
 
 interface LandingPageProps {
   onNavigate: (view: string, param?: string) => void;
-  onOpenSimulator: () => void;
 }
 
-export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenSimulator }) => {
-  const { quickDemoLogin, isAuthenticated } = useAuth();
-  const demoScanUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/#scan/RQ7K29`;
+export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate }) => {
+  const { isAuthenticated } = useAuth();
 
   return (
     <div className="space-y-16 pb-24 text-[#2B2020]">
@@ -40,181 +36,102 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenSimu
       {/* ======================================================== */}
       {/* 1. HERO SECTION (Full-Width Animated Accident Background)*/}
       {/* ======================================================== */}
-      <section className="relative min-h-[660px] sm:min-h-[720px] flex items-center pt-10 sm:pt-16 pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden text-white">
+      <section className="relative min-h-[660px] sm:min-h-[720px] flex items-center justify-center pt-12 sm:pt-20 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden text-white">
         
         {/* Full-width Animated Hero Accident Background */}
         <HeroAccidentBackground />
 
-        {/* Content Container */}
-        <div className="relative z-10 max-w-7xl mx-auto w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+        {/* Content Container: Centered, Balanced, Impactful */}
+        <div className="relative z-10 max-w-4xl mx-auto w-full text-center space-y-7">
+          
+          {/* Top Badge */}
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-900/80 backdrop-blur-md border border-red-500/30 text-rose-200 text-xs font-bold shadow-lg">
+            <Shield className="w-3.5 h-3.5 text-[#FF6B6B]" />
+            <span className="tracking-wide uppercase">Emergency Identification & Safety Platform</span>
+            <span className="w-2 h-2 rounded-full bg-[#E53935] animate-ping"></span>
+          </div>
+
+          {/* Main Headline */}
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white leading-[1.12] drop-shadow-md">
+            When the victim cannot speak,{<br className="hidden sm:inline" />}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF6B6B] via-[#E53935] to-[#FF8E8E] drop-shadow-sm">
+              {' '}ResQTag speaks for them.
+            </span>
+          </h1>
+
+          {/* Subtitle */}
+          <p className="text-base sm:text-lg text-slate-200 font-normal max-w-2xl mx-auto leading-relaxed drop-shadow-sm">
+            Smart emergency identification and proactive safety monitoring in one platform. Rapid medical triage, instant trusted contact alerts, and solo travel check-ins.
+          </p>
+
+          {/* Three Primary Action Buttons */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-2">
             
-            {/* Left Column: Headline & Animated Action Buttons */}
-            <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
-              
-              {/* Top Badge */}
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-900/80 backdrop-blur-md border border-red-500/30 text-rose-200 text-xs font-bold shadow-lg">
-                <Shield className="w-3.5 h-3.5 text-[#FF6B6B]" />
-                <span className="tracking-wide uppercase">Emergency Identification & Safety Platform</span>
-                <span className="w-2 h-2 rounded-full bg-[#E53935] animate-ping"></span>
+            {/* 1. REGISTER */}
+            <button
+              onClick={() => onNavigate(isAuthenticated ? 'dashboard' : 'register')}
+              className="w-full sm:w-auto px-8 py-3.5 rounded-xl font-bold text-sm btn-rose-primary flex items-center justify-center gap-2"
+            >
+              <UserPlus className="w-4 h-4" />
+              <span>REGISTER NOW</span>
+            </button>
+
+            {/* 2. SCAN RESQTAG */}
+            <button
+              onClick={() => onNavigate('scan')}
+              className="w-full sm:w-auto px-7 py-3.5 rounded-xl font-bold text-sm bg-white/90 hover:bg-white text-[#2B2020] hover:text-[#E53935] border border-white/40 shadow-lg hover:-translate-y-0.5 active:scale-[0.97] transition-all flex items-center justify-center gap-2 backdrop-blur-md"
+            >
+              <QrCode className="w-4 h-4 text-[#E53935]" />
+              <span>SCAN RESQTAG</span>
+            </button>
+
+            {/* 3. START SAFEJOURNEY */}
+            <button
+              onClick={() => onNavigate('safejourney')}
+              className="w-full sm:w-auto px-7 py-3.5 rounded-xl font-bold text-sm bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white shadow-lg shadow-emerald-500/25 hover:-translate-y-0.5 active:scale-[0.97] transition-all flex items-center justify-center gap-2"
+            >
+              <Trees className="w-4 h-4 text-white" />
+              <span>START SAFEJOURNEY</span>
+            </button>
+          </div>
+
+          {/* Trust & Capability Pillars in Translucent Glass */}
+          <div className="pt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-3xl mx-auto text-left">
+            <div className="p-3.5 rounded-2xl bg-slate-900/60 backdrop-blur-md border border-white/10 space-y-1 shadow-md">
+              <div className="flex items-center gap-1.5 text-[#FF6B6B] font-bold text-xs">
+                <PhoneCall className="w-3.5 h-3.5" />
+                <span>1-Tap SOS Call</span>
               </div>
-
-              {/* Main Headline */}
-              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white leading-[1.12] drop-shadow-md">
-                When the victim cannot speak,{<br className="hidden sm:inline" />}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#FF6B6B] via-[#E53935] to-[#FF8E8E] drop-shadow-sm">
-                  {' '}ResQTag speaks for them.
-                </span>
-              </h1>
-
-              {/* Subtitle */}
-              <p className="text-base sm:text-lg text-slate-200 font-normal max-w-2xl mx-auto lg:mx-0 leading-relaxed drop-shadow-sm">
-                Smart emergency identification and proactive safety monitoring in one platform. Rapid medical triage, instant trusted contact alerts, and solo travel check-ins.
-              </p>
-
-              {/* Three Specific Animated Action Buttons */}
-              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 pt-2">
-                
-                {/* 1. REGISTER */}
-                <button
-                  onClick={() => onNavigate(isAuthenticated ? 'dashboard' : 'register')}
-                  className="w-full sm:w-auto px-7 py-3.5 rounded-xl font-bold text-sm btn-rose-primary flex items-center justify-center gap-2"
-                >
-                  <UserPlus className="w-4 h-4" />
-                  <span>REGISTER</span>
-                </button>
-
-                {/* 2. SCAN RESQTAG */}
-                <button
-                  onClick={() => onNavigate('scan')}
-                  className="w-full sm:w-auto px-6 py-3.5 rounded-xl font-bold text-sm bg-white/90 hover:bg-white text-[#2B2020] hover:text-[#E53935] border border-white/40 shadow-lg hover:-translate-y-0.5 active:scale-[0.97] transition-all flex items-center justify-center gap-2 backdrop-blur-md"
-                >
-                  <QrCode className="w-4 h-4 text-[#E53935]" />
-                  <span>SCAN RESQTAG</span>
-                </button>
-
-                {/* 3. START SAFEJOURNEY */}
-                <button
-                  onClick={() => onNavigate('safejourney')}
-                  className="w-full sm:w-auto px-6 py-3.5 rounded-xl font-bold text-sm bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white shadow-lg shadow-emerald-500/25 hover:-translate-y-0.5 active:scale-[0.97] transition-all flex items-center justify-center gap-2"
-                >
-                  <Trees className="w-4 h-4 text-white" />
-                  <span>START SAFEJOURNEY</span>
-                </button>
-              </div>
-
-              {/* Fast-Track Evaluator Quick Actions in Dark Glass Pill */}
-              <div className="pt-2 flex flex-wrap items-center justify-center lg:justify-start gap-3 text-xs">
-                <div className="inline-flex items-center gap-2.5 px-3.5 py-2 rounded-2xl bg-slate-900/75 backdrop-blur-md border border-white/15 text-slate-300 shadow-md">
-                  <span className="font-bold text-slate-400">Hackathon Fast-Track:</span>
-                  <button
-                    onClick={async () => {
-                      await quickDemoLogin();
-                      onNavigate('dashboard');
-                    }}
-                    className="text-[#FF8E8E] hover:text-white font-bold flex items-center gap-1 hover:underline transition-colors"
-                  >
-                    <Zap className="w-3.5 h-3.5 text-[#FF6B6B]" />
-                    Live Demo Dashboard
-                  </button>
-                  <span className="text-slate-600">•</span>
-                  <button
-                    onClick={onOpenSimulator}
-                    className="text-[#38D9FF] hover:text-white font-bold flex items-center gap-1 hover:underline transition-colors"
-                  >
-                    <Activity className="w-3.5 h-3.5 text-[#38D9FF]" />
-                    Simulate Accident Flow
-                  </button>
-                </div>
-              </div>
+              <p className="text-[11px] text-slate-300">Direct dial to trusted family contacts.</p>
             </div>
 
-            {/* Right Column: Smartphone Mockup on Dark Glass Display */}
-            <div className="lg:col-span-5 flex justify-center">
-              <div className="relative w-full max-w-[340px] sm:max-w-[360px]">
-                
-                {/* Soft Ambient Red/Rose Glow */}
-                <div className="absolute -inset-2 bg-gradient-to-r from-red-500/30 to-cyan-500/20 rounded-[42px] blur-xl opacity-80 animate-pulse-subtle"></div>
-
-                {/* Device Frame */}
-                <div className="relative rounded-[36px] bg-slate-900/90 p-3 shadow-2xl border-2 border-white/20 backdrop-blur-xl">
-                {/* Speaker & Sensor Bar */}
-                <div className="w-24 h-4 bg-slate-200/80 rounded-full mx-auto mb-2 flex items-center justify-center">
-                  <div className="w-8 h-1 bg-slate-400 rounded-full"></div>
-                </div>
-
-                {/* Inner Screen Display */}
-                <div className="rounded-[26px] bg-[#FFF7F7] text-[#2B2020] p-4 space-y-3.5 overflow-hidden border border-red-100">
-                  
-                  {/* Top Emergency Status Header */}
-                  <div className="flex items-center justify-between border-b border-red-100 pb-2.5">
-                    <div className="flex items-center gap-1.5">
-                      <div className="w-2 h-2 rounded-full bg-[#E53935] animate-pulse"></div>
-                      <span className="text-[11px] font-black tracking-wider text-[#2B2020] font-mono">
-                        RESQTAG MEDICAL PROFILE
-                      </span>
-                    </div>
-                    <span className="px-2 py-0.5 rounded bg-red-100 text-[#C62828] font-black font-mono text-[10px] border border-red-200">
-                      O+ POSITIVE
-                    </span>
-                  </div>
-
-                  {/* Profile Summary Card */}
-                  <div className="bg-white/90 rounded-2xl p-3 border border-red-100 shadow-sm space-y-2">
-                    <div className="flex items-center gap-3">
-                      <div className="w-11 h-11 rounded-xl bg-rose-50 border border-red-100 flex items-center justify-center font-black text-[#E53935] text-sm">
-                        RK
-                      </div>
-                      <div>
-                        <h4 className="text-sm font-bold text-[#2B2020]">Rahul Kumar</h4>
-                        <p className="text-[11px] text-[#806F6F]">Age 24 • Male • KA-01-AB-1234</p>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-1.5 text-[10px] pt-1">
-                      <div className="p-1.5 rounded-xl bg-rose-50/60 border border-red-100">
-                        <span className="text-[#806F6F] block font-semibold">ALLERGIES</span>
-                        <span className="font-bold text-[#E53935]">Penicillin (Severe)</span>
-                      </div>
-                      <div className="p-1.5 rounded-xl bg-rose-50/60 border border-red-100">
-                        <span className="text-[#806F6F] block font-semibold">CONDITION</span>
-                        <span className="font-bold text-[#2B2020]">Asthma (Inhaler)</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Primary 1-Tap Emergency Action */}
-                  <div className="space-y-1.5">
-                    <button
-                      onClick={() => onNavigate('emergency-profile', 'RQ7K29')}
-                      className="w-full py-2.5 px-3 rounded-xl btn-rose-sos text-white font-bold text-xs shadow-md flex items-center justify-center gap-2"
-                    >
-                      <PhoneCall className="w-3.5 h-3.5" />
-                      <span>1-Tap Call Emergency Contact</span>
-                    </button>
-                  </div>
-
-                  {/* Physical QR Decal Preview */}
-                  <div className="bg-white/95 rounded-2xl p-3 border border-red-100 flex items-center justify-between gap-3 shadow-sm">
-                    <div className="bg-white p-1 rounded-lg border border-slate-200">
-                      <QRCodeSVG value={demoScanUrl} size={54} level="M" />
-                    </div>
-                    <div className="text-left space-y-0.5">
-                      <span className="text-[10px] uppercase font-bold text-[#806F6F] block">TAG IDENTIFIER</span>
-                      <span className="text-sm font-black font-mono text-[#2B2020] tracking-wider">RQ7K29</span>
-                      <span className="text-[10px] text-emerald-700 font-semibold block">✓ Verified Identity</span>
-                    </div>
-                  </div>
-
-                </div>
-
+            <div className="p-3.5 rounded-2xl bg-slate-900/60 backdrop-blur-md border border-white/10 space-y-1 shadow-md">
+              <div className="flex items-center gap-1.5 text-emerald-400 font-bold text-xs">
+                <Clock className="w-3.5 h-3.5" />
+                <span>SafeJourney</span>
               </div>
+              <p className="text-[11px] text-slate-300">Proactive solo travel safety check-ins.</p>
+            </div>
+
+            <div className="p-3.5 rounded-2xl bg-slate-900/60 backdrop-blur-md border border-white/10 space-y-1 shadow-md">
+              <div className="flex items-center gap-1.5 text-[#38D9FF] font-bold text-xs">
+                <Lock className="w-3.5 h-3.5" />
+                <span>Zero Tracking</span>
+              </div>
+              <p className="text-[11px] text-slate-300">Consent-based emergency geolocation.</p>
+            </div>
+
+            <div className="p-3.5 rounded-2xl bg-slate-900/60 backdrop-blur-md border border-white/10 space-y-1 shadow-md">
+              <div className="flex items-center gap-1.5 text-amber-300 font-bold text-xs">
+                <Smartphone className="w-3.5 h-3.5" />
+                <span>No App Needed</span>
+              </div>
+              <p className="text-[11px] text-slate-300">Universal camera browser scanning.</p>
             </div>
           </div>
 
         </div>
-      </div>
-    </section>
+      </section>
 
       {/* ======================================================== */}
       {/* 2. TWO CORE SOLUTIONS (Rose Glass Cards)                 */}
@@ -445,7 +362,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenSimu
           {/* Check-In Action Micro-Demo with Dedicated Button Glows */}
           <div className="pt-4 border-t border-red-100 space-y-4">
             <span className="text-xs uppercase font-bold tracking-wider text-[#806F6F] block">
-              Live Check-In Interaction Controls Preview:
+              Live Check-In Interaction Controls:
             </span>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
               
@@ -537,7 +454,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenSimu
               </div>
               <h4 className="font-bold text-sm text-[#2B2020]">🔒 Protected Data</h4>
               <p className="text-[11px] text-[#806F6F] leading-relaxed">
-                QR encodes a pointer token (RQ7K29), never raw personal details.
+                QR encodes a pointer token, never raw personal details.
               </p>
             </div>
 
@@ -548,7 +465,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenSimu
               </div>
               <h4 className="font-bold text-sm text-[#2B2020]">📍 Consent Location</h4>
               <p className="text-[11px] text-[#806F6F] leading-relaxed">
-                Responders explicitly grant geolocation permission before sharing coords.
+                Responders explicitly grant geolocation permission before sharing coordinates.
               </p>
             </div>
 

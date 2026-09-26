@@ -12,7 +12,6 @@ import {
   ArrowLeft, 
   CheckCircle2, 
   Lock, 
-  Sparkles,
   Printer
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
@@ -68,28 +67,12 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({ onNavigate }
 
   // OTP State
   const [otp, setOtp] = useState('');
-  const [demoOtpCode, setDemoOtpCode] = useState('123456');
   const [isSendingOtp, setIsSendingOtp] = useState(false);
   const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
   // Generated Profile on completion
   const [createdProfile, setCreatedProfile] = useState<UserProfile | null>(null);
-
-  // Quick fill sample data for testing
-  const handlePrefillSample = () => {
-    setFullName('Karthik Rao');
-    setAge(28);
-    setBloodGroup('B+');
-    setPhone('+91 98860 12345');
-    setVehicleNumber('KA-05-MK-9021');
-    setAddress('Flat 301, Green Meadows, HSR Layout Sector 2, Bengaluru - 560102');
-    setAllergies('Aspirin, Shellfish');
-    setMedicalInfo('Hypertension (On daily Telmisartan 40mg), Mild Sinusitis');
-    setContact1({ id: 'c1', name: 'Suresh Rao', relationship: 'Father', phone: '+91 98440 98765', isPrimary: true });
-    setContact2({ id: 'c2', name: 'Ananya Rao', relationship: 'Sister', phone: '+91 98440 54321', isPrimary: false });
-    setContact3({ id: 'c3', name: 'Vikram Mehta', relationship: 'Colleague', phone: '+91 99000 11223', isPrimary: false });
-  };
 
   // Step 1 Validation
   const validateStep1 = () => {
@@ -126,7 +109,6 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({ onNavigate }
     try {
       const res = await api.sendOtp(phone);
       if (res.success) {
-        setDemoOtpCode(res.demoOtp || '123456');
         setStep(3);
       } else {
         setErrorMessage('Failed to send OTP. Please try again.');
@@ -243,13 +225,6 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({ onNavigate }
                   This vital information will be accessible to emergency responders upon scanning.
                 </p>
               </div>
-              <button
-                type="button"
-                onClick={handlePrefillSample}
-                className="btn-rose-outline text-xs px-3.5 py-1.5 rounded-xl font-semibold self-start sm:self-auto"
-              >
-                ⚡ Autofill Sample Data
-              </button>
             </div>
 
             {/* Profile Photo Upload */}
@@ -574,31 +549,8 @@ export const RegistrationFlow: React.FC<RegistrationFlowProps> = ({ onNavigate }
             <div className="space-y-1">
               <h2 className="text-xl font-bold text-[#2B2020]">Verify Phone Number</h2>
               <p className="text-xs text-[#806F6F]">
-                We sent a 6-digit authentication code to <strong className="text-[#2B2020] font-mono">{phone}</strong>
+                We sent a 6-digit verification code to <strong className="text-[#2B2020] font-mono">{phone}</strong>
               </p>
-            </div>
-
-            {/* Safe Demo OTP Helper Banner */}
-            <div className="p-4 rounded-2xl bg-[#FFEFEF] border border-red-200 text-[#2B2020] text-xs space-y-2.5 text-left shadow-sm">
-              <div className="flex items-center justify-between">
-                <span className="font-bold flex items-center gap-1.5 text-[#C62828]">
-                  <Sparkles className="w-4 h-4 text-[#E53935]" />
-                  HACKATHON DEMO OTP:
-                </span>
-                <span className="font-mono font-black text-sm bg-white px-2.5 py-0.5 rounded-lg border border-red-200 text-[#E53935]">
-                  {demoOtpCode}
-                </span>
-              </div>
-              <p className="text-[11px] text-[#806F6F]">
-                For hackathon evaluation, click below to autofill this code immediately.
-              </p>
-              <button
-                type="button"
-                onClick={() => setOtp(demoOtpCode)}
-                className="w-full py-2 px-3 rounded-xl bg-white hover:bg-red-50 font-bold text-xs text-[#E53935] border border-red-200 shadow-sm transition-all hover:-translate-y-0.5 active:scale-95"
-              >
-                ⚡ 1-Click Autofill Code ({demoOtpCode})
-              </button>
             </div>
 
             {/* OTP Input */}

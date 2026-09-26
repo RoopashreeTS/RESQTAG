@@ -4,7 +4,6 @@ import {
   Search, 
   Upload, 
   ShieldAlert, 
-  Sparkles, 
   AlertCircle, 
   ArrowRight,
   StopCircle
@@ -286,42 +285,6 @@ export const ResponderScanPage: React.FC<ResponderScanPageProps> = ({ onScanComp
             <div id="qr-reader-hidden" className="hidden" />
           </div>
         )}
-
-        {/* HACKATHON QUICK-TEST BUTTONS */}
-        <div className="pt-4 border-t border-red-100 space-y-2.5">
-          <div className="flex items-center justify-between text-[11px] text-[#806F6F]">
-            <span className="font-semibold flex items-center gap-1 text-[#2B2020]">
-              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-              Hackathon Quick Test:
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            <button
-              type="button"
-              onClick={() => onScanComplete('RQ7K29')}
-              className="p-3 rounded-2xl bg-white/80 hover:bg-red-50 text-[#2B2020] border border-red-200 text-xs font-semibold flex items-center justify-between transition-all hover:-translate-y-0.5 text-left shadow-sm"
-            >
-              <div>
-                <span className="font-mono font-bold text-[#E53935] block">RQ7K29</span>
-                <span className="text-[10px] text-[#806F6F]">Rahul Kumar (KA-01-AB-1234)</span>
-              </div>
-              <ArrowRight className="w-3.5 h-3.5 text-[#E53935]" />
-            </button>
-
-            <button
-              type="button"
-              onClick={() => onScanComplete('RQT-8829A4')}
-              className="p-3 rounded-2xl bg-white/80 hover:bg-red-50 text-[#2B2020] border border-red-200 text-xs font-semibold flex items-center justify-between transition-all hover:-translate-y-0.5 text-left shadow-sm"
-            >
-              <div>
-                <span className="font-mono font-bold text-[#2B2020] block">RQT-8829A4</span>
-                <span className="text-[10px] text-[#806F6F]">Direct Tag ID Lookup</span>
-              </div>
-              <ArrowRight className="w-3.5 h-3.5 text-[#806F6F]" />
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   );

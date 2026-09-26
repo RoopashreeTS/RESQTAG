@@ -26,13 +26,12 @@ import { ProfilePhotoUploader } from './ProfilePhotoUploader';
 
 interface OwnerDashboardProps {
   onNavigate: (view: string, param?: string) => void;
-  onOpenSimulator: () => void;
 }
 
 const BLOOD_GROUPS: BloodGroup[] = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 
-export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOpenSimulator }) => {
-  const { profile, token, logout, updateProfile, resetDemo, activeJourney } = useAuth();
+export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate }) => {
+  const { profile, token, logout, updateProfile, activeJourney } = useAuth();
   const current = profile || INITIAL_DEMO_DATA;
 
   // Active Tab: dashboard, qr, safejourney, history, notifications, profile, settings
@@ -192,11 +191,11 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
         {/* Action button */}
         <div className="flex items-center gap-2">
           <button
-            onClick={onOpenSimulator}
+            onClick={() => onNavigate('sticker')}
             className="btn-rose-primary px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-1.5"
           >
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Simulate Incident</span>
+            <Printer className="w-3.5 h-3.5" />
+            <span>Print QR Tag</span>
           </button>
         </div>
       </div>
@@ -903,7 +902,7 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
             </div>
           )}
 
-          {/* TAB 6: SETTINGS & HACKATHON RESET */}
+          {/* TAB 6: ACCOUNT SETTINGS */}
           {activeTab === 'settings' && (
             <div className="glass-card-rose-solid rounded-3xl p-6 sm:p-8 space-y-6 shadow-xl">
               <div className="border-b border-red-100 pb-4">
@@ -911,29 +910,37 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
                   <div className="w-8 h-8 rounded-lg bg-[#FFEFEF] flex items-center justify-center text-[#E53935]">
                     <Settings className="w-4 h-4" />
                   </div>
-                  Account & Hackathon Demo Settings
+                  Account & Security Settings
                 </h2>
+                <p className="text-xs text-[#806F6F] mt-1">
+                  Manage your ResQTag account preferences and security credentials.
+                </p>
               </div>
 
               <div className="space-y-4 text-xs">
                 <div className="p-4 rounded-2xl bg-white/80 border border-red-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
                   <div>
-                    <h4 className="font-bold text-[#2B2020]">Reset Fictional Demo Data</h4>
-                    <p className="text-[#806F6F] text-[11px] mt-0.5">
-                      Restores Rahul Kumar (KA-01-AB-1234) for fresh hackathon judging.
+                    <h4 className="font-bold text-[#2B2020]">Registered Mobile Number</h4>
+                    <p className="text-[#806F6F] text-[11px] mt-0.5 font-mono">
+                      {current.phone || '+91 98765 43210'} (Verified via OTP)
                     </p>
                   </div>
-                  <button
-                    onClick={async () => {
-                      if (window.confirm('Reset demo data to initial state?')) {
-                        await resetDemo();
-                        alert('Demo data successfully reset!');
-                      }
-                    }}
-                    className="btn-rose-primary px-4 py-2 rounded-xl font-bold text-xs"
-                  >
-                    Reset Demo
-                  </button>
+                  <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-bold border border-emerald-300 inline-flex items-center gap-1 w-fit">
+                    <CheckCircle2 className="w-3 h-3" />
+                    Verified
+                  </span>
+                </div>
+
+                <div className="p-4 rounded-2xl bg-white/80 border border-red-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
+                  <div>
+                    <h4 className="font-bold text-[#2B2020]">Emergency Profile Privacy</h4>
+                    <p className="text-[#806F6F] text-[11px] mt-0.5">
+                      Your medical info and emergency contacts are securely served to responders upon QR scan.
+                    </p>
+                  </div>
+                  <span className="px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-[11px] font-bold border border-blue-200 inline-flex items-center gap-1 w-fit">
+                    Active & Protected
+                  </span>
                 </div>
               </div>
             </div>

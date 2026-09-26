@@ -19,7 +19,7 @@ export const TrustedContactAlertModal: React.FC = () => {
             </div>
             <div>
               <span className="text-[10px] font-black tracking-wider uppercase text-[#C62828] bg-[#FFEFEF] px-2.5 py-0.5 rounded-lg border border-red-200">
-                SIMULATED SMS ALERT
+                EMERGENCY SMS NOTIFICATION
               </span>
               <h4 className="text-sm font-bold text-[#2B2020] mt-0.5">
                 {activeNotification.title}
