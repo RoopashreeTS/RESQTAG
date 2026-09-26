@@ -30,8 +30,8 @@ export const INITIAL_DEMO_DATA: UserProfile = {
   bloodGroup: 'O+',
   address: '#402, Sunshine Residency, Indiranagar 100ft Road, Bengaluru, Karnataka - 560038',
   vehicleNumber: 'KA-01-AB-1234',
-  allergies: '',
-  medicalInfo: '',
+  allergies: 'Penicillin (Severe), Peanuts',
+  medicalInfo: 'Asthmatic (Carries inhaler in backpack). Type 2 Diabetic.',
   emergencyContacts: [
     {
       id: 'c1',
@@ -421,8 +421,8 @@ export const api = {
           bloodGroup: INITIAL_DEMO_DATA.bloodGroup,
           address: INITIAL_DEMO_DATA.address,
           vehicleNumber: INITIAL_DEMO_DATA.vehicleNumber,
-          allergies: '',
-          medicalInfo: '',
+          allergies: INITIAL_DEMO_DATA.allergies || '',
+          medicalInfo: INITIAL_DEMO_DATA.medicalInfo || '',
           emergencyContacts: INITIAL_DEMO_DATA.emergencyContacts,
           updatedAt: INITIAL_DEMO_DATA.updatedAt,
         },

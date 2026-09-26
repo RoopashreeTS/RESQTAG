@@ -9,7 +9,9 @@ import {
   PhoneCall, 
   Navigation,
   BellRing,
-  User
+  User,
+  AlertTriangle,
+  FileText
 } from 'lucide-react';
 import type { PublicEmergencyProfile } from '../types';
 import { api } from '../services/api';
@@ -41,14 +43,15 @@ export const EmergencyProfileView: React.FC<EmergencyProfileViewProps> = ({ iden
       setIsLoading(true);
       setFetchError(null);
       try {
-        const res = await api.getPublicTag(identifier);
+        const cleanCode = (identifier || 'RQ7K29').trim();
+        const res = await api.getPublicTag(cleanCode);
         if (res.success && res.profile && isMounted) {
           setProfile(res.profile);
         } else if (isMounted) {
-          setFetchError(res.error || `Could not find ResQTag profile for identifier "${identifier}"`);
+          setFetchError(res.error || 'Please check the QR code or enter the short code manually.');
         }
       } catch {
-        if (isMounted) setFetchError('Failed to retrieve emergency profile. Check network connection.');
+        if (isMounted) setFetchError('Please check the QR code or enter the short code manually.');
       } finally {
         if (isMounted) setIsLoading(false);
       }
@@ -68,7 +71,7 @@ export const EmergencyProfileView: React.FC<EmergencyProfileViewProps> = ({ iden
     setHasLoggedScan(true);
 
     if (shareLocation) {
-      if (navigator.geolocation) {
+      if (typeof navigator !== 'undefined' && navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           async (pos) => {
             const lat = pos.coords.latitude;
@@ -89,8 +92,7 @@ export const EmergencyProfileView: React.FC<EmergencyProfileViewProps> = ({ iden
               triggerSimulatedScanAlert(res.notification);
             }
           },
-          async (err) => {
-            console.warn('Geolocation denied by browser:', err);
+          async () => {
             setLocationStatus('denied');
             setAlertSentSuccess(true);
             const res = await api.recordScanEvent({
@@ -140,10 +142,10 @@ export const EmergencyProfileView: React.FC<EmergencyProfileViewProps> = ({ iden
 
   if (isLoading) {
     return (
-      <div className="max-w-xl mx-auto px-4 py-20 text-center space-y-4">
+      <div className="max-w-xl mx-auto px-4 py-24 text-center space-y-4">
         <div className="w-12 h-12 border-4 border-[#E53935] border-t-transparent rounded-full animate-spin mx-auto" />
-        <p className="text-sm font-bold text-[#2B2020]">Retrieving Emergency Medical Profile...</p>
-        <p className="text-xs text-[#806F6F]">Querying secure ResQTag API</p>
+        <h2 className="text-base font-black text-[#2B2020]">Loading ResQTag…</h2>
+        <p className="text-xs text-[#806F6F]">Querying secure emergency database</p>
       </div>
     );
   }
@@ -155,21 +157,21 @@ export const EmergencyProfileView: React.FC<EmergencyProfileViewProps> = ({ iden
           <ShieldAlert className="w-9 h-9" />
         </div>
         <div className="space-y-1.5">
-          <h2 className="text-2xl font-black text-[#2B2020]">ResQTag not found.</h2>
+          <h2 className="text-2xl font-black text-[#2B2020]">ResQTag not found</h2>
           <p className="text-xs text-[#806F6F] max-w-md mx-auto">
-            {fetchError || 'Please check the code and try again.'}
+            Please check the QR code or enter the short code manually.
           </p>
         </div>
         <div className="flex flex-wrap justify-center gap-3">
           <button
             onClick={() => onNavigate('scan')}
-            className="px-5 py-2.5 rounded-xl btn-rose-primary text-white font-bold text-xs"
+            className="px-6 py-3 rounded-xl btn-rose-primary text-white font-bold text-xs uppercase tracking-wider shadow-md"
           >
-            Enter Another Code
+            BACK TO SCAN
           </button>
           <button
             onClick={() => onNavigate('landing')}
-            className="px-5 py-2.5 rounded-xl btn-rose-outline text-[#2B2020] font-bold text-xs"
+            className="px-6 py-3 rounded-xl btn-rose-outline text-[#2B2020] font-bold text-xs"
           >
             Return to Home
           </button>
@@ -178,7 +180,8 @@ export const EmergencyProfileView: React.FC<EmergencyProfileViewProps> = ({ iden
     );
   }
 
-  const primaryContact = profile.emergencyContacts.find(c => c.isPrimary) || profile.emergencyContacts[0];
+  const contacts = profile.emergencyContacts || [];
+  const primaryContact = contacts.find(c => c && c.isPrimary) || contacts[0];
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 space-y-6 pb-24 text-[#2B2020]">
@@ -249,29 +252,29 @@ export const EmergencyProfileView: React.FC<EmergencyProfileViewProps> = ({ iden
 
       {/* 3. PRIMARY EMERGENCY ACTIONS BAR */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        {/* Action 1: 📞 Contact Family */}
+        {/* Action 1: 📞 Contact */}
         {primaryContact && (
           <a
-            href={`tel:${primaryContact.phone.replace(/\s+/g, '')}`}
+            href={`tel:${(primaryContact.phone || '').replace(/\s+/g, '')}`}
             className="p-4 rounded-2xl glass-card-dark-rose text-white flex items-center justify-center gap-2.5 font-bold text-xs hover:-translate-y-0.5 active:scale-[0.97] transition-all"
           >
             <PhoneCall className="w-4 h-4 text-emerald-400" />
             <div className="text-left">
-              <span className="block text-[10px] text-slate-300 uppercase font-semibold">1-Tap Dial</span>
-              <span className="block text-xs font-bold text-white">Call {primaryContact.name.split(' ')[0]}</span>
+              <span className="block text-[10px] text-slate-300 uppercase font-semibold">📞 Contact</span>
+              <span className="block text-xs font-bold text-white">Call {(primaryContact.name || 'Family').split(' ')[0]}</span>
             </div>
           </a>
         )}
 
-        {/* Action 2: 🚑 Emergency Assistance */}
+        {/* Action 2: 🚨 Emergency Assistance */}
         <a
           href="tel:108"
           className="p-4 rounded-2xl glass-card-rose text-[#2B2020] flex items-center justify-center gap-2.5 font-bold text-xs hover:border-[#E53935]"
         >
           <Ambulance className="w-4 h-4 text-[#E53935]" />
           <div className="text-left">
-            <span className="block text-[10px] text-[#806F6F] uppercase font-semibold">Toll-Free SOS</span>
-            <span className="block text-xs font-bold text-[#2B2020]">Call Ambulance (108/112)</span>
+            <span className="block text-[10px] text-[#806F6F] uppercase font-semibold">🚨 Emergency Assistance</span>
+            <span className="block text-xs font-bold text-[#2B2020]">Ambulance (108 / 112)</span>
           </div>
         </a>
 
@@ -297,7 +300,7 @@ export const EmergencyProfileView: React.FC<EmergencyProfileViewProps> = ({ iden
             {profile.photoUrl ? (
               <img
                 src={profile.photoUrl}
-                alt={profile.fullName}
+                alt={profile.fullName || 'Profile Photo'}
                 className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl object-cover border-2 border-red-200 shadow-md bg-white"
               />
             ) : (
@@ -314,10 +317,10 @@ export const EmergencyProfileView: React.FC<EmergencyProfileViewProps> = ({ iden
           <div className="flex-1 space-y-2">
             <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
               <span className="px-2.5 py-0.5 rounded-full bg-rose-100 text-[#C62828] text-[10px] font-bold border border-red-200 uppercase">
-                EMERGENCY MEDICAL PROFILE
+                RESQTAG EMERGENCY PROFILE
               </span>
               <span className="px-2.5 py-0.5 rounded-full bg-white/80 text-[#2B2020] font-mono text-[10px] font-bold border border-red-100">
-                TAG: {profile.shortCode}
+                TAG: {profile.shortCode || identifier}
               </span>
             </div>
 
@@ -330,7 +333,7 @@ export const EmergencyProfileView: React.FC<EmergencyProfileViewProps> = ({ iden
               <span>•</span>
               <span className="flex items-center gap-1 font-mono">
                 <Car className="w-3.5 h-3.5 text-[#E53935]" />
-                <strong className="text-[#2B2020]">{profile.vehicleNumber}</strong>
+                <strong className="text-[#2B2020]">{profile.vehicleNumber || 'Not specified'}</strong>
               </span>
             </div>
           </div>
@@ -341,8 +344,31 @@ export const EmergencyProfileView: React.FC<EmergencyProfileViewProps> = ({ iden
               BLOOD GROUP
             </span>
             <span className="text-3xl sm:text-4xl font-black font-mono">
-              {profile.bloodGroup}
+              {profile.bloodGroup || 'O+'}
             </span>
+          </div>
+        </div>
+
+        {/* Allergies & Medical Information */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="p-4 rounded-2xl bg-rose-50/80 border border-red-200 space-y-1.5">
+            <div className="flex items-center gap-1.5 text-[#C62828] text-xs font-bold uppercase tracking-wider">
+              <AlertTriangle className="w-4 h-4 text-[#E53935]" />
+              <span>Allergies</span>
+            </div>
+            <p className="text-xs font-semibold text-[#2B2020] leading-relaxed">
+              {profile.allergies || 'No known allergies reported'}
+            </p>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-white/80 border border-red-100 space-y-1.5">
+            <div className="flex items-center gap-1.5 text-[#2B2020] text-xs font-bold uppercase tracking-wider">
+              <FileText className="w-4 h-4 text-[#E53935]" />
+              <span>Important Medical Information</span>
+            </div>
+            <p className="text-xs font-medium text-[#2B2020] leading-relaxed">
+              {profile.medicalInfo || 'No chronic conditions reported'}
+            </p>
           </div>
         </div>
 

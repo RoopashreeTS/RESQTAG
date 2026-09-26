@@ -13,87 +13,116 @@ import { SafeJourneyAlertModal } from './components/SafeJourneyAlertModal';
 import { TrustedContactAlertModal } from './components/TrustedContactAlertModal';
 import { GlobalRoseBackground } from './components/GlobalRoseBackground';
 
+// Helper to parse route synchronously on first load
+function parseCurrentRoute(): { view: string; param?: string } {
+  if (typeof window === 'undefined') return { view: 'landing' };
+
+  // 1. Check path-based emergency / scan URL first
+  const path = window.location.pathname;
+  if (path.includes('/emergency/')) {
+    const parts = path.split('/emergency/');
+    const id = decodeURIComponent(parts[parts.length - 1].split(/[?#]/)[0].trim());
+    if (id) return { view: 'emergency-profile', param: id };
+  }
+  if (path.includes('/scan/')) {
+    const parts = path.split('/scan/');
+    const id = decodeURIComponent(parts[parts.length - 1].split(/[?#]/)[0].trim());
+    if (id) return { view: 'emergency-profile', param: id };
+  }
+
+  // 2. Check hash routing
+  let rawHash = window.location.hash || '';
+  try {
+    rawHash = decodeURIComponent(rawHash);
+  } catch {}
+
+  const cleanHash = rawHash.replace(/^#[/!]*/, '').trim();
+  const hashPath = cleanHash.split('?')[0].trim();
+
+  if (hashPath.toLowerCase().startsWith('scan/')) {
+    const id = hashPath.replace(/^scan\//i, '').trim();
+    if (id) {
+      return { view: 'emergency-profile', param: id };
+    } else {
+      return { view: 'scan', param: undefined };
+    }
+  } else if (hashPath.toLowerCase() === 'scan') {
+    return { view: 'scan', param: undefined };
+  } else if (hashPath.toLowerCase().startsWith('emergency/') || hashPath.toLowerCase().startsWith('emergency-profile/')) {
+    const id = hashPath.replace(/^(emergency|emergency-profile)\//i, '').trim();
+    if (id) {
+      return { view: 'emergency-profile', param: id };
+    } else {
+      return { view: 'scan', param: undefined };
+    }
+  } else if (hashPath.toLowerCase() === 'safejourney') {
+    return { view: 'safejourney', param: undefined };
+  } else if (hashPath.toLowerCase() === 'register') {
+    return { view: 'register', param: undefined };
+  } else if (hashPath.toLowerCase() === 'dashboard') {
+    return { view: 'dashboard', param: undefined };
+  } else if (hashPath.toLowerCase() === 'sticker') {
+    return { view: 'sticker', param: undefined };
+  } else if (hashPath.toLowerCase() === 'landing' || hashPath.toLowerCase() === 'home' || !hashPath) {
+    return { view: 'landing', param: undefined };
+  } else {
+    return { view: 'scan', param: undefined };
+  }
+}
+
+class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean; error: any }> {
+  constructor(props: { children: React.ReactNode }) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error: any) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: any, errorInfo: any) {
+    console.error('ResQTag ErrorBoundary caught an error:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen bg-[#FFF7F7] flex items-center justify-center p-6 text-center">
+          <div className="glass-card-rose-solid rounded-3xl p-8 max-w-md space-y-4 border border-red-200">
+            <h2 className="text-xl font-black text-[#2B2020]">Emergency Portal</h2>
+            <p className="text-xs text-[#806F6F]">
+              An unexpected render issue occurred. Click below to reload the emergency profile.
+            </p>
+            <button
+              onClick={() => {
+                this.setState({ hasError: false, error: null });
+                window.location.reload();
+              }}
+              className="px-6 py-2.5 rounded-xl btn-rose-primary text-white font-bold text-xs"
+            >
+              Reload Page
+            </button>
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 const AppContent: React.FC = () => {
   const { isCheckinPromptOpen, setCheckinPromptOpen } = useAuth();
 
-  // Navigation state
-  const [currentView, setCurrentView] = useState<string>('landing');
-  const [currentParam, setCurrentParam] = useState<string | undefined>(undefined);
+  // Navigation state initialized synchronously
+  const [routeState, setRouteState] = useState(() => parseCurrentRoute());
+  const currentView = routeState.view;
+  const currentParam = routeState.param;
 
   // Sync with browser hash routing
   useEffect(() => {
     const handleHashChange = () => {
-      // 1. Check path-based emergency / scan URL first (e.g. /RESQTAG/scan/RQ7K29 or /RESQTAG/emergency/RQ7K29)
-      const path = window.location.pathname;
-      if (path.includes('/emergency/')) {
-        const parts = path.split('/emergency/');
-        const id = decodeURIComponent(parts[parts.length - 1].split(/[?#]/)[0].trim());
-        if (id) {
-          setCurrentView('emergency-profile');
-          setCurrentParam(id);
-          return;
-        }
-      }
-      if (path.includes('/scan/')) {
-        const parts = path.split('/scan/');
-        const id = decodeURIComponent(parts[parts.length - 1].split(/[?#]/)[0].trim());
-        if (id) {
-          setCurrentView('emergency-profile');
-          setCurrentParam(id);
-          return;
-        }
-      }
-
-      // 2. Check hash routing (e.g. #scan/RQ7K29, #/scan/RQ7K29, #emergency/..., etc.)
-      let rawHash = window.location.hash || '';
-      try {
-        rawHash = decodeURIComponent(rawHash);
-      } catch {}
-
-      const cleanHash = rawHash.replace(/^#[/!]*/, '').trim();
-      const hashPath = cleanHash.split('?')[0].trim(); // strip query string
-
-      if (hashPath.toLowerCase().startsWith('scan/')) {
-        const id = hashPath.replace(/^scan\//i, '').trim();
-        if (id) {
-          setCurrentView('emergency-profile');
-          setCurrentParam(id);
-        } else {
-          setCurrentView('scan');
-          setCurrentParam(undefined);
-        }
-      } else if (hashPath.toLowerCase() === 'scan') {
-        setCurrentView('scan');
-        setCurrentParam(undefined);
-      } else if (hashPath.toLowerCase().startsWith('emergency/') || hashPath.toLowerCase().startsWith('emergency-profile/')) {
-        const id = hashPath.replace(/^(emergency|emergency-profile)\//i, '').trim();
-        if (id) {
-          setCurrentView('emergency-profile');
-          setCurrentParam(id);
-        } else {
-          setCurrentView('scan');
-          setCurrentParam(undefined);
-        }
-      } else if (hashPath.toLowerCase() === 'safejourney') {
-        setCurrentView('safejourney');
-        setCurrentParam(undefined);
-      } else if (hashPath.toLowerCase() === 'register') {
-        setCurrentView('register');
-        setCurrentParam(undefined);
-      } else if (hashPath.toLowerCase() === 'dashboard') {
-        setCurrentView('dashboard');
-        setCurrentParam(undefined);
-      } else if (hashPath.toLowerCase() === 'sticker') {
-        setCurrentView('sticker');
-        setCurrentParam(undefined);
-      } else if (hashPath.toLowerCase() === 'landing' || hashPath.toLowerCase() === 'home' || !hashPath) {
-        setCurrentView('landing');
-        setCurrentParam(undefined);
-      } else {
-        // If route is unrecognized, show the Scan portal instead of a blank screen
-        setCurrentView('scan');
-        setCurrentParam(undefined);
-      }
+      const nextRoute = parseCurrentRoute();
+      setRouteState(nextRoute);
     };
 
     handleHashChange();
@@ -103,8 +132,7 @@ const AppContent: React.FC = () => {
 
   const handleNavigate = (view: string, param?: string) => {
     const targetView = view === 'home' ? 'landing' : view;
-    setCurrentView(targetView);
-    setCurrentParam(param);
+    setRouteState({ view: targetView, param });
 
     // Update URL hash smoothly
     if (targetView === 'emergency-profile' && param) {
@@ -212,8 +240,10 @@ const AppContent: React.FC = () => {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
+    <ErrorBoundary>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }

@@ -140,10 +140,10 @@ export const ResponderScanPage: React.FC<ResponderScanPageProps> = ({ onScanComp
           <span>PUBLIC RESPONDER PORTAL</span>
         </div>
         <h1 className="text-2xl sm:text-3xl font-black text-[#2B2020]">
-          Scan ResQTag Identifier
+          SCAN RESQTAG
         </h1>
         <p className="text-xs text-[#806F6F]">
-          Zero login or app install needed. Retrieve critical medical data in milliseconds.
+          Scan a ResQTag QR code or enter the backup code.
         </p>
       </div>
 
