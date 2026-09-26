@@ -1,5 +1,5 @@
 import React from 'react';
-import { Shield, QrCode, UserPlus, LayoutDashboard, LogOut, Flame } from 'lucide-react';
+import { Shield, QrCode, UserPlus, LayoutDashboard, LogOut, Flame, Trees } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 interface NavbarProps {
@@ -9,7 +9,7 @@ interface NavbarProps {
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate, onOpenSimulator }) => {
-  const { isAuthenticated, profile, logout, quickDemoLogin } = useAuth();
+  const { isAuthenticated, profile, logout, quickDemoLogin, activeJourney } = useAuth();
 
   return (
     <header className="sticky top-0 z-40 bg-navy-900/90 backdrop-blur-md border-b border-navy-750">
@@ -37,7 +37,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate, onOpenS
                 </span>
               </div>
               <p className="hidden md:block text-[11px] text-slate-400 font-medium leading-none">
-                Emergency Identity System
+                Emergency Identity & Proactive Safety
               </p>
             </div>
           </div>
@@ -54,6 +54,26 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate, onOpenS
             >
               Overview
             </button>
+
+            {/* SafeJourney Link */}
+            <button
+              onClick={() => onNavigate('safejourney')}
+              className={`px-3 py-1.5 rounded-lg text-sm font-medium flex items-center gap-1.5 transition-colors relative ${
+                currentView === 'safejourney'
+                  ? 'bg-emerald-600/20 text-emerald-400 border border-emerald-500/40 font-bold'
+                  : 'text-slate-300 hover:text-white hover:bg-navy-800/50'
+              }`}
+            >
+              <Trees className="w-4 h-4 text-emerald-400" />
+              <span>SafeJourney</span>
+              {activeJourney && (
+                <span className="flex h-2 w-2 relative">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </span>
+              )}
+            </button>
+
             <button
               onClick={() => onNavigate('scan')}
               className={`px-3 py-1.5 rounded-lg text-sm font-medium flex items-center gap-1.5 transition-colors ${
@@ -65,6 +85,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate, onOpenS
               <QrCode className="w-4 h-4 text-emergency-500" />
               Scan ResQTag
             </button>
+
             <button
               onClick={onOpenSimulator}
               className="px-3 py-1.5 rounded-lg text-sm font-medium text-amber-400 hover:bg-amber-400/10 transition-colors flex items-center gap-1.5"
@@ -76,6 +97,14 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate, onOpenS
 
           {/* Right Action Buttons */}
           <div className="flex items-center gap-2">
+            <button
+              onClick={() => onNavigate('safejourney')}
+              className="sm:hidden p-2 rounded-lg bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center"
+              title="SafeJourney"
+            >
+              <Trees className="w-5 h-5" />
+            </button>
+
             <button
               onClick={() => onNavigate('scan')}
               className="sm:hidden p-2 rounded-lg bg-emergency-600 text-white shadow-sm flex items-center justify-center"
@@ -95,7 +124,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentView, onNavigate, onOpenS
                   }`}
                 >
                   <LayoutDashboard className="w-4 h-4 text-brand-cyan" />
-                  <span className="hidden sm:inline">My Dashboard</span>
+                  <span className="hidden sm:inline">Dashboard</span>
                   {profile && (
                     <span className="px-1.5 py-0.2 bg-navy-950 text-brand-cyan rounded text-xs font-mono font-bold">
                       {profile.shortCode}

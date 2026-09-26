@@ -1,5 +1,12 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import type { UserProfile, DemoNotification } from '../types';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import type { 
+  UserProfile, 
+  DemoNotification, 
+  SafeJourney, 
+  JourneyAlert, 
+  JourneyDestinationType,
+  JourneyLocation
+} from '../types';
 import { api, INITIAL_DEMO_DATA } from '../services/api';
 
 interface AuthContextType {
@@ -9,6 +16,9 @@ interface AuthContextType {
   isLoading: boolean;
   notifications: DemoNotification[];
   activeNotification: DemoNotification | null;
+  activeJourney: SafeJourney | null;
+  activeJourneyAlert: JourneyAlert | null;
+  isCheckinPromptOpen: boolean;
   loginWithOtp: (phone: string, otp: string) => Promise<{ success: boolean; error?: string }>;
   quickDemoLogin: () => Promise<void>;
   updateProfile: (updates: Partial<UserProfile>) => Promise<boolean>;
@@ -16,6 +26,25 @@ interface AuthContextType {
   resetDemo: () => Promise<void>;
   dismissNotification: () => void;
   triggerSimulatedScanAlert: (notification: DemoNotification) => void;
+  // SafeJourney actions
+  startJourney: (params: {
+    destinationType: JourneyDestinationType;
+    customDestination?: string;
+    isSolo: boolean;
+    startTime: string;
+    expectedEndTime: string;
+    intervalMinutes: number;
+    isDemoMode: boolean;
+    demoIntervalSeconds?: number;
+    initialLocation?: JourneyLocation;
+  }) => Promise<{ success: boolean; journey?: SafeJourney; error?: string }>;
+  checkinJourney: (location?: JourneyLocation, notes?: string) => Promise<boolean>;
+  triggerJourneySos: (location?: JourneyLocation, reason?: string) => Promise<boolean>;
+  triggerJourneyMissed: (location?: JourneyLocation) => Promise<boolean>;
+  endJourney: () => Promise<boolean>;
+  dismissJourneyAlert: () => void;
+  setCheckinPromptOpen: (open: boolean) => void;
+  refreshActiveJourney: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -26,6 +55,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isLoading, setIsLoading] = useState(true);
   const [notifications, setNotifications] = useState<DemoNotification[]>([]);
   const [activeNotification, setActiveNotification] = useState<DemoNotification | null>(null);
+  
+  // SafeJourney state
+  const [activeJourney, setActiveJourney] = useState<SafeJourney | null>(null);
+  const [activeJourneyAlert, setActiveJourneyAlert] = useState<JourneyAlert | null>(null);
+  const [isCheckinPromptOpen, setIsCheckinPromptOpen] = useState(false);
+
+  const refreshActiveJourney = useCallback(async () => {
+    try {
+      const res = await api.getActiveSafeJourney(token || undefined);
+      if (res.success) {
+        setActiveJourney(res.journey);
+      }
+    } catch (e) {
+      console.error('Error refreshing active journey:', e);
+    }
+  }, [token]);
 
   useEffect(() => {
     const initAuth = async () => {
@@ -36,6 +81,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           const userProfile = await api.getProfile(storedToken);
           setProfile(userProfile || INITIAL_DEMO_DATA);
         }
+        // Check active journey
+        await refreshActiveJourney();
       } catch (err) {
         console.error('Failed to restore session:', err);
       } finally {
@@ -43,7 +90,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     };
     initAuth();
-  }, []);
+  }, [refreshActiveJourney]);
 
   const loginWithOtp = async (phone: string, otp: string) => {
     setIsLoading(true);
@@ -52,6 +99,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (res.success && res.token) {
         setToken(res.token);
         if (res.profile) setProfile(res.profile);
+        await refreshActiveJourney();
         return { success: true };
       }
       return { success: false, error: res.error || 'Verification failed' };
@@ -67,6 +115,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (res.success) {
         setToken(res.token);
         setProfile(res.profile);
+        await refreshActiveJourney();
       }
     } finally {
       setIsLoading(false);
@@ -93,6 +142,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.removeItem('resqtag_current_profile');
     setToken(null);
     setProfile(null);
+    setActiveJourney(null);
+    setActiveJourneyAlert(null);
   };
 
   const resetDemo = async () => {
@@ -103,6 +154,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setProfile(INITIAL_DEMO_DATA);
       setNotifications([]);
       setActiveNotification(null);
+      setActiveJourney(null);
+      setActiveJourneyAlert(null);
+      setIsCheckinPromptOpen(false);
     } finally {
       setIsLoading(false);
     }
@@ -117,6 +171,81 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setActiveNotification(notif);
   };
 
+  // SafeJourney actions
+  const startJourney = async (params: {
+    destinationType: JourneyDestinationType;
+    customDestination?: string;
+    isSolo: boolean;
+    startTime: string;
+    expectedEndTime: string;
+    intervalMinutes: number;
+    isDemoMode: boolean;
+    demoIntervalSeconds?: number;
+    initialLocation?: JourneyLocation;
+  }) => {
+    const res = await api.startSafeJourney(params, token || undefined);
+    if (res.success && res.journey) {
+      setActiveJourney(res.journey);
+      setActiveJourneyAlert(null);
+      return { success: true, journey: res.journey };
+    }
+    return { success: false, error: res.error || 'Failed to start journey' };
+  };
+
+  const checkinJourney = async (location?: JourneyLocation, notes?: string) => {
+    if (!activeJourney) return false;
+    const res = await api.checkinSafeJourney(activeJourney.id, location, notes);
+    if (res.success && res.journey) {
+      setActiveJourney(res.journey);
+      setIsCheckinPromptOpen(false);
+      return true;
+    }
+    return false;
+  };
+
+  const triggerJourneySos = async (location?: JourneyLocation, reason?: string) => {
+    if (!activeJourney) return false;
+    const res = await api.triggerSafeJourneySos(activeJourney.id, location, reason);
+    if (res.success && res.alert) {
+      setActiveJourneyAlert(res.alert);
+      setIsCheckinPromptOpen(false);
+      if (activeJourney) {
+        setActiveJourney({ ...activeJourney, status: 'alert_triggered' });
+      }
+      return true;
+    }
+    return false;
+  };
+
+  const triggerJourneyMissed = async (location?: JourneyLocation) => {
+    if (!activeJourney) return false;
+    const res = await api.triggerSafeJourneyMissed(activeJourney.id, location);
+    if (res.success && res.alert) {
+      setActiveJourneyAlert(res.alert);
+      setIsCheckinPromptOpen(false);
+      if (activeJourney) {
+        setActiveJourney({ ...activeJourney, status: 'alert_triggered' });
+      }
+      return true;
+    }
+    return false;
+  };
+
+  const endJourney = async () => {
+    if (!activeJourney) return false;
+    const res = await api.endSafeJourney(activeJourney.id);
+    if (res.success) {
+      setActiveJourney(null);
+      setIsCheckinPromptOpen(false);
+      return true;
+    }
+    return false;
+  };
+
+  const dismissJourneyAlert = () => {
+    setActiveJourneyAlert(null);
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -126,6 +255,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isLoading,
         notifications,
         activeNotification,
+        activeJourney,
+        activeJourneyAlert,
+        isCheckinPromptOpen,
         loginWithOtp,
         quickDemoLogin,
         updateProfile,
@@ -133,6 +265,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         resetDemo,
         dismissNotification,
         triggerSimulatedScanAlert,
+        startJourney,
+        checkinJourney,
+        triggerJourneySos,
+        triggerJourneyMissed,
+        endJourney,
+        dismissJourneyAlert,
+        setCheckinPromptOpen: setIsCheckinPromptOpen,
+        refreshActiveJourney,
       }}
     >
       {children}

@@ -71,3 +71,72 @@ export interface DemoNotification {
   approxLocation?: string;
   coords?: { lat: number; lng: number };
 }
+
+// ==========================================
+// 🌲 RESQTAG SAFEJOURNEY TYPES
+// ==========================================
+
+export type JourneyDestinationType =
+  | 'Forest / Trekking Area'
+  | 'Hill / Mountain Area'
+  | 'Camping Area'
+  | 'Remote / Isolated Area'
+  | 'Long-Distance Travel'
+  | 'Other';
+
+export interface JourneyLocation {
+  status: 'Location shared' | 'Location not shared' | 'Location unavailable — permission was not granted';
+  lat?: number | null;
+  lng?: number | null;
+  text?: string | null;
+}
+
+export interface SafeJourney {
+  id: string;
+  userId: string;
+  userName: string;
+  userPhone: string;
+  tagId: string;
+  destinationType: JourneyDestinationType;
+  customDestination?: string;
+  isSolo: boolean;
+  startTime: string;
+  expectedEndTime: string;
+  intervalMinutes: number;
+  isDemoMode: boolean;
+  demoIntervalSeconds?: number;
+  status: 'active' | 'completed' | 'alert_triggered';
+  lastCheckinTime: string | null;
+  nextCheckinTime: string;
+  lastLocation?: JourneyLocation;
+  emergencyContacts: EmergencyContact[];
+  createdAt: string;
+  endedAt?: string | null;
+  totalCheckins: number;
+  missedCheckins: number;
+  alertsCount: number;
+}
+
+export interface JourneyCheckin {
+  id: string;
+  journeyId: string;
+  timestamp: string;
+  status: 'safe' | 'missed' | 'help_requested';
+  location?: JourneyLocation;
+  notes?: string;
+}
+
+export interface JourneyAlert {
+  id: string;
+  journeyId: string;
+  userId: string;
+  userName: string;
+  journeyType: string;
+  alertType: 'missed_checkin' | 'manual_sos';
+  timestamp: string;
+  lastCheckinTime: string | null;
+  location?: JourneyLocation;
+  emergencyContacts: EmergencyContact[];
+  notifiedContacts: boolean;
+  notes?: string;
+}

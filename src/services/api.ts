@@ -1,12 +1,23 @@
-import type { UserProfile, PublicEmergencyProfile, ScanEvent, DemoNotification } from '../types';
+import type { 
+  UserProfile, 
+  PublicEmergencyProfile, 
+  ScanEvent, 
+  DemoNotification, 
+  SafeJourney, 
+  JourneyCheckin, 
+  JourneyAlert, 
+  JourneyDestinationType,
+  JourneyLocation
+} from '../types';
 
 const API_BASE = '/api';
 
-// Fallback in-memory/localStorage store for bulletproof demo resilience
 const LOCAL_STORAGE_KEY_PROFILE = 'resqtag_current_profile';
 const LOCAL_STORAGE_KEY_TOKEN = 'resqtag_auth_token';
 const LOCAL_STORAGE_KEY_SCANS = 'resqtag_scan_events';
 const LOCAL_STORAGE_KEY_NOTIFS = 'resqtag_notifications';
+const LOCAL_STORAGE_KEY_JOURNEYS = 'resqtag_safe_journeys';
+const LOCAL_STORAGE_KEY_JOURNEY_ALERTS = 'resqtag_journey_alerts';
 
 export const INITIAL_DEMO_DATA: UserProfile = {
   id: 'usr_rahul_kumar_demo',
@@ -370,23 +381,322 @@ export const api = {
         approxLocation: 'MG Road Junction, Bengaluru, Karnataka',
         notifiedContacts: true,
       },
-      {
-        id: 'scan_init_2',
-        tagId: 'RQT-8829A4',
-        shortCode: 'RQ7K29',
-        timestamp: new Date(Date.now() - 86400000 * 3).toISOString(),
-        vehicleNumber: 'KA-01-AB-1234',
-        scannerDevice: 'Mobile Browser (Chrome / Android)',
-        locationStatus: 'Location not shared',
-        latitude: null,
-        longitude: null,
-        approxLocation: 'Location not shared',
-        notifiedContacts: true,
-      },
     ];
   },
 
-  // 10. Reset Demo Data
+  // ============================================================
+  // 🌲 SAFEJOURNEY CLIENT METHODS
+  // ============================================================
+
+  // 10. Start SafeJourney
+  async startSafeJourney(params: {
+    destinationType: JourneyDestinationType;
+    customDestination?: string;
+    isSolo: boolean;
+    startTime: string;
+    expectedEndTime: string;
+    intervalMinutes: number;
+    isDemoMode: boolean;
+    demoIntervalSeconds?: number;
+    initialLocation?: JourneyLocation;
+  }, token?: string): Promise<{ success: boolean; journey?: SafeJourney; error?: string }> {
+    try {
+      const res = await fetch(`${API_BASE}/safejourney/start`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify(params),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        return data;
+      }
+      return { success: false, error: data.error || 'Failed to start SafeJourney' };
+    } catch (e) {
+      console.warn('Backend unavailable, starting local SafeJourney', e);
+    }
+
+    const storedUser = localStorage.getItem(LOCAL_STORAGE_KEY_PROFILE);
+    const user = storedUser ? JSON.parse(storedUser) : INITIAL_DEMO_DATA;
+    const now = new Date();
+    const effectiveIntervalMs = params.isDemoMode
+      ? (params.demoIntervalSeconds || 20) * 1000
+      : (params.intervalMinutes || 60) * 60 * 1000;
+
+    const newJourney: SafeJourney = {
+      id: `journey_${Date.now()}`,
+      userId: user.id,
+      userName: user.fullName,
+      userPhone: user.phone,
+      tagId: user.tagId,
+      destinationType: params.destinationType,
+      customDestination: params.customDestination,
+      isSolo: params.isSolo,
+      startTime: params.startTime || now.toISOString(),
+      expectedEndTime: params.expectedEndTime,
+      intervalMinutes: params.intervalMinutes,
+      isDemoMode: params.isDemoMode,
+      demoIntervalSeconds: params.demoIntervalSeconds || 20,
+      status: 'active',
+      lastCheckinTime: now.toISOString(),
+      nextCheckinTime: new Date(now.getTime() + effectiveIntervalMs).toISOString(),
+      lastLocation: params.initialLocation,
+      emergencyContacts: user.emergencyContacts,
+      createdAt: now.toISOString(),
+      totalCheckins: 1,
+      missedCheckins: 0,
+      alertsCount: 0,
+    };
+
+    const existingJourneys: SafeJourney[] = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_JOURNEYS) || '[]');
+    existingJourneys.forEach(j => { if (j.status === 'active') j.status = 'completed'; });
+    existingJourneys.unshift(newJourney);
+    localStorage.setItem(LOCAL_STORAGE_KEY_JOURNEYS, JSON.stringify(existingJourneys));
+
+    return { success: true, journey: newJourney };
+  },
+
+  // 11. Get Active SafeJourney
+  async getActiveSafeJourney(token?: string): Promise<{ success: boolean; journey: SafeJourney | null; checkins?: JourneyCheckin[] }> {
+    try {
+      const res = await fetch(`${API_BASE}/safejourney/active`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+      if (res.ok) {
+        return await res.json();
+      }
+    } catch (e) {
+      console.warn('Backend unavailable, checking local active journey', e);
+    }
+
+    const journeys: SafeJourney[] = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_JOURNEYS) || '[]');
+    const active = journeys.find(j => j.status === 'active') || null;
+    return { success: true, journey: active };
+  },
+
+  // 12. Check-in (I'M SAFE)
+  async checkinSafeJourney(journeyId: string, location?: JourneyLocation, notes?: string): Promise<{ success: boolean; journey?: SafeJourney; message?: string }> {
+    try {
+      const res = await fetch(`${API_BASE}/safejourney/checkin`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ journeyId, location, notes }),
+      });
+      if (res.ok) {
+        return await res.json();
+      }
+    } catch (e) {
+      console.warn('Backend unavailable, checking in locally', e);
+    }
+
+    const journeys: SafeJourney[] = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_JOURNEYS) || '[]');
+    const journey = journeys.find(j => j.id === journeyId);
+    if (journey) {
+      const now = new Date();
+      const effectiveIntervalMs = journey.isDemoMode
+        ? (journey.demoIntervalSeconds || 20) * 1000
+        : (journey.intervalMinutes || 60) * 60 * 1000;
+
+      journey.lastCheckinTime = now.toISOString();
+      journey.nextCheckinTime = new Date(now.getTime() + effectiveIntervalMs).toISOString();
+      journey.totalCheckins += 1;
+      if (location) journey.lastLocation = location;
+      localStorage.setItem(LOCAL_STORAGE_KEY_JOURNEYS, JSON.stringify(journeys));
+      return { success: true, journey, message: "✓ You're marked safe." };
+    }
+    return { success: false };
+  },
+
+  // 13. Immediate SOS (🆘 I NEED HELP)
+  async triggerSafeJourneySos(journeyId: string, location?: JourneyLocation, reason?: string): Promise<{ success: boolean; alert?: JourneyAlert; message?: string }> {
+    try {
+      const res = await fetch(`${API_BASE}/safejourney/sos`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ journeyId, location, reason }),
+      });
+      if (res.ok) {
+        return await res.json();
+      }
+    } catch (e) {
+      console.warn('Backend unavailable, triggering local SOS alert', e);
+    }
+
+    const journeys: SafeJourney[] = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_JOURNEYS) || '[]');
+    const journey = journeys.find(j => j.id === journeyId);
+    const now = new Date();
+
+    const alertRecord: JourneyAlert = {
+      id: `alert_${Date.now()}`,
+      journeyId,
+      userId: journey?.userId || 'usr_demo',
+      userName: journey?.userName || 'Rahul Kumar',
+      journeyType: journey?.destinationType || 'Forest / Trekking Area',
+      alertType: 'manual_sos',
+      timestamp: now.toISOString(),
+      lastCheckinTime: journey?.lastCheckinTime || null,
+      location: location || journey?.lastLocation,
+      emergencyContacts: journey?.emergencyContacts || [],
+      notifiedContacts: true,
+      notes: reason || 'User pressed 🆘 I NEED HELP during active SafeJourney',
+    };
+
+    if (journey) {
+      journey.status = 'alert_triggered';
+      journey.alertsCount += 1;
+      localStorage.setItem(LOCAL_STORAGE_KEY_JOURNEYS, JSON.stringify(journeys));
+    }
+
+    const existingAlerts: JourneyAlert[] = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_JOURNEY_ALERTS) || '[]');
+    existingAlerts.unshift(alertRecord);
+    localStorage.setItem(LOCAL_STORAGE_KEY_JOURNEY_ALERTS, JSON.stringify(existingAlerts));
+
+    return { success: true, alert: alertRecord, message: 'Emergency alert sent. Emergency contacts are being notified.' };
+  },
+
+  // 14. Missed Check-in Timeout
+  async triggerSafeJourneyMissed(journeyId: string, location?: JourneyLocation): Promise<{ success: boolean; alert?: JourneyAlert; message?: string }> {
+    try {
+      const res = await fetch(`${API_BASE}/safejourney/missed`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ journeyId, location }),
+      });
+      if (res.ok) {
+        return await res.json();
+      }
+    } catch (e) {
+      console.warn('Backend unavailable, triggering local missed check-in alert', e);
+    }
+
+    const journeys: SafeJourney[] = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_JOURNEYS) || '[]');
+    const journey = journeys.find(j => j.id === journeyId);
+    const now = new Date();
+
+    const alertRecord: JourneyAlert = {
+      id: `alert_${Date.now()}`,
+      journeyId,
+      userId: journey?.userId || 'usr_demo',
+      userName: journey?.userName || 'Rahul Kumar',
+      journeyType: journey?.destinationType || 'Forest / Trekking Area',
+      alertType: 'missed_checkin',
+      timestamp: now.toISOString(),
+      lastCheckinTime: journey?.lastCheckinTime || null,
+      location: location || journey?.lastLocation,
+      emergencyContacts: journey?.emergencyContacts || [],
+      notifiedContacts: true,
+      notes: `${journey?.userName || 'User'} has not responded to the scheduled SafeJourney check-in.`,
+    };
+
+    if (journey) {
+      journey.status = 'alert_triggered';
+      journey.missedCheckins += 1;
+      journey.alertsCount += 1;
+      localStorage.setItem(LOCAL_STORAGE_KEY_JOURNEYS, JSON.stringify(journeys));
+    }
+
+    const existingAlerts: JourneyAlert[] = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_JOURNEY_ALERTS) || '[]');
+    existingAlerts.unshift(alertRecord);
+    localStorage.setItem(LOCAL_STORAGE_KEY_JOURNEY_ALERTS, JSON.stringify(existingAlerts));
+
+    return { success: true, alert: alertRecord, message: 'Missed check-in safety alert generated and trusted contacts notified.' };
+  },
+
+  // 15. End SafeJourney
+  async endSafeJourney(journeyId: string): Promise<{ success: boolean; journey?: SafeJourney; message?: string }> {
+    try {
+      const res = await fetch(`${API_BASE}/safejourney/end`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ journeyId }),
+      });
+      if (res.ok) {
+        return await res.json();
+      }
+    } catch (e) {
+      console.warn('Backend unavailable, ending local SafeJourney', e);
+    }
+
+    const journeys: SafeJourney[] = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY_JOURNEYS) || '[]');
+    const journey = journeys.find(j => j.id === journeyId);
+    if (journey) {
+      journey.status = 'completed';
+      journey.endedAt = new Date().toISOString();
+      localStorage.setItem(LOCAL_STORAGE_KEY_JOURNEYS, JSON.stringify(journeys));
+      return { success: true, journey, message: '✓ Journey completed safely.' };
+    }
+    return { success: false };
+  },
+
+  // 16. Get SafeJourney History
+  async getSafeJourneyHistory(token?: string): Promise<SafeJourney[]> {
+    try {
+      const res = await fetch(`${API_BASE}/safejourney/history`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+      if (res.ok) {
+        const data = await res.json();
+        return data.journeys || [];
+      }
+    } catch (e) {
+      console.warn('Backend unavailable, reading local journey history', e);
+    }
+    const local = localStorage.getItem(LOCAL_STORAGE_KEY_JOURNEYS);
+    if (local) return JSON.parse(local);
+    return [
+      {
+        id: 'journey_demo_prev1',
+        userId: 'usr_rahul_kumar_demo',
+        userName: 'Rahul Kumar',
+        userPhone: '+91 98450 11223',
+        tagId: 'RQT-8829A4',
+        destinationType: 'Forest / Trekking Area',
+        customDestination: 'Savandurga Trek, Karnataka',
+        isSolo: true,
+        startTime: '2026-09-21T06:00:00.000Z',
+        expectedEndTime: '2026-09-21T12:00:00.000Z',
+        intervalMinutes: 60,
+        isDemoMode: false,
+        status: 'completed',
+        lastCheckinTime: '2026-09-21T11:00:00.000Z',
+        nextCheckinTime: '2026-09-21T12:00:00.000Z',
+        lastLocation: {
+          status: 'Location shared',
+          lat: 12.9186,
+          lng: 77.2929,
+          text: 'Savandurga Base Camp (Coordinates shared)'
+        },
+        emergencyContacts: [
+          { id: 'c1', name: 'Ramesh Kumar', relationship: 'Father', phone: '+91 98765 43210', isPrimary: true },
+          { id: 'c2', name: 'Priya Sharma', relationship: 'Spouse', phone: '+91 98765 12345', isPrimary: false }
+        ],
+        createdAt: '2026-09-21T06:00:00.000Z',
+        endedAt: '2026-09-21T11:45:00.000Z',
+        totalCheckins: 5,
+        missedCheckins: 0,
+        alertsCount: 0,
+      }
+    ];
+  },
+
+  // 17. Get SafeJourney Alerts
+  async getSafeJourneyAlerts(): Promise<JourneyAlert[]> {
+    try {
+      const res = await fetch(`${API_BASE}/safejourney/alerts`);
+      if (res.ok) {
+        const data = await res.json();
+        return data.alerts || [];
+      }
+    } catch (e) {
+      console.warn('Backend unavailable, reading local alerts', e);
+    }
+    const local = localStorage.getItem(LOCAL_STORAGE_KEY_JOURNEY_ALERTS);
+    return local ? JSON.parse(local) : [];
+  },
+
+  // Reset Demo Data
   async resetDemoData(): Promise<void> {
     try {
       await fetch(`${API_BASE}/demo/reset-fictional-data`, { method: 'POST' });
@@ -397,6 +707,8 @@ export const api = {
     localStorage.setItem(LOCAL_STORAGE_KEY_TOKEN, 'demo-token-rahul');
     localStorage.removeItem(LOCAL_STORAGE_KEY_SCANS);
     localStorage.removeItem(LOCAL_STORAGE_KEY_NOTIFS);
+    localStorage.removeItem(LOCAL_STORAGE_KEY_JOURNEYS);
+    localStorage.removeItem(LOCAL_STORAGE_KEY_JOURNEY_ALERTS);
   },
 
   getPublicScanUrl(identifier: string): string {

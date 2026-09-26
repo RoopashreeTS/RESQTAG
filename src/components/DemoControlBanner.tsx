@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, Activity, QrCode, RefreshCw, AlertTriangle } from 'lucide-react';
+import { Sparkles, Activity, QrCode, RefreshCw, AlertTriangle, Trees } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 interface DemoControlBannerProps {
@@ -8,7 +8,7 @@ interface DemoControlBannerProps {
 }
 
 export const DemoControlBanner: React.FC<DemoControlBannerProps> = ({ onNavigate, onOpenSimulator }) => {
-  const { quickDemoLogin, resetDemo, profile } = useAuth();
+  const { quickDemoLogin, resetDemo, profile, activeJourney, setCheckinPromptOpen } = useAuth();
 
   return (
     <aside aria-label="Hackathon quick demo controls" className="bg-gradient-to-r from-navy-900 via-navy-850 to-navy-900 border-b border-navy-750/80 px-3 py-2">
@@ -29,6 +29,22 @@ export const DemoControlBanner: React.FC<DemoControlBannerProps> = ({ onNavigate
         </div>
 
         <div className="flex items-center flex-wrap gap-1.5">
+          {/* Quick SafeJourney Trigger */}
+          <button
+            onClick={() => {
+              if (activeJourney) {
+                setCheckinPromptOpen(true);
+              } else {
+                onNavigate('safejourney');
+              }
+            }}
+            className="flex items-center gap-1 px-2.5 py-1 rounded bg-emerald-950/60 hover:bg-emerald-900 text-emerald-300 border border-emerald-500/40 hover:border-emerald-400 transition-all font-semibold"
+            title="Open or test SafeJourney proactive monitoring"
+          >
+            <Trees className="w-3 h-3 text-emerald-400" />
+            <span>{activeJourney ? 'Trigger Check-in (SafeJourney)' : 'SafeJourney Demo'}</span>
+          </button>
+
           <button
             onClick={async () => {
               await quickDemoLogin();

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { Navbar } from './components/Navbar';
 import { DemoControlBanner } from './components/DemoControlBanner';
 import { LandingPage } from './components/LandingPage';
@@ -8,10 +8,15 @@ import { ResponderScanPage } from './components/ResponderScanPage';
 import { EmergencyProfileView } from './components/EmergencyProfileView';
 import { OwnerDashboard } from './components/OwnerDashboard';
 import { QrStickerPage } from './components/QrStickerPage';
+import { SafeJourneyView } from './components/SafeJourneyView';
+import { SafeJourneyCheckinModal } from './components/SafeJourneyCheckinModal';
+import { SafeJourneyAlertModal } from './components/SafeJourneyAlertModal';
 import { TrustedContactAlertModal } from './components/TrustedContactAlertModal';
 import { AccidentSimulationModal } from './components/AccidentSimulationModal';
 
 const AppContent: React.FC = () => {
+  const { isCheckinPromptOpen, setCheckinPromptOpen } = useAuth();
+
   // Navigation state
   const [currentView, setCurrentView] = useState<string>('landing');
   const [currentParam, setCurrentParam] = useState<string | undefined>(undefined);
@@ -27,6 +32,9 @@ const AppContent: React.FC = () => {
         setCurrentParam(id || 'RQ7K29');
       } else if (hash === 'scan') {
         setCurrentView('scan');
+        setCurrentParam(undefined);
+      } else if (hash === 'safejourney') {
+        setCurrentView('safejourney');
         setCurrentParam(undefined);
       } else if (hash === 'register') {
         setCurrentView('register');
@@ -57,6 +65,8 @@ const AppContent: React.FC = () => {
       window.location.hash = `scan/${param}`;
     } else if (view === 'scan') {
       window.location.hash = 'scan';
+    } else if (view === 'safejourney') {
+      window.location.hash = 'safejourney';
     } else if (view === 'register') {
       window.location.hash = 'register';
     } else if (view === 'dashboard') {
@@ -94,6 +104,12 @@ const AppContent: React.FC = () => {
           />
         )}
 
+        {currentView === 'safejourney' && (
+          <SafeJourneyView
+            onNavigate={handleNavigate}
+          />
+        )}
+
         {currentView === 'register' && (
           <RegistrationFlow onNavigate={handleNavigate} />
         )}
@@ -128,17 +144,28 @@ const AppContent: React.FC = () => {
         <div className="flex items-center justify-center gap-2 font-mono font-bold text-slate-200">
           <span>RESQTAG</span>
           <span>•</span>
-          <span className="text-emergency-500">QR-BASED EMERGENCY IDENTITY SYSTEM</span>
+          <span className="text-emergency-500">EMERGENCY QR</span>
+          <span>+</span>
+          <span className="text-emerald-400">SAFEJOURNEY PROACTIVE MONITORING</span>
         </div>
         <p className="text-[11px] text-slate-500">
           “When the victim cannot speak, ResQTag speaks for them.” • Built for Hackathon Demo
         </p>
       </footer>
 
-      {/* 5. Live Simulated Contact Notification Popups */}
+      {/* 5. SafeJourney Scheduled Check-in Prompt Modal */}
+      <SafeJourneyCheckinModal
+        isOpen={isCheckinPromptOpen}
+        onClose={() => setCheckinPromptOpen(false)}
+      />
+
+      {/* 6. SafeJourney Emergency Contact Alert Modal */}
+      <SafeJourneyAlertModal />
+
+      {/* 7. Live Simulated Contact Notification Popups */}
       <TrustedContactAlertModal />
 
-      {/* 6. Accident Simulation Modal */}
+      {/* 8. Accident Simulation Modal */}
       <AccidentSimulationModal
         isOpen={isSimulatorOpen}
         onClose={() => setIsSimulatorOpen(false)}

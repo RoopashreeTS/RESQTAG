@@ -15,7 +15,8 @@ import {
   Clock, 
   Smartphone, 
   Sparkles, 
-  ExternalLink 
+  ExternalLink,
+  Trees
 } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { useAuth } from '../context/AuthContext';
@@ -227,6 +228,14 @@ export const OwnerDashboard: React.FC<OwnerDashboardProps> = ({ onNavigate, onOp
             >
               <QrCode className="w-4 h-4" />
               <span>My QR & Stickers</span>
+            </button>
+
+            <button
+              onClick={() => onNavigate('safejourney')}
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold text-emerald-400 hover:bg-emerald-950/40 border border-emerald-500/20 hover:border-emerald-500/50 transition-all"
+            >
+              <Trees className="w-4 h-4 text-emerald-400" />
+              <span>🌲 SafeJourney (Proactive)</span>
             </button>
 
             <button
