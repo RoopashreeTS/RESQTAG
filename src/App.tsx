@@ -23,11 +23,20 @@ const AppContent: React.FC = () => {
   // Sync with browser hash routing
   useEffect(() => {
     const handleHashChange = () => {
-      // 1. Check path-based emergency URL first (e.g. /RESQTAG/emergency/RQT-...)
+      // 1. Check path-based emergency / scan URL first (e.g. /RESQTAG/scan/RQ7K29 or /RESQTAG/emergency/RQ7K29)
       const path = window.location.pathname;
       if (path.includes('/emergency/')) {
         const parts = path.split('/emergency/');
-        const id = parts[parts.length - 1].split(/[?#]/)[0].trim();
+        const id = decodeURIComponent(parts[parts.length - 1].split(/[?#]/)[0].trim());
+        if (id) {
+          setCurrentView('emergency-profile');
+          setCurrentParam(id);
+          return;
+        }
+      }
+      if (path.includes('/scan/')) {
+        const parts = path.split('/scan/');
+        const id = decodeURIComponent(parts[parts.length - 1].split(/[?#]/)[0].trim());
         if (id) {
           setCurrentView('emergency-profile');
           setCurrentParam(id);
@@ -35,35 +44,54 @@ const AppContent: React.FC = () => {
         }
       }
 
-      // 2. Check hash routing (e.g. #/emergency/RQT-... or #emergency/RQT-... or #scan/...)
-      const rawHash = window.location.hash.replace(/^#\/?/, '');
-      const hash = rawHash.split('?')[0]; // strip query string
+      // 2. Check hash routing (e.g. #scan/RQ7K29, #/scan/RQ7K29, #emergency/..., etc.)
+      let rawHash = window.location.hash || '';
+      try {
+        rawHash = decodeURIComponent(rawHash);
+      } catch {}
 
-      if (hash.startsWith('emergency/')) {
-        const id = hash.replace('emergency/', '').trim();
-        setCurrentView('emergency-profile');
-        setCurrentParam(id || 'RQT-8829A4');
-      } else if (hash.startsWith('scan/')) {
-        const id = hash.replace('scan/', '').trim();
-        setCurrentView('emergency-profile');
-        setCurrentParam(id || 'RQT-8829A4');
-      } else if (hash === 'scan') {
+      const cleanHash = rawHash.replace(/^#[/!]*/, '').trim();
+      const hashPath = cleanHash.split('?')[0].trim(); // strip query string
+
+      if (hashPath.toLowerCase().startsWith('scan/')) {
+        const id = hashPath.replace(/^scan\//i, '').trim();
+        if (id) {
+          setCurrentView('emergency-profile');
+          setCurrentParam(id);
+        } else {
+          setCurrentView('scan');
+          setCurrentParam(undefined);
+        }
+      } else if (hashPath.toLowerCase() === 'scan') {
         setCurrentView('scan');
         setCurrentParam(undefined);
-      } else if (hash === 'safejourney') {
+      } else if (hashPath.toLowerCase().startsWith('emergency/') || hashPath.toLowerCase().startsWith('emergency-profile/')) {
+        const id = hashPath.replace(/^(emergency|emergency-profile)\//i, '').trim();
+        if (id) {
+          setCurrentView('emergency-profile');
+          setCurrentParam(id);
+        } else {
+          setCurrentView('scan');
+          setCurrentParam(undefined);
+        }
+      } else if (hashPath.toLowerCase() === 'safejourney') {
         setCurrentView('safejourney');
         setCurrentParam(undefined);
-      } else if (hash === 'register') {
+      } else if (hashPath.toLowerCase() === 'register') {
         setCurrentView('register');
         setCurrentParam(undefined);
-      } else if (hash === 'dashboard') {
+      } else if (hashPath.toLowerCase() === 'dashboard') {
         setCurrentView('dashboard');
         setCurrentParam(undefined);
-      } else if (hash === 'sticker') {
+      } else if (hashPath.toLowerCase() === 'sticker') {
         setCurrentView('sticker');
         setCurrentParam(undefined);
-      } else if (hash === 'landing' || !hash) {
+      } else if (hashPath.toLowerCase() === 'landing' || hashPath.toLowerCase() === 'home' || !hashPath) {
         setCurrentView('landing');
+        setCurrentParam(undefined);
+      } else {
+        // If route is unrecognized, show the Scan portal instead of a blank screen
+        setCurrentView('scan');
         setCurrentParam(undefined);
       }
     };
@@ -74,22 +102,25 @@ const AppContent: React.FC = () => {
   }, []);
 
   const handleNavigate = (view: string, param?: string) => {
-    setCurrentView(view);
+    const targetView = view === 'home' ? 'landing' : view;
+    setCurrentView(targetView);
     setCurrentParam(param);
 
     // Update URL hash smoothly
-    if (view === 'emergency-profile' && param) {
-      window.location.hash = `emergency/${param}`;
-    } else if (view === 'scan') {
+    if (targetView === 'emergency-profile' && param) {
+      window.location.hash = `scan/${param}`;
+    } else if (targetView === 'scan') {
       window.location.hash = 'scan';
-    } else if (view === 'safejourney') {
+    } else if (targetView === 'safejourney') {
       window.location.hash = 'safejourney';
-    } else if (view === 'register') {
+    } else if (targetView === 'register') {
       window.location.hash = 'register';
-    } else if (view === 'dashboard') {
+    } else if (targetView === 'dashboard') {
       window.location.hash = 'dashboard';
-    } else if (view === 'sticker') {
+    } else if (targetView === 'sticker') {
       window.location.hash = 'sticker';
+    } else if (targetView === 'landing') {
+      window.location.hash = '';
     } else {
       window.location.hash = '';
     }

@@ -20,23 +20,23 @@ const LOCAL_STORAGE_KEY_JOURNEYS = 'resqtag_safe_journeys';
 const LOCAL_STORAGE_KEY_JOURNEY_ALERTS = 'resqtag_journey_alerts';
 
 export const INITIAL_DEMO_DATA: UserProfile = {
-  id: 'usr_rahul_kumar_demo',
+  id: 'usr_demo_user',
   tagId: 'RQT-8829A4',
   shortCode: 'RQ7K29',
   phone: '+91 98450 11223',
-  fullName: 'Rahul Kumar',
+  fullName: 'Demo User',
   photoUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80',
-  age: 24,
+  age: 26,
   bloodGroup: 'O+',
   address: '#402, Sunshine Residency, Indiranagar 100ft Road, Bengaluru, Karnataka - 560038',
   vehicleNumber: 'KA-01-AB-1234',
-  allergies: 'Penicillin, Peanuts (Severe anaphylaxis risk)',
-  medicalInfo: 'Asthmatic (Carries blue Salbutamol inhaler in backpack). No cardiac history. Diabetic Type 2 (Diet controlled).',
+  allergies: '',
+  medicalInfo: '',
   emergencyContacts: [
     {
       id: 'c1',
-      name: 'Ramesh Kumar',
-      relationship: 'Father',
+      name: 'Demo Emergency Contact',
+      relationship: 'Primary Contact',
       phone: '+91 98765 43210',
       isPrimary: true,
     },
@@ -129,9 +129,9 @@ export function generateProductionQrUrl(profile: Partial<UserProfile> | Partial<
   const origin = typeof window !== 'undefined' ? window.location.origin : 'https://roopashreeTS.github.io';
   const pathname = typeof window !== 'undefined' ? window.location.pathname.replace(/\/$/, '') : '/RESQTAG';
   const base = `${origin}${pathname}`;
-  const tag = profile.tagId || 'RQT-8829A4';
+  const code = profile.shortCode || profile.tagId || 'RQ7K29';
   const dataToken = encodeEmergencyProfile(profile);
-  return `${base}/#/emergency/${encodeURIComponent(tag)}${dataToken ? `?d=${dataToken}` : ''}`;
+  return `${base}/#scan/${encodeURIComponent(code)}${dataToken ? `?d=${dataToken}` : ''}`;
 }
 
 const CLOUD_DB_ENDPOINT = 'https://api.restful-api.dev/objects';
@@ -431,7 +431,7 @@ export const api = {
 
     return {
       success: false,
-      error: `No active emergency profile found for code: "${cleanId}". Please verify the code or scan the QR code.`,
+      error: 'Please check the code and try again.',
     };
   },
 

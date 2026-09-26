@@ -170,7 +170,7 @@ export const ResponderScanPage: React.FC<ResponderScanPageProps> = ({ onScanComp
           }`}
         >
           <Search className="w-4 h-4" />
-          <span>Enter Short Code</span>
+          <span>Enter ResQTag Code</span>
         </button>
 
         <button
@@ -239,7 +239,7 @@ export const ResponderScanPage: React.FC<ResponderScanPageProps> = ({ onScanComp
           <form onSubmit={handleManualSubmit} className="space-y-4">
             <div className="space-y-2">
               <label className="block text-xs font-bold text-[#2B2020] uppercase tracking-wider text-center">
-                6-Character Backup Short Code or Tag ID
+                Enter ResQTag Code
               </label>
               <div className="relative">
                 <input
@@ -252,17 +252,17 @@ export const ResponderScanPage: React.FC<ResponderScanPageProps> = ({ onScanComp
                 />
               </div>
               <p className="text-[11px] text-[#806F6F] text-center">
-                Printed directly below the QR code on every physical sticker.
+                Example: <strong>RQ7K29</strong> (Printed directly below the QR code on every sticker).
               </p>
             </div>
 
             <button
               type="submit"
               disabled={!shortCodeInput.trim()}
-              className="w-full btn-rose-primary py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2"
+              className="w-full btn-rose-primary py-3.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2 uppercase tracking-wide shadow-md"
             >
               <Search className="w-4 h-4" />
-              <span>Retrieve Emergency Profile</span>
+              <span>FIND RESQTAG</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </form>

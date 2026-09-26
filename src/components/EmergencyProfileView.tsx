@@ -155,18 +155,20 @@ export const EmergencyProfileView: React.FC<EmergencyProfileViewProps> = ({ iden
           <ShieldAlert className="w-9 h-9" />
         </div>
         <div className="space-y-1.5">
-          <h2 className="text-2xl font-black text-[#2B2020]">ResQTag Not Found</h2>
-          <p className="text-xs text-[#806F6F] max-w-md mx-auto">{fetchError}</p>
+          <h2 className="text-2xl font-black text-[#2B2020]">ResQTag not found.</h2>
+          <p className="text-xs text-[#806F6F] max-w-md mx-auto">
+            {fetchError || 'Please check the code and try again.'}
+          </p>
         </div>
         <div className="flex flex-wrap justify-center gap-3">
           <button
             onClick={() => onNavigate('scan')}
             className="px-5 py-2.5 rounded-xl btn-rose-primary text-white font-bold text-xs"
           >
-            Scan Another Tag
+            Enter Another Code
           </button>
           <button
-            onClick={() => onNavigate('home')}
+            onClick={() => onNavigate('landing')}
             className="px-5 py-2.5 rounded-xl btn-rose-outline text-[#2B2020] font-bold text-xs"
           >
             Return to Home
