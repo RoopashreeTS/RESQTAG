@@ -259,9 +259,9 @@ export const SafeJourneyActiveDashboard: React.FC<SafeJourneyActiveDashboardProp
               type="button"
               onClick={handleManualCheckin}
               disabled={isProcessing}
-              className="py-4 px-6 rounded-2xl font-bold text-sm bg-safe-600 hover:bg-safe-700 text-white shadow-sm flex items-center justify-center gap-2 transition-all active:scale-[0.99]"
+              className="py-4 px-6 rounded-2xl font-bold text-sm bg-safe-600 hover:bg-safe-500 text-white shadow-glow-green flex items-center justify-center gap-2 transition-all duration-250 hover:-translate-y-0.5 active:scale-[0.97]"
             >
-              <CheckCircle2 className="w-5 h-5" />
+              <CheckCircle2 className="w-5 h-5 text-white" />
               <span>🟢 I&apos;M SAFE (Check-in Now)</span>
             </button>
 
@@ -270,9 +270,9 @@ export const SafeJourneyActiveDashboard: React.FC<SafeJourneyActiveDashboardProp
               type="button"
               onClick={handleManualSos}
               disabled={isProcessing}
-              className="py-4 px-6 rounded-2xl font-bold text-sm bg-emergency-600 hover:bg-emergency-700 text-white shadow-glow-red flex items-center justify-center gap-2 transition-all active:scale-[0.99]"
+              className="py-4 px-6 rounded-2xl font-bold text-sm bg-emergency-600 hover:bg-emergency-500 text-white shadow-glow-red animate-pulse-emergency flex items-center justify-center gap-2 transition-all duration-250 hover:-translate-y-0.5 active:scale-[0.97]"
             >
-              <ShieldAlert className="w-5 h-5" />
+              <ShieldAlert className="w-5 h-5 text-white" />
               <span>🆘 I NEED HELP (Emergency SOS)</span>
             </button>
           </div>

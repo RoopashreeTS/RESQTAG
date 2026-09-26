@@ -11,15 +11,19 @@ import {
   PhoneCall, 
   Trees, 
   KeyRound, 
-  HeartHandshake,
-  Activity,
-  Ambulance,
-  ShieldCheck,
-  Smartphone,
-  EyeOff
+  HeartHandshake, 
+  Activity, 
+  Ambulance, 
+  ShieldCheck, 
+  Smartphone, 
+  EyeOff,
+  Sparkles,
+  Compass,
+  AlertOctagon
 } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import { useAuth } from '../context/AuthContext';
+import { TechWaveBackground } from './TechWaveBackground';
 
 interface LandingPageProps {
   onNavigate: (view: string, param?: string) => void;
@@ -31,165 +35,197 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenSimu
   const demoScanUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/#scan/RQ7K29`;
 
   return (
-    <div className="space-y-20 pb-24 overflow-hidden bg-slate-50 text-slate-900">
-      {/* 1. HERO SECTION */}
-      <section className="relative pt-10 sm:pt-16 pb-14 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-          
-          {/* Left Column: Headline & Action */}
-          <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900 text-slate-100 text-xs font-semibold shadow-sm">
-              <Shield className="w-3.5 h-3.5 text-brand-400" />
-              <span>RESQTAG EMERGENCY PLATFORM</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-safe-500"></span>
-            </div>
+    <div className="space-y-0 pb-24 overflow-hidden bg-slate-50 text-slate-900">
+      
+      {/* ======================================================== */}
+      {/* 1. ANIMATED TECH HERO SECTION (Rich Blue / Teal Wave)   */}
+      {/* ======================================================== */}
+      <section className="relative pt-12 sm:pt-20 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
+        {/* Animated Background: Flowing Wave, Glowing Orbs, Particles, Network */}
+        <TechWaveBackground variant="hero" showNetwork={true} />
 
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-950 leading-[1.12]">
-              When the victim cannot speak,{<br className="hidden sm:inline" />}
-              <span className="text-brand-600"> ResQTag speaks for them.</span>
-            </h1>
+        <div className="relative z-10 max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+            
+            {/* Left Column: Headline & Animated Action Buttons */}
+            <div className="lg:col-span-7 space-y-7 text-center lg:text-left">
+              
+              {/* Badge */}
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-cyan-200 text-xs font-semibold shadow-glass">
+                <Shield className="w-3.5 h-3.5 text-cyan-300 animate-pulse" />
+                <span className="tracking-wide">RESQTAG EMERGENCY PLATFORM</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-teal-400"></span>
+              </div>
 
-            <p className="text-base sm:text-lg text-slate-600 font-normal max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-              Smart emergency identification and proactive safety monitoring in one platform.
-            </p>
+              {/* Main Headline */}
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white leading-[1.12] drop-shadow-sm">
+                When the victim cannot speak,{<br className="hidden sm:inline" />}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-sky-200 to-teal-200">
+                  {' '}ResQTag speaks for them.
+                </span>
+              </h1>
 
-            {/* CTAs */}
-            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 pt-2">
-              <button
-                onClick={() => onNavigate(isAuthenticated ? 'dashboard' : 'register')}
-                className="w-full sm:w-auto px-7 py-3.5 rounded-xl font-bold text-sm bg-brand-600 hover:bg-brand-700 text-white shadow-sm transition-all hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2"
-              >
-                <UserPlus className="w-4 h-4" />
-                <span>Get Started</span>
-              </button>
+              {/* Subtitle */}
+              <p className="text-base sm:text-lg text-sky-100 font-normal max-w-2xl mx-auto lg:mx-0 leading-relaxed drop-shadow-sm">
+                Smart emergency identification and proactive safety monitoring in one platform. Rapid medical triage and instant family dispatch in under 3 seconds.
+              </p>
 
-              <button
-                onClick={() => onNavigate('safejourney')}
-                className="w-full sm:w-auto px-7 py-3.5 rounded-xl font-bold text-sm bg-white hover:bg-slate-100 text-slate-800 border border-slate-300 shadow-sm transition-all flex items-center justify-center gap-2"
-              >
-                <Trees className="w-4 h-4 text-safe-600" />
-                <span>Explore SafeJourney</span>
-              </button>
+              {/* Three Specific Animated Action Buttons */}
+              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 pt-2">
+                
+                {/* 1. REGISTER: Blue gradient with highlight sweep & hover elevation */}
+                <button
+                  onClick={() => onNavigate(isAuthenticated ? 'dashboard' : 'register')}
+                  className="w-full sm:w-auto px-7 py-3.5 rounded-xl font-bold text-sm btn-tech-primary flex items-center justify-center gap-2"
+                >
+                  <UserPlus className="w-4 h-4" />
+                  <span>REGISTER</span>
+                </button>
 
-              <button
-                onClick={() => onNavigate('scan')}
-                className="w-full sm:w-auto px-5 py-3.5 rounded-xl font-semibold text-sm text-slate-700 hover:text-slate-900 hover:bg-slate-200/60 transition-colors flex items-center justify-center gap-2"
-              >
-                <QrCode className="w-4 h-4 text-slate-600" />
-                <span>Scan Tag</span>
-              </button>
-            </div>
+                {/* 2. SCAN RESQTAG: Dark blue/transparent with cyan border & scanning line */}
+                <button
+                  onClick={() => onNavigate('scan')}
+                  className="w-full sm:w-auto px-6 py-3.5 rounded-xl font-bold text-sm btn-tech-scan flex items-center justify-center gap-2"
+                >
+                  <div className="scan-bar"></div>
+                  <QrCode className="w-4 h-4 text-cyan-300" />
+                  <span>SCAN RESQTAG</span>
+                </button>
 
-            {/* Fast-Track Evaluator Quick Actions */}
-            <div className="pt-4 border-t border-slate-200/80 flex flex-wrap items-center justify-center lg:justify-start gap-3 text-xs text-slate-500">
-              <span className="font-semibold text-slate-700">Hackathon Fast-Track:</span>
-              <button
-                onClick={async () => {
-                  await quickDemoLogin();
-                  onNavigate('dashboard');
-                }}
-                className="text-brand-600 hover:text-brand-800 font-semibold flex items-center gap-1 hover:underline"
-              >
-                <Zap className="w-3.5 h-3.5 text-brand-600" />
-                Live Demo Dashboard
-              </button>
-              <span className="text-slate-300">•</span>
-              <button
-                onClick={onOpenSimulator}
-                className="text-emergency-700 hover:text-emergency-800 font-semibold flex items-center gap-1 hover:underline"
-              >
-                <Activity className="w-3.5 h-3.5 text-emergency-600" />
-                Simulate Accident Flow
-              </button>
-            </div>
-          </div>
+                {/* 3. START SAFEJOURNEY: Blue/teal button with subtle pulsing glow */}
+                <button
+                  onClick={() => onNavigate('safejourney')}
+                  className="w-full sm:w-auto px-6 py-3.5 rounded-xl font-bold text-sm btn-tech-teal flex items-center justify-center gap-2"
+                >
+                  <Trees className="w-4 h-4 text-white" />
+                  <span>START SAFEJOURNEY</span>
+                </button>
+              </div>
 
-          {/* Right Column: Premium Smartphone Mockup Displaying ResQTag Card & QR */}
-          <div className="lg:col-span-5 flex justify-center">
-            <div className="relative w-full max-w-[340px] sm:max-w-[360px]">
-              {/* Device Frame */}
-              <div className="relative rounded-[36px] bg-slate-900 p-3 shadow-2xl border-4 border-slate-800">
-                {/* Speaker & Sensor Bar */}
-                <div className="w-24 h-4 bg-slate-950 rounded-full mx-auto mb-2 flex items-center justify-center">
-                  <div className="w-8 h-1 bg-slate-800 rounded-full"></div>
+              {/* Fast-Track Evaluator Quick Actions in Glass Pill */}
+              <div className="pt-4 flex flex-wrap items-center justify-center lg:justify-start gap-3 text-xs text-sky-200">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10">
+                  <span className="font-semibold text-white/80">Hackathon Fast-Track:</span>
+                  <button
+                    onClick={async () => {
+                      await quickDemoLogin();
+                      onNavigate('dashboard');
+                    }}
+                    className="text-cyan-300 hover:text-white font-bold flex items-center gap-1 transition-colors"
+                  >
+                    <Zap className="w-3.5 h-3.5 text-cyan-400" />
+                    Live Demo Dashboard
+                  </button>
+                  <span className="text-white/30">•</span>
+                  <button
+                    onClick={onOpenSimulator}
+                    className="text-rose-300 hover:text-white font-bold flex items-center gap-1 transition-colors"
+                  >
+                    <Activity className="w-3.5 h-3.5 text-rose-400" />
+                    Simulate Accident Flow
+                  </button>
                 </div>
-
-                {/* Inner Screen Display */}
-                <div className="rounded-[26px] bg-slate-50 text-slate-900 p-4 space-y-3.5 overflow-hidden border border-slate-200">
-                  
-                  {/* Top Emergency Status Header */}
-                  <div className="flex items-center justify-between border-b border-slate-200 pb-2.5">
-                    <div className="flex items-center gap-1.5">
-                      <div className="w-2 h-2 rounded-full bg-emergency-600 animate-pulse"></div>
-                      <span className="text-[11px] font-black tracking-wider text-slate-900 font-mono">
-                        RESQTAG MEDICAL PROFILE
-                      </span>
-                    </div>
-                    <span className="px-2 py-0.5 rounded bg-emergency-100 text-emergency-800 font-black font-mono text-[10px] border border-emergency-200">
-                      O+ POSITIVE
-                    </span>
-                  </div>
-
-                  {/* Profile Summary Card */}
-                  <div className="bg-white rounded-xl p-3 border border-slate-200 shadow-sm space-y-2">
-                    <div className="flex items-center gap-3">
-                      <div className="w-11 h-11 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center font-bold text-slate-700 text-sm">
-                        RK
-                      </div>
-                      <div>
-                        <h4 className="text-sm font-bold text-slate-900">Rahul Kumar</h4>
-                        <p className="text-[11px] text-slate-500">Age 28 • Male • KA-01-AB-1234</p>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-1.5 text-[10px] pt-1">
-                      <div className="p-1.5 rounded bg-slate-50 border border-slate-200/80">
-                        <span className="text-slate-500 block">ALLERGIES</span>
-                        <span className="font-bold text-emergency-700">Penicillin (Severe)</span>
-                      </div>
-                      <div className="p-1.5 rounded bg-slate-50 border border-slate-200/80">
-                        <span className="text-slate-500 block">CONDITION</span>
-                        <span className="font-bold text-slate-800">Asthma (Inhaler)</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Primary 1-Tap Emergency Action */}
-                  <div className="space-y-1.5">
-                    <button
-                      onClick={() => onNavigate('emergency-profile', 'RQ7K29')}
-                      className="w-full py-2.5 px-3 rounded-xl bg-emergency-600 hover:bg-emergency-700 text-white font-bold text-xs shadow-sm flex items-center justify-center gap-2 transition-colors"
-                    >
-                      <PhoneCall className="w-3.5 h-3.5" />
-                      <span>1-Tap Call Emergency Contact</span>
-                    </button>
-                  </div>
-
-                  {/* Physical QR Decal Preview */}
-                  <div className="bg-slate-100 rounded-xl p-3 border border-slate-200 flex items-center justify-between gap-3">
-                    <div className="bg-white p-1 rounded-lg border border-slate-200">
-                      <QRCodeSVG value={demoScanUrl} size={56} level="M" />
-                    </div>
-                    <div className="text-left space-y-0.5">
-                      <span className="text-[10px] uppercase font-bold text-slate-500 block">TAG IDENTIFIER</span>
-                      <span className="text-sm font-black font-mono text-slate-900 tracking-wider">RQ7K29</span>
-                      <span className="text-[10px] text-safe-700 font-semibold block">✓ Verified Identity</span>
-                    </div>
-                  </div>
-
-                </div>
-
-                {/* Home Indicator */}
-                <div className="w-28 h-1 bg-slate-700 rounded-full mx-auto mt-2.5"></div>
               </div>
             </div>
-          </div>
 
+            {/* Right Column: Premium Smartphone Mockup on Glass Display */}
+            <div className="lg:col-span-5 flex justify-center">
+              <div className="relative w-full max-w-[340px] sm:max-w-[360px]">
+                
+                {/* Subtle Ambient Back-Glow */}
+                <div className="absolute -inset-1.5 bg-gradient-to-r from-cyan-500/30 to-blue-500/30 rounded-[40px] blur-xl opacity-75 animate-pulse-subtle"></div>
+
+                {/* Device Frame */}
+                <div className="relative rounded-[36px] bg-slate-900/90 p-3 shadow-2xl border-2 border-white/20 backdrop-blur-xl">
+                  {/* Speaker & Sensor Bar */}
+                  <div className="w-24 h-4 bg-slate-950 rounded-full mx-auto mb-2 flex items-center justify-center">
+                    <div className="w-8 h-1 bg-slate-700 rounded-full"></div>
+                  </div>
+
+                  {/* Inner Screen Display */}
+                  <div className="rounded-[26px] bg-slate-50 text-slate-900 p-4 space-y-3.5 overflow-hidden border border-slate-200">
+                    
+                    {/* Top Emergency Status Header */}
+                    <div className="flex items-center justify-between border-b border-slate-200 pb-2.5">
+                      <div className="flex items-center gap-1.5">
+                        <div className="w-2 h-2 rounded-full bg-emergency-600 animate-pulse"></div>
+                        <span className="text-[11px] font-black tracking-wider text-slate-900 font-mono">
+                          RESQTAG MEDICAL PROFILE
+                        </span>
+                      </div>
+                      <span className="px-2 py-0.5 rounded bg-emergency-100 text-emergency-800 font-black font-mono text-[10px] border border-emergency-200">
+                        O+ POSITIVE
+                      </span>
+                    </div>
+
+                    {/* Profile Summary Card */}
+                    <div className="bg-white rounded-xl p-3 border border-slate-200 shadow-sm space-y-2">
+                      <div className="flex items-center gap-3">
+                        <div className="w-11 h-11 rounded-full bg-brand-50 border border-brand-200 flex items-center justify-center font-bold text-brand-700 text-sm">
+                          RK
+                        </div>
+                        <div>
+                          <h4 className="text-sm font-bold text-slate-900">Rahul Kumar</h4>
+                          <p className="text-[11px] text-slate-500">Age 28 • Male • KA-01-AB-1234</p>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-1.5 text-[10px] pt-1">
+                        <div className="p-1.5 rounded bg-slate-50 border border-slate-200/80">
+                          <span className="text-slate-500 block">ALLERGIES</span>
+                          <span className="font-bold text-emergency-700">Penicillin (Severe)</span>
+                        </div>
+                        <div className="p-1.5 rounded bg-slate-50 border border-slate-200/80">
+                          <span className="text-slate-500 block">CONDITION</span>
+                          <span className="font-bold text-slate-800">Asthma (Inhaler)</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Primary 1-Tap Emergency Action */}
+                    <div className="space-y-1.5">
+                      <button
+                        onClick={() => onNavigate('emergency-profile', 'RQ7K29')}
+                        className="w-full py-2.5 px-3 rounded-xl bg-emergency-600 hover:bg-emergency-700 text-white font-bold text-xs shadow-sm flex items-center justify-center gap-2 transition-transform active:scale-95"
+                      >
+                        <PhoneCall className="w-3.5 h-3.5" />
+                        <span>1-Tap Call Emergency Contact</span>
+                      </button>
+                    </div>
+
+                    {/* Physical QR Decal Preview */}
+                    <div className="bg-slate-100 rounded-xl p-3 border border-slate-200 flex items-center justify-between gap-3">
+                      <div className="bg-white p-1 rounded-lg border border-slate-200">
+                        <QRCodeSVG value={demoScanUrl} size={56} level="M" />
+                      </div>
+                      <div className="text-left space-y-0.5">
+                        <span className="text-[10px] uppercase font-bold text-slate-500 block">TAG IDENTIFIER</span>
+                        <span className="text-sm font-black font-mono text-slate-900 tracking-wider">RQ7K29</span>
+                        <span className="text-[10px] text-safe-700 font-semibold block">✓ Verified Identity</span>
+                      </div>
+                    </div>
+
+                  </div>
+
+                  {/* Home Indicator */}
+                  <div className="w-28 h-1 bg-slate-700 rounded-full mx-auto mt-2.5"></div>
+                </div>
+              </div>
+            </div>
+
+          </div>
         </div>
       </section>
 
-      {/* 2. TWO CORE SOLUTIONS */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+      {/* ======================================================== */}
+      {/* 2. LIGHT INFORMATION SECTION: TWO CORE SOLUTIONS         */}
+      {/* ======================================================== */}
+      <section className="relative pt-12 pb-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        
+        {/* Subtle decorative background circles */}
+        <div className="absolute top-10 left-10 w-72 h-72 rounded-full bg-brand-100/40 blur-3xl -z-10 pointer-events-none"></div>
+        <div className="absolute bottom-10 right-10 w-72 h-72 rounded-full bg-teal-100/40 blur-3xl -z-10 pointer-events-none"></div>
+
         <div className="text-center space-y-2">
           <span className="text-xs font-bold uppercase tracking-wider text-brand-700 bg-brand-50 px-3 py-1 rounded-full border border-brand-200">
             Unified Safety Architecture
@@ -203,6 +239,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenSimu
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          
           {/* Card 1: Emergency QR */}
           <div className="bg-white rounded-2xl p-7 border border-slate-200 shadow-card hover:shadow-card-hover transition-all flex flex-col justify-between space-y-6">
             <div className="space-y-4">
@@ -256,10 +293,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenSimu
           <div className="bg-white rounded-2xl p-7 border border-slate-200 shadow-card hover:shadow-card-hover transition-all flex flex-col justify-between space-y-6">
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <div className="w-12 h-12 rounded-xl bg-safe-50 border border-safe-100 text-safe-700 flex items-center justify-center">
+                <div className="w-12 h-12 rounded-xl bg-teal-50 border border-teal-100 text-teal-700 flex items-center justify-center">
                   <Trees className="w-6 h-6" />
                 </div>
-                <span className="px-2.5 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-safe-50 text-safe-800 border border-safe-200">
+                <span className="px-2.5 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-teal-50 text-teal-800 border border-teal-200">
                   Proactive Monitoring
                 </span>
               </div>
@@ -274,7 +311,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenSimu
               {/* Show items list */}
               <div className="grid grid-cols-2 gap-2 pt-2 text-xs">
                 <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200/80 flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-safe-500"></span>
+                  <span className="w-2 h-2 rounded-full bg-teal-500"></span>
                   <span className="font-semibold text-slate-800">Journey Tracker</span>
                 </div>
                 <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200/80 flex items-center gap-2">
@@ -303,8 +340,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenSimu
         </div>
       </section>
 
-      {/* 3. EMERGENCY QR SECTION & PROCESS TIMELINE */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+      {/* ======================================================== */}
+      {/* 3. LIGHT SECTION: HOW RESQTAG WORKS (6-STEP TIMELINE)    */}
+      {/* ======================================================== */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10 py-10">
         <div className="text-center space-y-2">
           <span className="text-xs font-bold uppercase tracking-wider text-slate-600 bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
             Emergency Workflow
@@ -319,7 +358,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenSimu
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3.5">
           {/* Step 01 */}
-          <div className="bg-white rounded-xl p-4 border border-slate-200 shadow-sm space-y-2.5 text-center">
+          <div className="bg-white rounded-xl p-4 border border-slate-200 shadow-sm space-y-2.5 text-center hover:border-brand-300 transition-colors">
             <span className="text-xs font-black font-mono text-brand-600">01</span>
             <div className="w-9 h-9 rounded-lg bg-brand-50 text-brand-600 mx-auto flex items-center justify-center">
               <UserPlus className="w-4 h-4" />
@@ -329,7 +368,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenSimu
           </div>
 
           {/* Step 02 */}
-          <div className="bg-white rounded-xl p-4 border border-slate-200 shadow-sm space-y-2.5 text-center">
+          <div className="bg-white rounded-xl p-4 border border-slate-200 shadow-sm space-y-2.5 text-center hover:border-brand-300 transition-colors">
             <span className="text-xs font-black font-mono text-brand-600">02</span>
             <div className="w-9 h-9 rounded-lg bg-brand-50 text-brand-600 mx-auto flex items-center justify-center">
               <KeyRound className="w-4 h-4" />
@@ -339,7 +378,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenSimu
           </div>
 
           {/* Step 03 */}
-          <div className="bg-white rounded-xl p-4 border border-slate-200 shadow-sm space-y-2.5 text-center">
+          <div className="bg-white rounded-xl p-4 border border-slate-200 shadow-sm space-y-2.5 text-center hover:border-brand-300 transition-colors">
             <span className="text-xs font-black font-mono text-brand-600">03</span>
             <div className="w-9 h-9 rounded-lg bg-brand-50 text-brand-600 mx-auto flex items-center justify-center">
               <QrCode className="w-4 h-4" />
@@ -349,7 +388,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenSimu
           </div>
 
           {/* Step 04 */}
-          <div className="bg-white rounded-xl p-4 border border-slate-200 shadow-sm space-y-2.5 text-center">
+          <div className="bg-white rounded-xl p-4 border border-slate-200 shadow-sm space-y-2.5 text-center hover:border-brand-300 transition-colors">
             <span className="text-xs font-black font-mono text-brand-600">04</span>
             <div className="w-9 h-9 rounded-lg bg-brand-50 text-brand-600 mx-auto flex items-center justify-center">
               <ShieldCheck className="w-4 h-4" />
@@ -359,7 +398,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenSimu
           </div>
 
           {/* Step 05 */}
-          <div className="bg-white rounded-xl p-4 border border-slate-200 shadow-sm space-y-2.5 text-center">
+          <div className="bg-white rounded-xl p-4 border border-slate-200 shadow-sm space-y-2.5 text-center hover:border-emergency-300 transition-colors">
             <span className="text-xs font-black font-mono text-emergency-600">05</span>
             <div className="w-9 h-9 rounded-lg bg-emergency-50 text-emergency-600 mx-auto flex items-center justify-center">
               <Smartphone className="w-4 h-4" />
@@ -369,7 +408,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenSimu
           </div>
 
           {/* Step 06 */}
-          <div className="bg-white rounded-xl p-4 border border-slate-200 shadow-sm space-y-2.5 text-center">
+          <div className="bg-white rounded-xl p-4 border border-slate-200 shadow-sm space-y-2.5 text-center hover:border-safe-300 transition-colors">
             <span className="text-xs font-black font-mono text-safe-600">06</span>
             <div className="w-9 h-9 rounded-lg bg-safe-50 text-safe-600 mx-auto flex items-center justify-center">
               <HeartHandshake className="w-4 h-4" />
@@ -380,73 +419,156 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenSimu
         </div>
       </section>
 
-      {/* 4. SECURITY & PRIVACY SECTION */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-slate-900 text-white rounded-3xl p-8 sm:p-12 space-y-8 shadow-xl">
+      {/* ======================================================== */}
+      {/* 4. ANIMATED SAFEJOURNEY SPOTLIGHT SECTION (Blue → Teal)  */}
+      {/* ======================================================== */}
+      <section className="relative my-12 py-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
+        <TechWaveBackground variant="safejourney" showNetwork={true} />
+
+        <div className="relative z-10 max-w-7xl mx-auto">
+          <div className="glass-panel-tech rounded-3xl p-8 sm:p-12 border border-white/20 shadow-glass text-white space-y-8">
+            
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+              <div className="space-y-2 max-w-2xl">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-400/20 text-teal-200 text-xs font-semibold border border-teal-300/30">
+                  <Compass className="w-3.5 h-3.5 text-teal-300 animate-spin duration-10000" />
+                  <span>PROACTIVE MONITORING ENGINE</span>
+                </div>
+                <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
+                  ResQTag SafeJourney
+                </h2>
+                <p className="text-base text-teal-100 font-normal">
+                  “Stay connected. Check in. Get help when you need it.”
+                </p>
+              </div>
+
+              <button
+                onClick={() => onNavigate('safejourney')}
+                className="px-6 py-3 rounded-xl btn-tech-teal font-bold text-sm flex items-center gap-2 shrink-0"
+              >
+                <span>Open SafeJourney Hub</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Check-In Action Micro-Demo with Dedicated Button Glows */}
+            <div className="pt-4 border-t border-white/10 space-y-4">
+              <span className="text-xs uppercase font-bold tracking-wider text-sky-200 block">
+                Live Check-In Interaction Controls Preview:
+              </span>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+                
+                {/* 1. I'M SAFE (Green Professional Glow) */}
+                <div className="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-2">
+                  <span className="text-[11px] text-teal-200 font-semibold block">Normal Check-in</span>
+                  <button
+                    onClick={() => onNavigate('safejourney')}
+                    className="w-full py-2.5 px-4 rounded-xl bg-safe-600 hover:bg-safe-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-glow-green transition-transform active:scale-95"
+                  >
+                    <CheckCircle2 className="w-4 h-4" />
+                    <span>I&apos;M SAFE</span>
+                  </button>
+                </div>
+
+                {/* 2. I NEED HELP (Controlled Red Emergency Glow) */}
+                <div className="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-2">
+                  <span className="text-[11px] text-rose-200 font-semibold block">Manual Emergency SOS</span>
+                  <button
+                    onClick={() => onNavigate('safejourney')}
+                    className="w-full py-2.5 px-4 rounded-xl bg-emergency-600 hover:bg-emergency-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-glow-red transition-transform active:scale-95 animate-pulse-emergency"
+                  >
+                    <AlertOctagon className="w-4 h-4" />
+                    <span>I NEED HELP</span>
+                  </button>
+                </div>
+
+                {/* 3. END JOURNEY (Neutral Dark/Gray Button) */}
+                <div className="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-2">
+                  <span className="text-[11px] text-slate-300 font-semibold block">Completed Safe Travel</span>
+                  <button
+                    onClick={() => onNavigate('safejourney')}
+                    className="w-full py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs flex items-center justify-center gap-2 transition-transform active:scale-95"
+                  >
+                    <span>END JOURNEY</span>
+                  </button>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ======================================================== */}
+      {/* 5. LIGHT SECURITY & PRIVACY SECTION                      */}
+      {/* ======================================================== */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="bg-white rounded-3xl p-8 sm:p-12 space-y-8 border border-slate-200 shadow-sm">
           <div className="max-w-2xl space-y-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-brand-400 bg-brand-950 px-3 py-1 rounded-full border border-brand-800">
+            <span className="text-xs font-bold uppercase tracking-wider text-brand-700 bg-brand-50 px-3 py-1 rounded-full border border-brand-200">
               Data Protection Architecture
             </span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
               Privacy and security by design.
             </h2>
-            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
               ResQTag does not print personal details or unencrypted databases on physical stickers. All scans resolve securely through protected backend tokens.
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 pt-2">
             {/* 1. Secure Profile */}
-            <div className="bg-slate-800/80 rounded-2xl p-5 border border-slate-700/80 space-y-2.5">
-              <div className="w-8 h-8 rounded-lg bg-slate-700 text-brand-400 flex items-center justify-center">
+            <div className="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-2.5">
+              <div className="w-8 h-8 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center">
                 <Lock className="w-4 h-4" />
               </div>
-              <h4 className="font-bold text-sm text-white">🔐 Secure Profile</h4>
-              <p className="text-[11px] text-slate-300 leading-relaxed">
+              <h4 className="font-bold text-sm text-slate-900">🔐 Secure Profile</h4>
+              <p className="text-[11px] text-slate-500 leading-relaxed">
                 Personal identity records are encrypted and protected in hardened storage.
               </p>
             </div>
 
             {/* 2. OTP Verification */}
-            <div className="bg-slate-800/80 rounded-2xl p-5 border border-slate-700/80 space-y-2.5">
-              <div className="w-8 h-8 rounded-lg bg-slate-700 text-safe-400 flex items-center justify-center">
+            <div className="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-2.5">
+              <div className="w-8 h-8 rounded-lg bg-safe-50 text-safe-600 flex items-center justify-center">
                 <CheckCircle2 className="w-4 h-4" />
               </div>
-              <h4 className="font-bold text-sm text-white">✓ OTP Verification</h4>
-              <p className="text-[11px] text-slate-300 leading-relaxed">
+              <h4 className="font-bold text-sm text-slate-900">✓ OTP Verification</h4>
+              <p className="text-[11px] text-slate-500 leading-relaxed">
                 Profile edits require multi-factor phone OTP authentication.
               </p>
             </div>
 
             {/* 3. Protected Data */}
-            <div className="bg-slate-800/80 rounded-2xl p-5 border border-slate-700/80 space-y-2.5">
-              <div className="w-8 h-8 rounded-lg bg-slate-700 text-brand-400 flex items-center justify-center">
+            <div className="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-2.5">
+              <div className="w-8 h-8 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center">
                 <EyeOff className="w-4 h-4" />
               </div>
-              <h4 className="font-bold text-sm text-white">🔒 Protected Data</h4>
-              <p className="text-[11px] text-slate-300 leading-relaxed">
+              <h4 className="font-bold text-sm text-slate-900">🔒 Protected Data</h4>
+              <p className="text-[11px] text-slate-500 leading-relaxed">
                 QR encodes a pointer token (RQ7K29), never raw personal details.
               </p>
             </div>
 
             {/* 4. Consent-Based Location */}
-            <div className="bg-slate-800/80 rounded-2xl p-5 border border-slate-700/80 space-y-2.5">
-              <div className="w-8 h-8 rounded-lg bg-slate-700 text-amber-400 flex items-center justify-center">
+            <div className="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-2.5">
+              <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
                 <MapPin className="w-4 h-4" />
               </div>
-              <h4 className="font-bold text-sm text-white">📍 Consent Location</h4>
-              <p className="text-[11px] text-slate-300 leading-relaxed">
+              <h4 className="font-bold text-sm text-slate-900">📍 Consent Location</h4>
+              <p className="text-[11px] text-slate-500 leading-relaxed">
                 Responders explicitly grant geolocation permission before sharing coords.
               </p>
             </div>
 
             {/* 5. Controlled Access */}
-            <div className="bg-slate-800/80 rounded-2xl p-5 border border-slate-700/80 space-y-2.5">
-              <div className="w-8 h-8 rounded-lg bg-slate-700 text-emerald-400 flex items-center justify-center">
+            <div className="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-2.5">
+              <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
                 <ShieldCheck className="w-4 h-4" />
               </div>
-              <h4 className="font-bold text-sm text-white">🛡️ Controlled Access</h4>
-              <p className="text-[11px] text-slate-300 leading-relaxed">
+              <h4 className="font-bold text-sm text-slate-900">🛡️ Controlled Access</h4>
+              <p className="text-[11px] text-slate-500 leading-relaxed">
                 Instant tag deactivation and contact updates without reprinting stickers.
               </p>
             </div>
@@ -454,8 +576,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenSimu
         </div>
       </section>
 
-      {/* 5. OFFICIAL HELPLINES & DISCLAIMER */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+      {/* ======================================================== */}
+      {/* 6. LIGHT HELPLINES DIRECTORY                             */}
+      {/* ======================================================== */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 py-4">
         <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 space-y-6 shadow-sm">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
             <div className="flex items-center gap-2">
@@ -498,6 +622,49 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onNavigate, onOpenSimu
           </p>
         </div>
       </section>
+
+      {/* ======================================================== */}
+      {/* 7. ANIMATED FINAL CTA SECTION (Rich Blue Tech Wave)      */}
+      {/* ======================================================== */}
+      <section className="relative my-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="relative rounded-3xl overflow-hidden shadow-2xl p-8 sm:p-14 text-center text-white space-y-6">
+          <TechWaveBackground variant="cta" showNetwork={false} />
+          
+          <div className="relative z-10 max-w-2xl mx-auto space-y-4">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-cyan-200 text-xs font-bold">
+              <Sparkles className="w-3.5 h-3.5 text-cyan-300" />
+              <span>INSTANT PROTECTION IN MINUTES</span>
+            </div>
+            
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
+              Protect yourself and your loved ones today.
+            </h2>
+            
+            <p className="text-sm sm:text-base text-sky-100 leading-relaxed">
+              Create your emergency profile, generate your waterproof QR decal, and enable proactive SafeJourney tracking.
+            </p>
+
+            <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3.5">
+              <button
+                onClick={() => onNavigate('register')}
+                className="w-full sm:w-auto px-8 py-3.5 rounded-xl font-bold text-sm btn-tech-primary shadow-lg flex items-center justify-center gap-2"
+              >
+                <UserPlus className="w-4 h-4" />
+                <span>Create Free Emergency Profile</span>
+              </button>
+
+              <button
+                onClick={() => onNavigate('safejourney')}
+                className="w-full sm:w-auto px-7 py-3.5 rounded-xl font-bold text-sm btn-tech-teal flex items-center justify-center gap-2"
+              >
+                <Trees className="w-4 h-4" />
+                <span>Launch SafeJourney</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
     </div>
   );
 };
